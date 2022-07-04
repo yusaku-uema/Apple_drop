@@ -34,6 +34,7 @@ int g_PlayerImage[16];  //自機画像 //キャラ画像変数
 int g_Barrier; //バリア画像
 
 int g_Applec; //タイトルカーソル変数　消さないで
+
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -234,7 +235,7 @@ void DrawGameTitle(void) {
     //メニュー
     //DrawGraph(120, 200, g_Menu, TRUE);
 
-    //メニュー
+      //メニュー
     DrawGraph(310, 220 + MenuNo * 50, g_Applec, TRUE);
 
     ////メニューカーソル
@@ -432,12 +433,12 @@ void InputRanking(void)
  ***********************************************/
 int LoadImages()
 {
-    
+  
+
     //タイトル タイトル画像替えました。
     if ((g_TitleImage = LoadGraph("images/Chapter5/Title.png")) == -1) return -1;
     //メニュー
     if ((g_Applec = LoadGraph("images/Chapter5/Applec.png")) == -1) return -1;
-
     return 0;
 }
 /***********************************************
