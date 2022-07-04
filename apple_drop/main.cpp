@@ -16,7 +16,7 @@ int g_KeyFlg;  // 入力キー情報
 int g_GameState = 0;  // ゲームモード 
 
 int g_TitleImage; // 画像用変数 
-int g_Menu, g_Cone; //メニュー画面
+int g_Menu; //g//_Cone; //メニュー画面
 int g_Score = 0; //スコア
 int g_RankingImage; //画像用変数
 int g_Item[2]; //アイテム画像変数
