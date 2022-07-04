@@ -30,20 +30,14 @@ int g_Teki[4]; //キャラ画像変数
 
 int g_StageImage;
 int g_teki;
-<<<<<<< HEAD
-<<<<<<< Updated upstream
 int g_Car, g_Barrier; //キャラ画像変数
-=======
 int g_PlayerImage[16];  //自機画像 //キャラ画像変数
-int g_Barrier; //バリア画像
+//int g_Barrier; //バリア画像
 
 //7月04日佐久本が追加Titleのカーソル
 int g_Apple;
->>>>>>> Stashed changes
-=======
-int g_PlayerImage[16];  //自機画像 //キャラ画像変数
-int g_Barrier; //バリア画像
->>>>>>> main
+//int g_PlayerImage[16];  //自機画像 //キャラ画像変数
+//int g_Barrier; //バリア画像
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -359,16 +353,13 @@ void GameMain(void)
     BackScrool();
     PlayerControl();
     EnemyControl();
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-    ItemControl();
+    //ItemControl();
     //スペースキーでメニュに戻る
     //if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
 
     //SetFontSize(16);
     //DrawString(20, 20, "ゲームメイン", 0xffffff, 0);
     //DrawString(150, 450, "--- スペースキーを押してゲームオーバーへ ---", 0xffffff, 0);
-=======
 
     //消さないでね佐久本
     //スペースキーでメニューに戻る
@@ -376,9 +367,6 @@ void GameMain(void)
 
     SetFontSize(16);
     DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
->>>>>>> Stashed changes
-=======
->>>>>>> main
 }
 /***********************************************
  *ゲームオーバー画面描画処理
