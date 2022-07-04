@@ -30,7 +30,15 @@ int g_Teki[3]; //キャラ画像変数
 
 int g_StageImage;
 int g_teki;
+<<<<<<< Updated upstream
 int g_Car, g_Barrier; //キャラ画像変数
+=======
+int g_PlayerImage[16];  //自機画像 //キャラ画像変数
+int g_Barrier; //バリア画像
+
+//7月04日佐久本が追加Titleのカーソル
+int g_Apple;
+>>>>>>> Stashed changes
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -224,6 +232,10 @@ void DrawGameTitle(void) {
 
     //メニューカーソル
     DrawRotaGraph(90, 220 + MenuNo * 40, 0.7f, M_PI / 2, g_Cone, TRUE);
+
+    //リンゴカーソル佐久本消さないで
+    //メニュー
+    DrawGraph(310, 220 + MenuNo * 50, g_Apple, TRUE);
 }
 
 /***********************************************
@@ -337,6 +349,7 @@ void GameMain(void)
     BackScrool();
     PlayerControl();
     EnemyControl();
+<<<<<<< Updated upstream
     ItemControl();
     //スペースキーでメニュに戻る
     //if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
@@ -344,6 +357,15 @@ void GameMain(void)
     //SetFontSize(16);
     //DrawString(20, 20, "ゲームメイン", 0xffffff, 0);
     //DrawString(150, 450, "--- スペースキーを押してゲームオーバーへ ---", 0xffffff, 0);
+=======
+
+    //消さないでね佐久本
+    //スペースキーでメニューに戻る
+    if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
+
+    SetFontSize(16);
+    DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
+>>>>>>> Stashed changes
 }
 /***********************************************
  *ゲームオーバー画面描画処理
@@ -424,10 +446,12 @@ void InputRanking(void)
 int LoadImages()
 {
     //タイトル
-    if ((g_TitleImage = LoadGraph("images/Chapter5/Title.bmp")) == -1)return -1;
+    if ((g_TitleImage = LoadGraph("images/Chapter5/Title.png")) == -1)return -1;
     //メニュー
-    if ((g_Menu = LoadGraph("images/Chapter5/menu.bmp")) == -1)return -1;
-    if ((g_Cone = LoadGraph("images/Chapter5/cone.bmp")) == -1)return -1;
+    // 	//メニュー
+    if ((g_Apple = LoadGraph("images/Chapter5/Applec.png")) == -1) return -1;
+    //if ((g_Menu = LoadGraph("images/Chapter5/menu.bmp")) == -1)return -1;
+    //if ((g_Cone = LoadGraph("images/Chapter5/cone.bmp")) == -1)return -1;
 
     return 0;
 }
