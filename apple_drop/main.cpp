@@ -32,6 +32,8 @@ int g_StageImage;
 int g_teki;
 int g_PlayerImage[16];  //自機画像 //キャラ画像変数
 int g_Barrier; //バリア画像
+
+int g_Applec; //タイトルカーソル変数　消さないで
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -230,10 +232,13 @@ void DrawGameTitle(void) {
     DrawGraph(0, 0, g_TitleImage, FALSE);
 
     //メニュー
-    DrawGraph(120, 200, g_Menu, TRUE);
+    //DrawGraph(120, 200, g_Menu, TRUE);
 
-    //メニューカーソル
-    DrawRotaGraph(90, 220 + MenuNo * 40, 0.7f, M_PI / 2, g_Cone, TRUE);
+    //メニュー
+    DrawGraph(310, 220 + MenuNo * 50, g_Applec, TRUE);
+
+    ////メニューカーソル
+    //DrawRotaGraph(90, 220 + MenuNo * 40, 0.7f, M_PI / 2, g_Cone, TRUE);
 }
 
 /***********************************************
@@ -343,6 +348,11 @@ void GameMain(void)
     BackScrool();
     PlayerControl();
     EnemyControl();
+
+    //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
+    if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
+    SetFontSize(16);
+    DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
 }
 /***********************************************
  *ゲームオーバー画面描画処理
@@ -422,11 +432,11 @@ void InputRanking(void)
  ***********************************************/
 int LoadImages()
 {
-    //タイトル
-    if ((g_TitleImage = LoadGraph("images/Chapter5/Title.bmp")) == -1)return -1;
+    
+    //タイトル タイトル画像替えました。
+    if ((g_TitleImage = LoadGraph("images/Chapter5/Title.png")) == -1) return -1;
     //メニュー
-    if ((g_Menu = LoadGraph("images/Chapter5/menu.bmp")) == -1)return -1;
-    if ((g_Cone = LoadGraph("images/Chapter5/cone.bmp")) == -1)return -1;
+    if ((g_Applec = LoadGraph("images/Chapter5/Applec.png")) == -1) return -1;
 
     return 0;
 }
