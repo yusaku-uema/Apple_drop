@@ -44,13 +44,17 @@ const int SCREEN_HEIGHT = 480;
 //自機の機体
 const int PLAYER_POS_X = SCREEN_WIDTH / 2;
 const int PLAYER_POS_Y = SCREEN_HEIGHT - 100;
-const int PLAYER_WIDTH = 63;
-const int PLAYER_HEIGHT = 120;
+const int PLAYER_WIDTH = 65; //本当は76
+const int PLAYER_HEIGHT = 90; //本当は100
 const int PLAYER_SPEED = 5;
 const int PLAYER_HP = 1000;
 const int PLAYER_FUEL = 20000;
 const int PLAYER_BARRIER = 3;
 const int PLAYER_BARRIERUP = 10;
+
+//リンゴ
+const int APPLE_WIDTH = 40; //本当は50
+const int APPLE_HEIGHT = 40; //本当は50
 
 //敵機の最大数
 const int ENEMY_MAX = 10;//チャレンジ1変更 20
@@ -71,7 +75,7 @@ struct PLAYER
     int flg;       //使用フラグ
     int x, y;      //座標x,y
     int w, h;      //幅w, 高さh
-    double angle;  //機体の向き
+    //double angle;  //機体の向き
     int count;     //タイミング用
     int speed;     //移動速度
 
@@ -96,8 +100,8 @@ struct ENEMY {
 };
 //敵機
 struct ENEMY g_enemy[ENEMY_MAX];
-struct ENEMY g_enemy00 = { TRUE,0,0,0,-50,63,120,0,1 };
-struct ENEMY g_enemyCn = { TRUE,4,0,0,-50,18,18,0,1 };
+struct ENEMY g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
+//struct ENEMY g_enemyCn = { TRUE,4,0,0,-50,18,18,0,1 };
 
 //アイテム
 struct ENEMY g_item[ITEM_MAX];
@@ -244,7 +248,7 @@ void GameInit(void)
     g_player.y = PLAYER_POS_Y;
     g_player.w = PLAYER_WIDTH;
     g_player.h = PLAYER_HEIGHT;
-    g_player.angle = 0.0;
+    //g_player.angle = 0.0;
     g_player.count = 0;
     g_player.speed = PLAYER_SPEED;
 
@@ -648,12 +652,12 @@ void EnemyControl()
         if (g_enemy[i].flg == TRUE)
         {
             //敵の表示
-            DrawRotaGraph(g_enemy[i].x, g_enemy[i].y, 1.0f, 0, g_enemy[i].img, TRUE, FALSE);
+            DrawGraph(g_enemy[i].x, g_enemy[i].y, g_enemy[i].img, TRUE);
 
             if (g_player.flg == FALSE)continue;
 
             //まっすぐ下に移動
-            g_enemy[i].y += g_enemy[i].speed + g_player.speed - PLAYER_SPEED + 1;
+            g_enemy[i].y += g_enemy[i].speed;// + g_player.speed - PLAYER_SPEED + 1;
 
             //画面をはみ出したら消去
             if (g_enemy[i].y > SCREEN_HEIGHT + g_enemy[i].h) g_enemy[i].flg = FALSE;
@@ -666,11 +670,14 @@ void EnemyControl()
                 g_player.count = 0;
                 g_player.hp -= 100;
                 g_enemy[i].flg = FALSE;
-
                 if (g_player.hp <= 0) g_GameState = 6;*/
+
+                g_enemy[i].flg = FALSE;
 
                 g_player.ATARI_HANTEI += 1;
             }
+
+            //g_player.ATARI_HANTEI = 0;
         }
 
         DrawFormatString(0, 33, 0x00ffff, "当たり判定 = %d", g_player.ATARI_HANTEI);
@@ -690,13 +697,32 @@ void EnemyControl()
  ***********************************************/
 int CreateEnemy()
 {
-    for (int i = 0; i < ENEMY_MAX; i++) {
-        if (g_enemy[i].flg == FALSE) {
+    for (int i = 0; i < ENEMY_MAX; i++) 
+    {
+        if (g_enemy[i].flg == FALSE) 
+        {
             g_enemy[i] = g_enemy00;
-            g_enemy[i].type = GetRand(2);
+            g_enemy[i].type = GetRand(3);
             g_enemy[i].img = g_Teki[g_enemy[i].type];
-            g_enemy[i].x = GetRand(4) * 105 + 40;
-            g_enemy[i].speed = g_enemy[i].type * 2;
+            g_enemy[i].x = GetRand(6) * 70 + 30;
+
+            if (g_enemy[i].type == 0)
+            {
+                g_enemy[i].speed = 2;
+            }
+            if (g_enemy[i].type == 1)
+            {
+                g_enemy[i].speed = 5;
+            }
+            if (g_enemy[i].type == 2)
+            {
+                g_enemy[i].speed = 10;
+            }
+            if (g_enemy[i].type == 3)
+            {
+                g_enemy[i].speed = 1;
+            }
+   
             //成功
             return TRUE;
         }
@@ -715,13 +741,13 @@ int HitBoxPlayer(PLAYER* p, ENEMY* e)
 {
 
     //x,yは中心座標とする
-    int sx1 = p->x - (p->w / 2);
-    int sy1 = p->y - (p->h / 2);
-    int sx2 = sx1 + 4 + p->w;
-    int sy2 = sy1 + 40 + p->h;
+    int sx1 = p->x;
+    int sy1 = p->y;
+    int sx2 = sx1 + p->w;
+    int sy2 = sy1 + p->h;
 
-    int dx1 = e->x - (e->w / 2);
-    int dy1 = e->y - (e->h / 2);
+    int dx1 = e->x;
+    int dy1 = e->y;
     int dx2 = dx1 + e->w;
     int dy2 = dy1 + e->h;
 
