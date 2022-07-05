@@ -35,6 +35,7 @@ int g_Barrier; //バリア画像
 
 int g_Applec; //タイトルカーソル変数　消さないで
 
+int g_StageBGM; //mainのBGM追加します
 //追加します
 int g_ky;
 /***********************************************
@@ -127,6 +128,8 @@ void PlayerControl(); //自機処理
 void EnemyControl(); //敵機処理
 int CreateEnemy(); //敵機生成処理
 int HitBoxPlayer(PLAYER* p, ENEMY* e); //当たり判定
+
+int LoadSounds(); //サウンドの読み込み処理
 /***********************************************
  * プログラムの開始
  ***********************************************/
@@ -348,6 +351,9 @@ void DrawEnd(void)
  ***********************************************/
 void GameMain(void)
 {
+    //mainにBGMを流す。消さないで
+    PlaySoundMem(g_StageBGM, DX_PLAYTYPE_BACK, FALSE);
+
     BackScrool();
     PlayerControl();
     EnemyControl();
@@ -403,6 +409,9 @@ void DrawGameOver(void)
     DrawFormatString(260, 290, 0xFFFFFF, "           =%6d", g_Score);
 
     DrawString(150, 450, "---スペースキーを押してタイトルへ戻る ---", 0xffffff, 0);
+
+    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+    
 }
 /***********************************************
  * ランキング入力処理
@@ -442,6 +451,12 @@ int LoadImages()
     //メニュー
     if ((g_Applec = LoadGraph("images/Chapter5/Applec.png")) == -1) return -1;
     return 0;
+}
+//サウンド読み込み
+int LoadSounds() {
+
+    //ステージBGMデータの読み込み
+    if ((g_StageBGM = LoadSoundMem("sounds/Chapter9/MusMus-BGM-104.wav")) == -1)return -1;
 }
 /***********************************************
  * ランキング並び替え
