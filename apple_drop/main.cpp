@@ -37,6 +37,7 @@ int g_Applec; //タイトルカーソル変数　消さないで
 
 //追加します
 int g_ky;
+
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -62,6 +63,22 @@ const int APPLE_HEIGHT = 40; //本当は50
 const int ENEMY_MAX = 10;//チャレンジ1変更 20
 //アイテムの最大数
 const int ITEM_MAX = 3;
+
+//ステック？
+struct DINPUT_JOYSTATE
+{
+    int		X;		// スティックのＸ軸パラメータ( -1000～1000 )
+    int		Y;		// スティックのＹ軸パラメータ( -1000～1000 )
+    int		Z;		// スティックのＺ軸パラメータ( -1000～1000 )
+    int		Rx;		// スティックのＸ軸回転パラメータ( -1000～1000 )
+    int		Ry;		// スティックのＹ軸回転パラメータ( -1000～1000 )
+    int		Rz;		// スティックのＺ軸回転パラメータ( -1000～1000 )
+    int		Slider[2];	// スライダー二つ
+    unsigned int	POV[4];	// ハットスイッチ４つ
+                    // ( 0xffffffff:入力なし 0:上 4500:右上 9000:右 13500:右下
+                    //		 18000:下 22500:左下 27000:左 31500:左上 )
+    unsigned char	Buttons[32];	// ボタン３２個( 押されたボタンは 128 になる )
+};
 
 //ランキングデータ（構造体）
 struct RankingData {
@@ -103,7 +120,6 @@ struct ENEMY {
 //敵機
 struct ENEMY g_enemy[ENEMY_MAX];
 struct ENEMY g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
-//struct ENEMY g_enemyCn = { TRUE,4,0,0,-50,18,18,0,1 };
 
 //アイテム
 struct ENEMY g_item[ITEM_MAX];
@@ -152,10 +168,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
 
       //ゲームループ 
-    while (ProcessMessage() == 0 && g_GameState != 99 && !(g_KeyFlg & PAD_INPUT_START)) {
+    while (ProcessMessage() == 0 && g_GameState != 99) {// && !(g_KeyFlg & PAD_INPUT_START)
         //キー入力取得 
         g_OldKey = g_NowKey;
-        g_NowKey = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+        g_NowKey = GetJoypadInputState(DX_INPUT_PAD1);
         g_KeyFlg = g_NowKey & ~g_OldKey;
 
         // 画面の初期化 
@@ -290,25 +306,48 @@ void DrawRanking(void)
  ***********************************************/
 void DrawHelp(void)
 {
-    //スペースキーでメニューに戻る
-    if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
+    ////スペースキーでメニューに戻る
+    //if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
 
-    //タイトル画像表示
-    DrawGraph(0, 0, g_TitleImage, FALSE);
-    SetFontSize(16);
-    DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
+    ////タイトル画像表示
+    //DrawGraph(0, 0, g_TitleImage, FALSE);
+    //SetFontSize(16);
+    //DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
 
-    DrawString(20, 160, "これは障害物を避けながら", 0xffffff, 0);
-    DrawString(20, 180, "走り続けるゲームです", 0xffffff);
-    DrawString(20, 200, "燃料が尽きるか障害物に", 0xffffff, 0);
-    DrawString(20, 220, "数回当たるとゲームオーバーです。", 0xffffff, 0);
-    DrawString(20, 250, "アイテム一覧", 0xffffff, 0);
-    DrawGraph(20, 260, g_Item[0], TRUE);
-    DrawString(20, 315, "取ると燃料が回復するよ。", 0xffffff, 0);
-    DrawGraph(20, 335, g_Item[1], TRUE);
-    DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
-    DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);
-    DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
+    //DrawString(20, 160, "これは障害物を避けながら", 0xffffff, 0);
+    //DrawString(20, 180, "走り続けるゲームです", 0xffffff);
+    //DrawString(20, 200, "燃料が尽きるか障害物に", 0xffffff, 0);
+    //DrawString(20, 220, "数回当たるとゲームオーバーです。", 0xffffff, 0);
+    //DrawString(20, 250, "アイテム一覧", 0xffffff, 0);
+    //DrawGraph(20, 260, g_Item[0], TRUE);
+    //DrawString(20, 315, "取ると燃料が回復するよ。", 0xffffff, 0);
+    //DrawGraph(20, 335, g_Item[1], TRUE);
+    //DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
+    //DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);
+    //DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
+
+
+
+    //int Pad;        //ジョイパッドの入力状態格納用変数
+
+    //// while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
+    //while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
+    //    Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
+    //    if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
+    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "入力中ですAボタン");
+    //    }
+    //    if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
+    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "入力中ですBボタン");
+    //    }
+    //    if (Pad & PAD_INPUT_DOWN) {        //ボタン1の入力フラグが立っていたら
+    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "入力中です下ボタン");
+    //    }
+    //}
+
+    DINPUT_JOYSTATE input;
+    int i;
+    int Color;
+
 
 }
 /***********************************************
