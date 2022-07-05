@@ -171,6 +171,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
+    if (LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
 
       //ゲームループ 
     while (ProcessMessage() == 0 && g_GameState != 99 && !(g_KeyFlg & PAD_INPUT_START)) {
