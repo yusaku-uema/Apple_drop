@@ -163,7 +163,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (LoadDivGraph("images/Chapter5/apple.png", 4, 4, 1, 50, 50, g_Teki) == -1)return-1;
 
     //ステージ背景
-    if ((g_StageImage = LoadGraph("images/Chapter5/haikei.png")) == -1)return -1;
+    if ((g_StageImage = LoadGraph("images/Chapter5/haikei_abc.png")) == -1)return -1;
 
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, g_PlayerImage) == -1) return -1; //自機画像
