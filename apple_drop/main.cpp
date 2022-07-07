@@ -611,11 +611,10 @@ void BackScrool()
  ***********************************************/
 void PlayerControl()
 {
-
     //ç∂âEà⁄ìÆ
     if (g_player.flg == TRUE)
     {
-        if (g_NowKey & PAD_INPUT_LEFT)//ç∂
+        if (AX < -0)
         {
             if (g_player.oldkey == 0 || g_player.oldkey == 1 || g_player.oldkey == 2)
             {
@@ -624,7 +623,7 @@ void PlayerControl()
             }
         }
 
-        if (!(g_NowKey & PAD_INPUT_LEFT))
+        if (!(AX < -0))
         {
             if (g_player.oldkey == 1 || g_player.oldkey == 2)
             {
@@ -633,7 +632,7 @@ void PlayerControl()
             }
         }
 
-        if (g_NowKey & PAD_INPUT_RIGHT)
+        if (AX > 0)
         {
             if (g_player.oldkey == 0 || g_player.oldkey == 3 || g_player.oldkey == 4)
             {
@@ -642,7 +641,7 @@ void PlayerControl()
             }
         }
 
-        if (!(g_NowKey & PAD_INPUT_RIGHT))
+        if (!(AX > 0))
         {
             if (g_player.oldkey == 3 || g_player.oldkey == 4)
             {
@@ -661,16 +660,11 @@ void PlayerControl()
         g_player.x = 0;
         g_player.speed = 1;
     }
-
-
     if (g_player.x > 440)
     {
         g_player.x = 440;
         g_player.speed = 1;
-        if (g_player.x < 15) g_player.x = 15;
-        if (g_player.x > 420) g_player.x = 420;
     }
-
 
     DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
 }
