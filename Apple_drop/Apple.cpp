@@ -29,11 +29,11 @@ void Enemy::EnemyMove()
             {
                 g_enemy[i].flg = FALSE;
 
-                g_player.ATARI_HANTEI += 1;
+                
             }
         }
 
-        DrawFormatString(0, 33, 0x00ffff, "当たり判定 = %d", g_player.ATARI_HANTEI);
+        
     }
 
     //走行距離ごとに敵出現パターンを制御する
