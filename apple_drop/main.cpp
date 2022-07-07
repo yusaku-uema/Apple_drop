@@ -2,7 +2,7 @@
 ** 第5章 ミニゲームを作る
 ** （2)　レース＆避けゲー
 ********************************************************************/
-#include "DxLib.h" 
+#include"DxLib.h"
 #define _USE_MATH_DEFINES
 #include<math.h>
 #define RANKING_DATA 5
@@ -37,6 +37,8 @@ int g_Applec; //タイトルカーソル変数　消さないで
 
 //追加します
 int g_ky;
+
+int AX, AY; //コントローラ左スティック座標消さないで
 
 /***********************************************
  * 定数を宣言
@@ -174,6 +176,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         g_NowKey = GetJoypadInputState(DX_INPUT_PAD1);
         g_KeyFlg = g_NowKey & ~g_OldKey;
 
+        //左右のアナログ入力状態を取得する
+        GetJoypadAnalogInput(&AX, &AY, DX_INPUT_PAD1);
+
         // 画面の初期化 
         ClearDrawScreen();
 
@@ -306,49 +311,41 @@ void DrawRanking(void)
  ***********************************************/
 void DrawHelp(void)
 {
-    ////スペースキーでメニューに戻る
-    //if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
+    //スペースキーでメニューに戻る
+    if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
 
-    ////タイトル画像表示
-    //DrawGraph(0, 0, g_TitleImage, FALSE);
-    //SetFontSize(16);
-    //DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
+    //タイトル画像表示
+    DrawGraph(0, 0, g_TitleImage, FALSE);
+    SetFontSize(16);
+    /*DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
 
-    //DrawString(20, 160, "これは障害物を避けながら", 0xffffff, 0);
-    //DrawString(20, 180, "走り続けるゲームです", 0xffffff);
-    //DrawString(20, 200, "燃料が尽きるか障害物に", 0xffffff, 0);
-    //DrawString(20, 220, "数回当たるとゲームオーバーです。", 0xffffff, 0);
-    //DrawString(20, 250, "アイテム一覧", 0xffffff, 0);
-    //DrawGraph(20, 260, g_Item[0], TRUE);
-    //DrawString(20, 315, "取ると燃料が回復するよ。", 0xffffff, 0);
-    //DrawGraph(20, 335, g_Item[1], TRUE);
-    //DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
-    //DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);
-    //DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
-
-
-
-    //int Pad;        //ジョイパッドの入力状態格納用変数
-
-    //// while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    //while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
-    //    Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
-    //    if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "入力中ですAボタン");
-    //    }
-    //    if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "入力中ですBボタン");
-    //    }
-    //    if (Pad & PAD_INPUT_DOWN) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "入力中です下ボタン");
-    //    }
-    //}
-
-    DINPUT_JOYSTATE input;
-    int i;
-    int Color;
+    DrawString(20, 160, "これは障害物を避けながら", 0xffffff, 0);
+    DrawString(20, 180, "走り続けるゲームです", 0xffffff);
+    DrawString(20, 200, "燃料が尽きるか障害物に", 0xffffff, 0);
+    DrawString(20, 220, "数回当たるとゲームオーバーです。", 0xffffff, 0);
+    DrawString(20, 250, "アイテム一覧", 0xffffff, 0);
+    DrawGraph(20, 260, g_Item[0], TRUE);
+    DrawString(20, 315, "取ると燃料が回復するよ。", 0xffffff, 0);
+    DrawGraph(20, 335, g_Item[1], TRUE);
+    DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
+    DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);
+    DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);*/
 
 
+
+    int Pad;        //ジョイパッドの入力状態格納用変数
+
+        // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
+    // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
+    while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
+        Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
+        if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
+            DrawFormatString(0, 0, GetColor(255, 255, 255), "Aです");
+        }
+        if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
+            DrawFormatString(0, 0, GetColor(255, 255, 255), "Bです");
+        }
+    }
 }
 /***********************************************
  * ゲームエンド描画処理
@@ -582,15 +579,16 @@ void BackScrool()
  ***********************************************/
 void PlayerControl()
 {
+    
     //左右移動
     if (g_player.flg == TRUE)
     {
-        if (g_NowKey & PAD_INPUT_LEFT)
+        if (AX < -0)//左
         {
             g_player.x -= g_player.speed;
             g_player.oldkey = 0;
         }
-        if (g_NowKey & PAD_INPUT_RIGHT)
+        if (AX > 0)//右
         {
             g_player.x += g_player.speed;
             g_player.oldkey = 1;
@@ -602,10 +600,10 @@ void PlayerControl()
     if (g_player.x > 420) g_player.x = 420;
 
 
-    //プレイヤーの表示
+    //プレイヤーの表示、向き
     if (g_player.flg == TRUE)
     {
-        if (g_NowKey & PAD_INPUT_LEFT)
+        if (AX < -0)//左
         {
             if (g_player.oldkey != 0)
             {
@@ -631,7 +629,7 @@ void PlayerControl()
             g_player.walkspeed++;
         }
 
-        else if (g_NowKey & PAD_INPUT_RIGHT)
+        else if (AX > 0)//右
         {
             if (g_player.oldkey != 1)
             {
