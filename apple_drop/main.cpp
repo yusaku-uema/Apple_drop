@@ -25,6 +25,8 @@ int g_EndImage; //ゲームエンド
 int g_Mileage; //走行距離
 int g_MileageB; //止め
 int g_EnemyCount1, g_EnemyCount2, g_EnemyCount3; //敵カウント
+int g_StartTime;   // スタート時間
+int Time;   // 現在時間
 
 int g_Teki[4]; //キャラ画像変数
 
@@ -35,6 +37,7 @@ int g_Barrier; //バリア画像
 
 int g_Applec; //タイトルカーソル変数　消さないで
 
+int g_StageBGM; //mainのBGM追加します
 //追加します
 int g_ky;
 
@@ -56,6 +59,8 @@ const int PLAYER_HP = 1000;
 const int PLAYER_FUEL = 20000;
 const int PLAYER_BARRIER = 3;
 const int PLAYER_BARRIERUP = 10;
+//制限時間
+const int TIMELIMIT = 30000;
 
 //リンゴ
 const int APPLE_WIDTH = 40; //本当は50
@@ -141,6 +146,8 @@ void DrawHelp(void); //ゲームヘルプ描画処理
 void DrawRanking(void); //ランキング描画処理
 void InputRanking(void);//ランキング入力
 int LoadImages(); //画像読み込み
+void UIView();
+void TimeCount();
 void SortRanking(void); //ランキンググ並び替え
 int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
@@ -149,6 +156,8 @@ void PlayerControl(); //自機処理
 void EnemyControl(); //敵機処理
 int CreateEnemy(); //敵機生成処理
 int HitBoxPlayer(PLAYER* p, ENEMY* e); //当たり判定
+
+int LoadSounds(); //サウンドの読み込み処理
 /***********************************************
  * プログラムの開始
  ***********************************************/
@@ -168,6 +177,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     if (ReadRanking() == -1) return -1;//ランキングデータの読込み
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
+    if (LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
 
       //ゲームループ 
     while (ProcessMessage() == 0 && g_GameState != 99) {// && !(g_KeyFlg & PAD_INPUT_START)
@@ -285,6 +295,9 @@ void GameInit(void)
         g_item[i].flg = FALSE;
     }
 
+    //現在の経過時間を得る
+    g_StartTime = GetNowCount();
+
     //ゲームメイン処理へ
     g_GameState = 5;
 }
@@ -366,9 +379,14 @@ void DrawEnd(void)
  ***********************************************/
 void GameMain(void)
 {
+    //mainにBGMを流す。消さないで
+    PlaySoundMem(g_StageBGM, DX_PLAYTYPE_BACK, FALSE);
+
     BackScrool();
     PlayerControl();
     EnemyControl();
+    UIView();
+    TimeCount();
 
     //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
     if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
@@ -421,6 +439,9 @@ void DrawGameOver(void)
     DrawFormatString(260, 290, 0xFFFFFF, "           =%6d", g_Score);
 
     DrawString(150, 450, "---スペースキーを押してタイトルへ戻る ---", 0xffffff, 0);
+
+    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+    
 }
 /***********************************************
  * ランキング入力処理
@@ -477,6 +498,12 @@ int LoadImages()
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, g_PlayerImage) == -1) return -1; //自機画像
     //if ((g_Barrier = LoadGraph("images/Chapter5/barrier.png")) == -1)return -1;
     return 0;
+}
+//サウンド読み込み
+int LoadSounds() {
+
+    //ステージBGMデータの読み込み
+    if ((g_StageBGM = LoadSoundMem("sounds/Chapter9/MusMus-BGM-104.wav")) == -1)return -1;
 }
 /***********************************************
  * ランキング並び替え
@@ -795,4 +822,41 @@ int HitBoxPlayer(PLAYER* p, ENEMY* e)
         return TRUE;
     }
     return FALSE;
+}
+
+void TimeCount(void)
+{
+    //制限時間を過ぎたらゲームオーバー
+    int Time = TIMELIMIT - (GetNowCount() - g_StartTime);
+    if (Time <= 0)
+    {
+        if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
+            g_GameState = 2;
+        }
+        else {
+            g_GameState = 7;
+        }
+    }
+    SetFontSize(50);
+    DrawFormatString(570, 100, 0xffffff, "%2d", Time / 1000);
+}
+
+void UIView(void)
+{
+    //UI「TIME」表示
+    SetFontSize(50);
+    DrawString(520, 40, "TIME", 0xffffff, 0);
+
+    //拾った数を表示
+    SetFontSize(16);
+    DrawRotaGraph(523, 220, 0.5f, 0, g_Teki[0], TRUE, FALSE);
+    DrawRotaGraph(573, 220, 0.5f, 0, g_Teki[1], TRUE, FALSE);
+    DrawRotaGraph(623, 220, 0.5f, 0, g_Teki[2], TRUE, FALSE);
+    DrawFormatString(510, 240, 0xFFFFFF, "%03d", g_EnemyCount1);
+    DrawFormatString(560, 240, 0xFFFFFF, "%03d", g_EnemyCount2);
+    DrawFormatString(610, 240, 0xFFFFFF, "%03d", g_EnemyCount3);
+
+    //UI「SCORE」表示
+    SetFontSize(45);
+    DrawString(510, 320, "SCORE", 0xffffff, 0);
 }
