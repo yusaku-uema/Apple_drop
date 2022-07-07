@@ -652,6 +652,7 @@ void PlayerControl()
 
         DrawFormatString(0, 50, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
         DrawFormatString(0, 70, 0x00ffff, "プレイヤー画像　 = %2d", g_player.image);
+        DrawFormatString(0, 33, 0x00ffff, "当たり判定 = %d", g_player.ATARI_HANTEI);
     }
 
     //画面をはみ出さないようにする
@@ -799,7 +800,7 @@ void EnemyControl()
             //g_player.ATARI_HANTEI = 0;
         }
 
-        DrawFormatString(0, 33, 0x00ffff, "当たり判定 = %d", g_player.ATARI_HANTEI);
+        
     }
 
     //走行距離ごとに敵出現パターンを制御する
