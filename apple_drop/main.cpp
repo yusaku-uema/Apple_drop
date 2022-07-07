@@ -25,6 +25,8 @@ int g_EndImage; //ゲームエンド
 int g_Mileage; //走行距離
 int g_MileageB; //止め
 int g_EnemyCount1, g_EnemyCount2, g_EnemyCount3; //敵カウント
+int g_StartTime;   // スタート時間
+int Time;   // 現在時間
 
 int g_Teki[4]; //キャラ画像変数
 
@@ -51,6 +53,8 @@ const int PLAYER_HP = 1000;
 const int PLAYER_FUEL = 20000;
 const int PLAYER_BARRIER = 3;
 const int PLAYER_BARRIERUP = 10;
+//制限時間
+const int TIMELIMIT = 30000;
 
 //敵機の最大数
 const int ENEMY_MAX = 10;//チャレンジ1変更 20
@@ -117,6 +121,8 @@ void DrawHelp(void); //ゲームヘルプ描画処理
 void DrawRanking(void); //ランキング描画処理
 void InputRanking(void);//ランキング入力
 int LoadImages(); //画像読み込み
+void UIView();
+void TimeCount();
 void SortRanking(void); //ランキンググ並び替え
 int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
@@ -280,6 +286,9 @@ void GameInit(void)
         g_item[i].flg = FALSE;
     }
 
+    //現在の経過時間を得る
+    g_StartTime = GetNowCount();
+
     //ゲームメイン処理へ
     g_GameState = 5;
 }
@@ -349,6 +358,8 @@ void GameMain(void)
     BackScrool();
     PlayerControl();
     EnemyControl();
+    UIView();
+    TimeCount();
 
     //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
     if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
@@ -735,4 +746,41 @@ int HitBoxPlayer(PLAYER* p, ENEMY* e)
         return TRUE;
     }
     return FALSE;
+}
+
+void TimeCount(void)
+{
+    //制限時間を過ぎたらゲームオーバー
+    int Time = TIMELIMIT - (GetNowCount() - g_StartTime);
+    if (Time <= 0)
+    {
+        if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
+            g_GameState = 2;
+        }
+        else {
+            g_GameState = 7;
+        }
+    }
+    SetFontSize(50);
+    DrawFormatString(570, 100, 0xffffff, "%2d", Time / 1000);
+}
+
+void UIView(void)
+{
+    //UI「TIME」表示
+    SetFontSize(50);
+    DrawString(520, 40, "TIME", 0xffffff, 0);
+
+    //拾った数を表示
+    SetFontSize(16);
+    DrawRotaGraph(523, 220, 0.5f, 0, g_Teki[0], TRUE, FALSE);
+    DrawRotaGraph(573, 220, 0.5f, 0, g_Teki[1], TRUE, FALSE);
+    DrawRotaGraph(623, 220, 0.5f, 0, g_Teki[2], TRUE, FALSE);
+    DrawFormatString(510, 240, 0xFFFFFF, "%03d", g_EnemyCount1);
+    DrawFormatString(560, 240, 0xFFFFFF, "%03d", g_EnemyCount2);
+    DrawFormatString(610, 240, 0xFFFFFF, "%03d", g_EnemyCount3);
+
+    //UI「SCORE」表示
+    SetFontSize(45);
+    DrawString(510, 320, "SCORE", 0xffffff, 0);
 }
