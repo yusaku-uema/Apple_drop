@@ -6,6 +6,7 @@
 #define _USE_MATH_DEFINES
 #include<math.h>
 #define RANKING_DATA 5
+#include"common.h"
 /***********************************************
  * 変数の宣言
  ***********************************************/
@@ -40,9 +41,7 @@ int g_ky;
 /***********************************************
  * 定数を宣言
  ***********************************************/
- //画面領域の大きさ
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+ 
 //自機の機体
 const int PLAYER_POS_X = SCREEN_WIDTH / 2;
 const int PLAYER_POS_Y = SCREEN_HEIGHT - 100;
@@ -54,12 +53,8 @@ const int PLAYER_FUEL = 20000;
 const int PLAYER_BARRIER = 3;
 const int PLAYER_BARRIERUP = 10;
 
-//リンゴ
-const int APPLE_WIDTH = 40; //本当は50
-const int APPLE_HEIGHT = 40; //本当は50
+struct PLAYER g_player;
 
-//敵機の最大数
-const int ENEMY_MAX = 10;//チャレンジ1変更 20
 //アイテムの最大数
 const int ITEM_MAX = 3;
 
@@ -71,43 +66,12 @@ struct RankingData {
 };
 struct RankingData g_Ranking[RANKING_DATA];
 
-//自機の構造体
-struct PLAYER
-{
-    int flg;       //使用フラグ
-    int x, y;      //座標x,y
-    int w, h;      //幅w, 高さh
-    //double angle;  //機体の向き
-    int count;     //タイミング用
-    int speed;     //移動速度
-
-    int image = 3;  //プレイヤーの歩く画像を変更するときの変数
-    int walkspeed;
-    int oldkey;
-
-    int ATARI_HANTEI = 0;
-};
-//自機
-struct PLAYER g_player;
 
 
-//敵の構造体
-struct ENEMY {
-    int flg; //使用フラグ
-    int type; //タイプ
-    int img; //画像
-    int x, y, w, h; //座標x,y,幅w,高さh
-    int speed; //移動速度
-    int point; //スコア加算
-};
-//敵機
-struct ENEMY g_enemy[ENEMY_MAX];
-struct ENEMY g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
+
+
 //struct ENEMY g_enemyCn = { TRUE,4,0,0,-50,18,18,0,1 };
 
-//アイテム
-struct ENEMY g_item[ITEM_MAX];
-struct ENEMY g_item00 = { TRUE,0,0,0,-50,50,50,0,1 };
 
 /***********************************************
  * 関数のプロトタイプ宣言
@@ -128,9 +92,8 @@ int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
 void BackScrool(); //背景画像スクロール処理
 void PlayerControl(); //自機処理
-void EnemyControl(); //敵機処理
-int CreateEnemy(); //敵機生成処理
-int HitBoxPlayer(PLAYER* p, ENEMY* e); //当たり判定
+void Pause(); //ポーズ画面
+
 /***********************************************
  * プログラムの開始
  ***********************************************/
@@ -185,6 +148,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
             break;
         case 7:
             InputRanking();
+        case 8:
+            Pause();
+            break;
         }
 
         //裏画面の内容を表画面に反映します 
@@ -235,7 +201,7 @@ void GameInit(void)
     g_Score = 0;
 
     //走行距離を初期化
-    g_Mileage = 0;
+    
     g_MileageB = 0;
 
     //敵１を避けた数の初期設定
@@ -254,15 +220,9 @@ void GameInit(void)
     g_player.count = 0;
     g_player.speed = PLAYER_SPEED;
 
-    //エネミーの初期処理
-    for (int i = 0; i < ENEMY_MAX; i++) {
-        g_enemy[i].flg = FALSE;
-    }
-
-    //アイテムの初期処理
-    for (int i = 0; i < ITEM_MAX; i++) {
-        g_item[i].flg = FALSE;
-    }
+    
+    enemy.InitEnemy();
+   
 
     //ゲームメイン処理へ
     g_GameState = 5;
@@ -332,12 +292,25 @@ void GameMain(void)
 {
     BackScrool();
     PlayerControl();
-    EnemyControl();
+    enemy.EnemyDraw();
+    enemy.EnemyMove();
 
     //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
     if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
     SetFontSize(16);
     DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
+
+    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
+}
+void Pause(void) {
+    BackScrool();
+    
+    enemy.EnemyDraw();
+
+    if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
+    SetFontSize(30);
+    DrawString(225, 250, "---Pause中---", GetColor(255, 0, 0), 0);
+    DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 0, 0), 0);
 }
 /***********************************************
  *ゲームオーバー画面描画処理
@@ -345,7 +318,7 @@ void GameMain(void)
 void DrawGameOver(void)
 {
     BackScrool();//チャレンジ3
-
+    DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
     g_Score = (g_MileageB / 10 * 10) + g_EnemyCount3 * 50 + g_EnemyCount2 * 100 + g_EnemyCount1 * 200;
 
 
@@ -642,97 +615,9 @@ void PlayerControl()
 
 }
 
-/***********************************************
- * エネミーの移動
- * 引　数：なし
- * 戻り値：なし
- ***********************************************/
-void EnemyControl()
-{
-    for (int i = 0; i < ENEMY_MAX; i++)
-    {
-        if (g_enemy[i].flg == TRUE)
-        {
-            //敵の表示
-            DrawGraph(g_enemy[i].x, g_enemy[i].y, g_enemy[i].img, TRUE);
 
-            if (g_player.flg == FALSE)continue;
 
-            //まっすぐ下に移動
-            g_enemy[i].y += g_enemy[i].speed;// + g_player.speed - PLAYER_SPEED + 1;
 
-            //画面をはみ出したら消去
-            if (g_enemy[i].y > SCREEN_HEIGHT + g_enemy[i].h) g_enemy[i].flg = FALSE;
-
-            //当たり判定
-            if (HitBoxPlayer(&g_player, &g_enemy[i]) == TRUE)
-            {
-                /*g_player.flg = FALSE;
-                g_player.speed = PLAYER_SPEED;
-                g_player.count = 0;
-                g_player.hp -= 100;
-                g_enemy[i].flg = FALSE;
-                if (g_player.hp <= 0) g_GameState = 6;*/
-
-                g_enemy[i].flg = FALSE;
-
-                g_player.ATARI_HANTEI += 1;
-            }
-
-            //g_player.ATARI_HANTEI = 0;
-        }
-
-        DrawFormatString(0, 33, 0x00ffff, "当たり判定 = %d", g_player.ATARI_HANTEI);
-    }
-
-    //走行距離ごとに敵出現パターンを制御する
-    if (g_Mileage / 10 % 50 == 0)
-    {
-        CreateEnemy();
-    }
-}
-
-/***********************************************
- * 敵の生成
- * 引  数:なし
- * 戻り値:TRUE成功、FALSE失敗
- ***********************************************/
-int CreateEnemy()
-{
-    for (int i = 0; i < ENEMY_MAX; i++) 
-    {
-        if (g_enemy[i].flg == FALSE) 
-        {
-            g_enemy[i] = g_enemy00;
-            g_enemy[i].type = GetRand(3);
-            g_enemy[i].img = g_Teki[g_enemy[i].type];
-            g_enemy[i].x = GetRand(6) * 70 + 30;
-
-            if (g_enemy[i].type == 0)
-            {
-                g_enemy[i].speed = 2;
-            }
-            if (g_enemy[i].type == 1)
-            {
-                g_enemy[i].speed = 5;
-            }
-            if (g_enemy[i].type == 2)
-            {
-                g_enemy[i].speed = 10;
-            }
-            if (g_enemy[i].type == 3)
-            {
-                g_enemy[i].speed = 1;
-            }
-   
-            //成功
-            return TRUE;
-        }
-    }
-
-    //失敗
-    return FALSE;
-}
 
 /***********************************************
  * 自機と敵機の当たり判定（四角）
