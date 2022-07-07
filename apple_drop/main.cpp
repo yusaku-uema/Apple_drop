@@ -84,11 +84,11 @@ struct PLAYER
     int w, h;      //幅w, 高さh
     //double angle;  //機体の向き
     int count;     //タイミング用
-    int speed;     //移動速度
+    int speed = 1;     //移動速度
 
     int image = 3;  //プレイヤーの歩く画像を変更するときの変数
+    int oldkey = 0;
     int walkspeed;
-    int oldkey;
 
     int ATARI_HANTEI = 0;
 };
@@ -140,6 +140,11 @@ int CreateEnemy(); //敵機生成処理
 int HitBoxPlayer(PLAYER* p, ENEMY* e); //当たり判定
 
 int LoadSounds(); //サウンドの読み込み処理
+
+void PlayerWalkStart(int a, int b);
+void PlayerWalkEnd(int);
+void PlayerImage(void);
+
 /***********************************************
  * プログラムの開始
  ***********************************************/
@@ -575,98 +580,147 @@ void PlayerControl()
     {
         if (g_NowKey & PAD_INPUT_LEFT)
         {
-            g_player.x -= g_player.speed;
-            g_player.oldkey = 0;
+            if (g_player.oldkey == 0 || g_player.oldkey == 1 || g_player.oldkey == 2)
+            {
+                PlayerWalkStart(1, -1);
+                //PlayerImage();
+            }
         }
+
+        if (!(g_NowKey & PAD_INPUT_LEFT))
+        {
+            if (g_player.oldkey == 1 || g_player.oldkey == 2)
+            {
+                PlayerWalkEnd(-1);
+                //PlayerImage();
+            }
+        }
+
         if (g_NowKey & PAD_INPUT_RIGHT)
         {
-            g_player.x += g_player.speed;
-            g_player.oldkey = 1;
+            if (g_player.oldkey == 0 || g_player.oldkey == 3 || g_player.oldkey == 4)
+            {
+                PlayerWalkStart(3, 1);
+                //PlayerImage();
+            }
         }
+
+        if (!(g_NowKey & PAD_INPUT_RIGHT))
+        {
+            if (g_player.oldkey == 3 || g_player.oldkey == 4)
+            {
+                PlayerWalkEnd(1);
+                //PlayerImage();
+            }
+        }
+
+        DrawFormatString(0, 50, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
+        DrawFormatString(0, 70, 0x00ffff, "プレイヤー画像　 = %2d", g_player.image);
     }
 
     //画面をはみ出さないようにする
-    if (g_player.x < 15) g_player.x = 15;
-    if (g_player.x > 420) g_player.x = 420;
-
-
-    //プレイヤーの表示
-    if (g_player.flg == TRUE)
+    if (g_player.x < 0)
     {
-        if (g_NowKey & PAD_INPUT_LEFT)
-        {
-            if (g_player.oldkey != 0)
-            {
-                g_player.walkspeed = 0;
-                g_player.oldkey = 0;
-            }
-
-            if (g_player.walkspeed >= 5)
-            {
-                if (g_player.image >= 8 && g_player.image <= 10)
-                {
-                    g_player.image++;
-                }
-
-                else
-                {
-                    g_player.image = 8;
-                }
-
-                g_player.walkspeed = 0;
-            }
-
-            g_player.walkspeed++;
-        }
-
-        else if (g_NowKey & PAD_INPUT_RIGHT)
-        {
-            if (g_player.oldkey != 1)
-            {
-                g_player.walkspeed = 0;
-                g_player.oldkey = 1;
-            }
-
-            if (g_player.walkspeed >= 5)
-            {
-                if (g_player.image >= 4 && g_player.image <= 6)
-                {
-                    g_player.image++;
-                }
-
-                else
-                {
-                    g_player.image = 4;
-                }
-
-                g_player.walkspeed = 0;
-            }
-
-            g_player.walkspeed++;
-        }
+        g_player.x = 0;
+        g_player.speed = 1;
+    }
+    if (g_player.x > 440)
+    {
+        g_player.x = 440;
+        g_player.speed = 1;
     }
 
     DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
+}
 
-    //敵を避けた数を表示
-   /* SetFontSize(16);
+void PlayerWalkEnd(int a)
+{
+    if (g_player.oldkey == 1 || g_player.oldkey == 3)
+    {
+        g_player.walkspeed = 0;
 
-    DrawFormatString(510, 20, 0x000000, "ハイスコア");
-    DrawFormatString(560, 40, 0xFFFFFF, "%08d", g_Ranking[0].score);
-    DrawFormatString(510, 80, 0x000000, "避けた数");
-    DrawRotaGraph(523, 120, 0.3f, 0, g_Teki[0], TRUE, FALSE);
-    DrawRotaGraph(573, 120, 0.3f, 0, g_Teki[1], TRUE, FALSE);
-    DrawRotaGraph(623, 120, 0.3f, 0, g_Teki[2], TRUE, FALSE);
+        if (g_player.oldkey == 1)g_player.oldkey = 2;
+        if (g_player.oldkey == 3)g_player.oldkey = 4;
+    }
 
-    DrawFormatString(510, 140, 0xFFFFFF, "%03d", g_EnemyCount1);
-    DrawFormatString(560, 140, 0xFFFFFF, "%03d", g_EnemyCount2);
-    DrawFormatString(610, 140, 0xFFFFFF, "%03d", g_EnemyCount3);
-    DrawFormatString(510, 200, 0x000000, "走行距離");
-    DrawFormatString(555, 220, 0xFFFFFF, "%08d", g_Mileage / 10);
-    DrawFormatString(510, 240, 0x000000, "スピード");
-    DrawFormatString(555, 260, 0xFFFFFF, "%08d", g_player.speed);*/
+    if (g_player.speed >= 1)
+    {
+        g_player.walkspeed++;
+        g_player.x += (g_player.speed * a);
+
+        if (g_player.walkspeed >= 5)
+        {
+            PlayerImage();
+            g_player.speed--;
+            g_player.walkspeed = 0;
+        }
+    }
+
+    if (g_player.speed <= 1)
+    {
+        g_player.oldkey = 0;
+    }
+}
 
 
+void PlayerWalkStart(int a, int b)
+{
+    if (g_player.oldkey != a)
+    {
+        g_player.oldkey = a;
+        g_player.walkspeed = 0;
+        PlayerImage();
+        if (g_player.oldkey == 0)g_player.speed = 1;
+    }
+
+    if (g_player.oldkey == a)
+    {
+        if (g_player.walkspeed >= 8)
+        {
+            PlayerImage();
+
+            if (g_player.speed <= 4)
+            {
+                g_player.speed++;
+            }
+
+            g_player.walkspeed = 0;
+        }
+
+        g_player.x += (g_player.speed * b);
+        g_player.walkspeed++;
+    }
+}
+
+
+void PlayerImage(void)
+{
+
+    if (g_player.oldkey == 1 || g_player.oldkey == 2)
+    {
+        if (g_player.image >= 8 && g_player.image <= 10)
+        {
+            g_player.image++;
+        }
+
+        else
+        {
+            g_player.image = 8;
+        }
+    }
+
+    if (g_player.oldkey == 3 || g_player.oldkey == 4)
+    {
+        if (g_player.image >= 4 && g_player.image <= 6)
+        {
+            g_player.image++;
+        }
+
+        else
+        {
+            g_player.image = 4;
+        }
+    }
 }
 
 /***********************************************
