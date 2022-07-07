@@ -370,7 +370,7 @@ void GameMain(void)
 }
 void Pause(void) {
     BackScrool();
-    
+    DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
     enemy.EnemyDraw();
 
     if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
