@@ -157,7 +157,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if ((g_RankingImage = LoadGraph("images/Chapter5/Ranking.bmp")) == -1)return-1;
 
     //エンディング画像の読込み  
-    if ((g_EndImage = LoadGraph("images/Chapter5/End.bmp")) == -1)return -1;
+    if ((g_EndImage = LoadGraph("images/Chapter5/GameEnd.png")) == -1)return -1;
 
     //敵
     if (LoadDivGraph("images/Chapter5/apple.png", 4, 4, 1, 50, 50, g_Teki) == -1)return-1;
