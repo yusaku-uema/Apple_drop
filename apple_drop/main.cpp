@@ -148,6 +148,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     SetDrawScreen(DX_SCREEN_BACK);
 
     if (ReadRanking() == -1) return -1;//ランキングデータの読込み
+
+    //アイテム画像の読込み
+    if ((g_Item[0] = LoadGraph("images/Chapter5/gasoline.bmp")) == -1)return -1;
+    if ((g_Item[1] = LoadGraph("images/Chapter5/supana.bmp")) == -1)return -1;
+
+    //ランキングデータの読込み
+    if ((g_RankingImage = LoadGraph("images/Chapter5/Ranking.bmp")) == -1)return-1;
+
+    //エンディング画像の読込み  
+    if ((g_EndImage = LoadGraph("images/Chapter5/GameEnd.png")) == -1)return -1;
+
+    //敵
+    if (LoadDivGraph("images/Chapter5/apple.png", 4, 4, 1, 50, 50, g_Teki) == -1)return-1;
+
+    //ステージ背景
+    if ((g_StageImage = LoadGraph("images/Chapter5/haikei_abc.png")) == -1)return -1;
+
+    //プレイヤー
+    if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, g_PlayerImage) == -1) return -1; //自機画像
+    //if ((g_Barrier = LoadGraph("images/Chapter5/barrier.png")) == -1)return -1;
+
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
     if (LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
 
