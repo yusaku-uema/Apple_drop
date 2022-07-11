@@ -357,9 +357,9 @@ void DrawHelp(void)
     //    }
     //}
 
-    DINPUT_JOYSTATE input;
+    /*DINPUT_JOYSTATE input;
     int i;
-    int Color;
+    int Color;*/
 
 
 }
