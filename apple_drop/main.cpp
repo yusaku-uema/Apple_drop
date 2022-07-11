@@ -44,6 +44,8 @@ int g_ky;
 
 int AX, AY; //コントローラ左スティック座標消さないで
 
+
+
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -89,6 +91,14 @@ struct RankingData {
     long score;
 };
 struct RankingData g_Ranking[RANKING_DATA];
+
+int  Rankingletter[4][2][13] = {
+    { //文字
+    {'a','b','c','d','e','f','g','h','i','j','k','l','m'},
+    {'n','o','p','q','r','s','t','u','v','w','x','y','z'}
+    },
+    
+};
 
 /***********************************************
  * 関数のプロトタイプ宣言
@@ -160,7 +170,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     //if ((g_Barrier = LoadGraph("images/Chapter5/barrier.png")) == -1)return -1;
 
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
-    if (LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
+    if (LoadSounds() == -1) return -1; //サウンド読みこみ関数を呼び出し
 
       //ゲームループ 
     while (ProcessMessage() == 0 && g_GameState != 99) {// && !(g_KeyFlg & PAD_INPUT_START)
@@ -306,6 +316,7 @@ void DrawHelp(void)
 {
     //スペースキーでメニューに戻る
     if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
+    
 
     //タイトル画像表示//
     DrawGraph(0, 0, g_TitleImage, FALSE);
@@ -323,44 +334,7 @@ void DrawHelp(void)
     DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
     DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);
     DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
-
-    //int Pad;        //ジョイパッドの入力状態格納用変数
-
-    //    // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    //// while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    //while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
-    //    Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
-    //    if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Aです");
-    //    }
-    //    if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Bです");
-    //    }
-    //    if (Pad & PAD_INPUT_C) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Cです");
-    //    }
-    //    if (Pad & PAD_INPUT_X) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Xです");
-    //    }
-    //    if (Pad & PAD_INPUT_Y) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Yです");
-    //    }
-    //    if (Pad & PAD_INPUT_Z) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Zです");
-    //    }
-    //    if (Pad & PAD_INPUT_L) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Lです");
-    //    }
-    //    if (Pad & PAD_INPUT_R) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Rです");
-    //    }
-    //    if (Pad & PAD_INPUT_START) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "STARTです");
-    //    }
-    //    if (Pad & PAD_INPUT_M) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Mです");
-    //    }
-    //}
+    
 }
 /***********************************************
  * ゲームエンド描画処理
