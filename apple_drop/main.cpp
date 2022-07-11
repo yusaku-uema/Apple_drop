@@ -163,7 +163,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (LoadDivGraph("images/Chapter5/apple.png", 4, 4, 1, 50, 50, g_Teki) == -1)return-1;
 
     //ステージ背景
-    if ((g_StageImage = LoadGraph("images/Chapter5/haikei_abc.png")) == -1)return -1;
+    if ((g_StageImage = LoadGraph("images/Chapter5/haikei_abcd.png")) == -1)return -1;
 
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, g_PlayerImage) == -1) return -1; //自機画像
@@ -358,8 +358,8 @@ void DrawEnd(void)
     //エンド画像表示
     DrawGraph(0, 0, g_EndImage, FALSE);
 
-    SetFontSize(24);
-    DrawString(360, 480 - 24, "Thank you for Playing", 0xffffff, 0);
+   /* SetFontSize(24);
+    DrawString(360, 480 - 24, "Thank you for Playing", 0xffffff, 0);*/
 
     //タイムの加算処理＆終了（3秒後）
     if (++g_WaitTime > 180)g_GameState = 99;
@@ -492,13 +492,13 @@ int LoadImages()
     if ((g_RankingImage = LoadGraph("images/Chapter5/Ranking.bmp")) == -1)return-1;
 
     //エンディング画像の読込み  
-    if ((g_EndImage = LoadGraph("images/Chapter5/End.bmp")) == -1)return -1;
+    if ((g_EndImage = LoadGraph("images/Chapter5/GameEnd.png")) == -1)return -1;
 
     //敵
     if (LoadDivGraph("images/Chapter5/apple.png", 4, 4, 1, 50, 50, g_Teki) == -1)return-1;
 
     //ステージ背景
-    if ((g_StageImage = LoadGraph("images/Chapter5/haikei.png")) == -1)return -1;
+    if ((g_StageImage = LoadGraph("images/Chapter5/haikei_abcd.png")) == -1)return -1;
 
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, g_PlayerImage) == -1) return -1; //自機画像
@@ -552,7 +552,7 @@ int  SaveRanking(void)
     FILE* fp;
 #pragma warning(disable:4996)
 
-    //ファイルオープン
+   
     if ((fp = fopen("dat/Chapter5/rankingdata.txt", "w")) == NULL) {
         /* エラー処理 */
         printf("Ranking Data Error\n");
