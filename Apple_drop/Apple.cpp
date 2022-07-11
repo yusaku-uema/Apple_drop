@@ -1,22 +1,24 @@
 #include"Apple.h"
 #include"common.h"
+#include"Player.h"
 
-Enemy enemy;
-struct ENEMY g_enemy[ENEMY_MAX];
+extern PLAYER Player;
+//struct ENEMY g_enemy[ENEMY_MAX];
 
-    Enemy::Enemy() {
-    struct ENEMY g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
+ENEMY::ENEMY()
+{
+    struct Enemy g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
     g_Mileage = 0;
 }
 
-void Enemy::EnemyMove()
+void ENEMY::EnemyMove()
 {
     for (int i = 0; i < ENEMY_MAX; i++)
     {
         if (g_enemy[i].flg == TRUE)
         {
 
-            if (g_player.flg == FALSE)continue;
+            if (Player.g_player.flg == FALSE)continue;
 
             //まっすぐ下に移動
             g_enemy[i].y += g_enemy[i].speed;// + g_player.speed - PLAYER_SPEED + 1;
@@ -25,11 +27,9 @@ void Enemy::EnemyMove()
             if (g_enemy[i].y > SCREEN_HEIGHT + g_enemy[i].h) g_enemy[i].flg = FALSE;
 
             //当たり判定
-            if (HitBoxPlayer(&g_player, &g_enemy[i]) == TRUE)
+            if (Player.HitBoxPlayer(&Player.g_player, &g_enemy[i]) == TRUE)
             {
                 g_enemy[i].flg = FALSE;
-
-                
             }
         }
 
@@ -43,7 +43,7 @@ void Enemy::EnemyMove()
     }
 }
 
-void Enemy::EnemyDraw() {
+void ENEMY::EnemyDraw() {
     for (int i = 0; i < ENEMY_MAX; i++)
     {
         if (g_enemy[i].flg == TRUE)
@@ -59,7 +59,7 @@ void Enemy::EnemyDraw() {
  * 引  数:なし
  * 戻り値:TRUE成功、FALSE失敗
  ***********************************************/
-int Enemy::CreateEnemy()
+int ENEMY::CreateEnemy()
 {
     for (int i = 0; i < ENEMY_MAX; i++)
     {
@@ -97,10 +97,11 @@ int Enemy::CreateEnemy()
     return FALSE;
 }
 
-void Enemy::InitEnemy() {
+void ENEMY::InitEnemy() {
 
     //エネミーの初期処理
     for (int i = 0; i < ENEMY_MAX; i++) {
         g_enemy[i].flg = FALSE;
     }
 }
+
