@@ -2,10 +2,11 @@
 ** 第5章 ミニゲームを作る
 ** （2)　レース＆避けゲー
 ********************************************************************/
-#include "DxLib.h" 
+#include"DxLib.h"
 #define _USE_MATH_DEFINES
 #include<math.h>
 #define RANKING_DATA 5
+#include"common.h"
 /***********************************************
  * 変数の宣言
  ***********************************************/
@@ -41,12 +42,12 @@ int g_StageBGM; //mainのBGM追加します
 //追加します
 int g_ky;
 
+int AX, AY; //コントローラ左スティック座標消さないで
+
 /***********************************************
  * 定数を宣言
  ***********************************************/
- //画面領域の大きさ
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+ 
 //自機の機体
 const int PLAYER_POS_X = SCREEN_WIDTH / 2;
 const int PLAYER_POS_Y = SCREEN_HEIGHT - 100;
@@ -60,12 +61,8 @@ const int PLAYER_BARRIERUP = 10;
 //制限時間
 const int TIMELIMIT = 30000;
 
-//リンゴ
-const int APPLE_WIDTH = 40; //本当は50
-const int APPLE_HEIGHT = 40; //本当は50
+struct PLAYER g_player;
 
-//敵機の最大数
-const int ENEMY_MAX = 10;//チャレンジ1変更 20
 //アイテムの最大数
 const int ITEM_MAX = 3;
 
@@ -93,42 +90,15 @@ struct RankingData {
 };
 struct RankingData g_Ranking[RANKING_DATA];
 
-//自機の構造体
-struct PLAYER
-{
-    int flg;       //使用フラグ
-    int x, y;      //座標x,y
-    int w, h;      //幅w, 高さh
-    //double angle;  //機体の向き
-    int count;     //タイミング用
-    int speed;     //移動速度
-
-    int image = 3;  //プレイヤーの歩く画像を変更するときの変数
-    int walkspeed;
-    int oldkey;
-
-    int ATARI_HANTEI = 0;
-};
-//自機
-struct PLAYER g_player;
 
 
-//敵の構造体
-struct ENEMY {
-    int flg; //使用フラグ
-    int type; //タイプ
-    int img; //画像
-    int x, y, w, h; //座標x,y,幅w,高さh
-    int speed; //移動速度
-    int point; //スコア加算
-};
-//敵機
-struct ENEMY g_enemy[ENEMY_MAX];
-struct ENEMY g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
 
-//アイテム
-struct ENEMY g_item[ITEM_MAX];
-struct ENEMY g_item00 = { TRUE,0,0,0,-50,50,50,0,1 };
+
+
+
+
+
+
 
 /***********************************************
  * 関数のプロトタイプ宣言
@@ -151,11 +121,15 @@ int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
 void BackScrool(); //背景画像スクロール処理
 void PlayerControl(); //自機処理
-void EnemyControl(); //敵機処理
-int CreateEnemy(); //敵機生成処理
 int HitBoxPlayer(PLAYER* p, ENEMY* e); //当たり判定
 
 int LoadSounds(); //サウンドの読み込み処理
+
+void PlayerWalkStart(int a, int b);
+void PlayerWalkEnd(int);
+void PlayerImage(void);
+void Pause(); //ポーズ画面
+
 /***********************************************
  * プログラムの開始
  ***********************************************/
@@ -184,6 +158,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         g_NowKey = GetJoypadInputState(DX_INPUT_PAD1);
         g_KeyFlg = g_NowKey & ~g_OldKey;
 
+        //左右のアナログ入力状態を取得する
+        GetJoypadAnalogInput(&AX, &AY, DX_INPUT_PAD1);
+
         // 画面の初期化 
         ClearDrawScreen();
 
@@ -211,6 +188,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
             break;
         case 7:
             InputRanking();
+        case 8:
+            Pause();
+            break;
         }
 
         //裏画面の内容を表画面に反映します 
@@ -261,7 +241,7 @@ void GameInit(void)
     g_Score = 0;
 
     //走行距離を初期化
-    g_Mileage = 0;
+    
     g_MileageB = 0;
 
     //敵１を避けた数の初期設定
@@ -280,15 +260,9 @@ void GameInit(void)
     g_player.count = 0;
     g_player.speed = PLAYER_SPEED;
 
-    //エネミーの初期処理
-    for (int i = 0; i < ENEMY_MAX; i++) {
-        g_enemy[i].flg = FALSE;
-    }
-
-    //アイテムの初期処理
-    for (int i = 0; i < ITEM_MAX; i++) {
-        g_item[i].flg = FALSE;
-    }
+    
+    enemy.InitEnemy();
+   
 
     //現在の経過時間を得る
     g_StartTime = GetNowCount();
@@ -319,49 +293,41 @@ void DrawRanking(void)
  ***********************************************/
 void DrawHelp(void)
 {
-    ////スペースキーでメニューに戻る
-    //if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
+    //スペースキーでメニューに戻る
+    if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
 
-    ////タイトル画像表示
-    //DrawGraph(0, 0, g_TitleImage, FALSE);
-    //SetFontSize(16);
-    //DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
+    //タイトル画像表示
+    DrawGraph(0, 0, g_TitleImage, FALSE);
+    SetFontSize(16);
+    /*DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
 
-    //DrawString(20, 160, "これは障害物を避けながら", 0xffffff, 0);
-    //DrawString(20, 180, "走り続けるゲームです", 0xffffff);
-    //DrawString(20, 200, "燃料が尽きるか障害物に", 0xffffff, 0);
-    //DrawString(20, 220, "数回当たるとゲームオーバーです。", 0xffffff, 0);
-    //DrawString(20, 250, "アイテム一覧", 0xffffff, 0);
-    //DrawGraph(20, 260, g_Item[0], TRUE);
-    //DrawString(20, 315, "取ると燃料が回復するよ。", 0xffffff, 0);
-    //DrawGraph(20, 335, g_Item[1], TRUE);
-    //DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
-    //DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);
-    //DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
-
-
-
-    //int Pad;        //ジョイパッドの入力状態格納用変数
-
-    //// while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    //while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
-    //    Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
-    //    if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "入力中ですAボタン");
-    //    }
-    //    if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "入力中ですBボタン");
-    //    }
-    //    if (Pad & PAD_INPUT_DOWN) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "入力中です下ボタン");
-    //    }
-    //}
-
-    /*DINPUT_JOYSTATE input;
-    int i;
-    int Color;*/
+    DrawString(20, 160, "これは障害物を避けながら", 0xffffff, 0);
+    DrawString(20, 180, "走り続けるゲームです", 0xffffff);
+    DrawString(20, 200, "燃料が尽きるか障害物に", 0xffffff, 0);
+    DrawString(20, 220, "数回当たるとゲームオーバーです。", 0xffffff, 0);
+    DrawString(20, 250, "アイテム一覧", 0xffffff, 0);
+    DrawGraph(20, 260, g_Item[0], TRUE);
+    DrawString(20, 315, "取ると燃料が回復するよ。", 0xffffff, 0);
+    DrawGraph(20, 335, g_Item[1], TRUE);
+    DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
+    DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);
+    DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);*/
 
 
+
+    int Pad;        //ジョイパッドの入力状態格納用変数
+
+        // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
+    // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
+    while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
+        Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
+        if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
+            DrawFormatString(0, 0, GetColor(255, 255, 255), "Aです");
+        }
+        if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
+            DrawFormatString(0, 0, GetColor(255, 255, 255), "Bです");
+        }
+    }
 }
 /***********************************************
  * ゲームエンド描画処理
@@ -387,14 +353,30 @@ void GameMain(void)
 
     BackScrool();
     PlayerControl();
-    EnemyControl();
+
     UIView();
     TimeCount();
+
+    enemy.EnemyDraw();
+    enemy.EnemyMove();
+
 
     //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
     if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
     SetFontSize(16);
     DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
+
+    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
+}
+void Pause(void) {
+    BackScrool();
+    DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
+    enemy.EnemyDraw();
+
+    if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
+    SetFontSize(30);
+    DrawString(225, 250, "---Pause中---", GetColor(255, 0, 0), 0);
+    DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 0, 0), 0);
 }
 /***********************************************
  *ゲームオーバー画面描画処理
@@ -402,7 +384,7 @@ void GameMain(void)
 void DrawGameOver(void)
 {
     BackScrool();//チャレンジ3
-
+    DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
     g_Score = (g_MileageB / 10 * 10) + g_EnemyCount3 * 50 + g_EnemyCount2 * 100 + g_EnemyCount1 * 200;
 
 
@@ -612,193 +594,156 @@ void PlayerControl()
     //左右移動
     if (g_player.flg == TRUE)
     {
-        if (g_NowKey & PAD_INPUT_LEFT)
+        if (AX < -0)
         {
-            g_player.x -= g_player.speed;
-            g_player.oldkey = 0;
-        }
-        if (g_NowKey & PAD_INPUT_RIGHT)
-        {
-            g_player.x += g_player.speed;
-            g_player.oldkey = 1;
-        }
-    }
-
-    //画面をはみ出さないようにする
-    if (g_player.x < 15) g_player.x = 15;
-    if (g_player.x > 420) g_player.x = 420;
-
-
-    //プレイヤーの表示
-    if (g_player.flg == TRUE)
-    {
-        if (g_NowKey & PAD_INPUT_LEFT)
-        {
-            if (g_player.oldkey != 0)
+            if (g_player.oldkey == 0 || g_player.oldkey == 1 || g_player.oldkey == 2)
             {
-                g_player.walkspeed = 0;
-                g_player.oldkey = 0;
+                PlayerWalkStart(1, -1);
+                //PlayerImage();
             }
-
-            if (g_player.walkspeed >= 5)
-            {
-                if (g_player.image >= 8 && g_player.image <= 10)
-                {
-                    g_player.image++;
-                }
-
-                else
-                {
-                    g_player.image = 8;
-                }
-
-                g_player.walkspeed = 0;
-            }
-
-            g_player.walkspeed++;
         }
 
-        else if (g_NowKey & PAD_INPUT_RIGHT)
+        if (!(AX < -0))
         {
-            if (g_player.oldkey != 1)
+            if (g_player.oldkey == 1 || g_player.oldkey == 2)
             {
-                g_player.walkspeed = 0;
-                g_player.oldkey = 1;
+                PlayerWalkEnd(-1);
+                //PlayerImage();
             }
-
-            if (g_player.walkspeed >= 5)
-            {
-                if (g_player.image >= 4 && g_player.image <= 6)
-                {
-                    g_player.image++;
-                }
-
-                else
-                {
-                    g_player.image = 4;
-                }
-
-                g_player.walkspeed = 0;
-            }
-
-            g_player.walkspeed++;
-        }
-    }
-
-    DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
-
-    //敵を避けた数を表示
-   /* SetFontSize(16);
-
-    DrawFormatString(510, 20, 0x000000, "ハイスコア");
-    DrawFormatString(560, 40, 0xFFFFFF, "%08d", g_Ranking[0].score);
-    DrawFormatString(510, 80, 0x000000, "避けた数");
-    DrawRotaGraph(523, 120, 0.3f, 0, g_Teki[0], TRUE, FALSE);
-    DrawRotaGraph(573, 120, 0.3f, 0, g_Teki[1], TRUE, FALSE);
-    DrawRotaGraph(623, 120, 0.3f, 0, g_Teki[2], TRUE, FALSE);
-
-    DrawFormatString(510, 140, 0xFFFFFF, "%03d", g_EnemyCount1);
-    DrawFormatString(560, 140, 0xFFFFFF, "%03d", g_EnemyCount2);
-    DrawFormatString(610, 140, 0xFFFFFF, "%03d", g_EnemyCount3);
-    DrawFormatString(510, 200, 0x000000, "走行距離");
-    DrawFormatString(555, 220, 0xFFFFFF, "%08d", g_Mileage / 10);
-    DrawFormatString(510, 240, 0x000000, "スピード");
-    DrawFormatString(555, 260, 0xFFFFFF, "%08d", g_player.speed);*/
-
-
-}
-
-/***********************************************
- * エネミーの移動
- * 引　数：なし
- * 戻り値：なし
- ***********************************************/
-void EnemyControl()
-{
-    for (int i = 0; i < ENEMY_MAX; i++)
-    {
-        if (g_enemy[i].flg == TRUE)
-        {
-            //敵の表示
-            DrawGraph(g_enemy[i].x, g_enemy[i].y, g_enemy[i].img, TRUE);
-
-            if (g_player.flg == FALSE)continue;
-
-            //まっすぐ下に移動
-            g_enemy[i].y += g_enemy[i].speed;// + g_player.speed - PLAYER_SPEED + 1;
-
-            //画面をはみ出したら消去
-            if (g_enemy[i].y > SCREEN_HEIGHT + g_enemy[i].h) g_enemy[i].flg = FALSE;
-
-            //当たり判定
-            if (HitBoxPlayer(&g_player, &g_enemy[i]) == TRUE)
-            {
-                /*g_player.flg = FALSE;
-                g_player.speed = PLAYER_SPEED;
-                g_player.count = 0;
-                g_player.hp -= 100;
-                g_enemy[i].flg = FALSE;
-                if (g_player.hp <= 0) g_GameState = 6;*/
-
-                g_enemy[i].flg = FALSE;
-
-                g_player.ATARI_HANTEI += 1;
-            }
-
-            //g_player.ATARI_HANTEI = 0;
         }
 
+        if (AX > 0)
+        {
+            if (g_player.oldkey == 0 || g_player.oldkey == 3 || g_player.oldkey == 4)
+            {
+                PlayerWalkStart(3, 1);
+                //PlayerImage();
+            }
+        }
+
+        if (!(AX > 0))
+        {
+            if (g_player.oldkey == 3 || g_player.oldkey == 4)
+            {
+                PlayerWalkEnd(1);
+                //PlayerImage();
+            }
+        }
+
+        DrawFormatString(0, 50, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
+        DrawFormatString(0, 70, 0x00ffff, "プレイヤー画像　 = %2d", g_player.image);
         DrawFormatString(0, 33, 0x00ffff, "当たり判定 = %d", g_player.ATARI_HANTEI);
     }
 
-    //走行距離ごとに敵出現パターンを制御する
-    if (g_Mileage / 10 % 50 == 0)
+    //画面をはみ出さないようにする
+    if (g_player.x < 0)
     {
-        CreateEnemy();
+        g_player.x = 0;
+        g_player.speed = 1;
     }
+    if (g_player.x > 440)
+    {
+        g_player.x = 440;
+        g_player.speed = 1;
+    }
+
+    DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
 }
 
-/***********************************************
- * 敵の生成
- * 引  数:なし
- * 戻り値:TRUE成功、FALSE失敗
- ***********************************************/
-int CreateEnemy()
+void PlayerWalkEnd(int a)
 {
-    for (int i = 0; i < ENEMY_MAX; i++) 
+    if (g_player.oldkey == 1 || g_player.oldkey == 3)
     {
-        if (g_enemy[i].flg == FALSE) 
-        {
-            g_enemy[i] = g_enemy00;
-            g_enemy[i].type = GetRand(3);
-            g_enemy[i].img = g_Teki[g_enemy[i].type];
-            g_enemy[i].x = GetRand(6) * 70 + 30;
+        g_player.walkspeed = 0;
 
-            if (g_enemy[i].type == 0)
-            {
-                g_enemy[i].speed = 2;
-            }
-            if (g_enemy[i].type == 1)
-            {
-                g_enemy[i].speed = 5;
-            }
-            if (g_enemy[i].type == 2)
-            {
-                g_enemy[i].speed = 10;
-            }
-            if (g_enemy[i].type == 3)
-            {
-                g_enemy[i].speed = 1;
-            }
-   
-            //成功
-            return TRUE;
+        if (g_player.oldkey == 1)g_player.oldkey = 2;
+        if (g_player.oldkey == 3)g_player.oldkey = 4;
+    }
+
+    if (g_player.speed >= 1)
+    {
+        g_player.walkspeed++;
+        g_player.x += (g_player.speed * a);
+
+        if (g_player.walkspeed >= 5)
+        {
+            PlayerImage();
+            g_player.speed--;
+            g_player.walkspeed = 0;
         }
     }
 
-    //失敗
-    return FALSE;
+    if (g_player.speed <= 1)
+    {
+        g_player.oldkey = 0;
+    }
 }
+
+
+void PlayerWalkStart(int a, int b)
+{
+    if (g_player.oldkey != a)
+    {
+        g_player.oldkey = a;
+        g_player.walkspeed = 0;
+        PlayerImage();
+        if (g_player.oldkey == 0)g_player.speed = 1;
+    }
+
+    if (g_player.oldkey == a)
+    {
+        if (g_player.walkspeed >= 8)
+        {
+            PlayerImage();
+
+            if (g_player.speed <= 4)
+            {
+                g_player.speed++;
+            }
+
+            g_player.walkspeed = 0;
+        }
+
+        g_player.x += (g_player.speed * b);
+        g_player.walkspeed++;
+    }
+}
+
+
+void PlayerImage(void)
+{
+
+    if (g_player.oldkey == 1 || g_player.oldkey == 2)
+    {
+        if (g_player.image >= 8 && g_player.image <= 10)
+        {
+            g_player.image++;
+        }
+
+        else
+        {
+            g_player.image = 8;
+        }
+    }
+
+    if (g_player.oldkey == 3 || g_player.oldkey == 4)
+    {
+        if (g_player.image >= 4 && g_player.image <= 6)
+        {
+            g_player.image++;
+        }
+
+        else
+        {
+            g_player.image = 4;
+        }
+    }
+}
+
+
+  
+
+    
 
 /***********************************************
  * 自機と敵機の当たり判定（四角）
