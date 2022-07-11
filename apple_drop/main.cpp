@@ -382,6 +382,7 @@ void DrawEnd(void)
 
     //タイムの加算処理＆終了（3秒後）
     if (++g_WaitTime > 180)g_GameState = 99;
+    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
 }
 /***********************************************
  * ゲームメイン
@@ -401,10 +402,10 @@ void GameMain(void)
     enemy.EnemyMove();
 
 
-    //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
-    if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
+    ////スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
+    //if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
     SetFontSize(16);
-    DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
+    //DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
 
     //STARTボタンでポーズ画面へ
     if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
@@ -415,17 +416,21 @@ void Pause(void) {
     BackScrool();
     DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
     enemy.EnemyDraw();
+    StopSoundMem(g_StageBGM);
 
     if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
     SetFontSize(30);
     DrawString(225, 250, "---Pause中---", GetColor(255, 0, 0), 0);
     DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 0, 0), 0);
+    
 }
 /***********************************************
  *ゲームオーバー画面描画処理
  ***********************************************/
 void DrawGameOver(void)
 {
+
+    
     BackScrool();//チャレンジ3
     DrawGraph(g_player.x, g_player.y, g_PlayerImage[g_player.image], TRUE);
     g_Score = (g_MileageB / 10 * 10) + g_EnemyCount3 * 50 + g_EnemyCount2 * 100 + g_EnemyCount1 * 200;
@@ -468,7 +473,7 @@ void DrawGameOver(void)
 
     DrawString(150, 450, "---スペースキーを押してタイトルへ戻る ---", 0xffffff, 0);
 
-    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+    
     
 }
 /***********************************************
@@ -510,7 +515,8 @@ int LoadImages()
     if ((g_Item[0] = LoadGraph("images/Chapter5/gasoline.bmp")) == -1)return -1;
     if ((g_Item[1] = LoadGraph("images/Chapter5/supana.bmp")) == -1)return -1;
 
-    //ランキングデータの読込み
+    //ランキングデータの読込end
+
     if ((g_RankingImage = LoadGraph("images/Chapter5/ranking.png")) == -1)return-1;
 
     //エンディング画像の読込み 
@@ -821,9 +827,11 @@ void TimeCount(void)
     if (Time <= 0)
     {
         if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
+            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
             g_GameState = 2;
         }
         else {
+            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
             g_GameState = 7;
         }
     }
