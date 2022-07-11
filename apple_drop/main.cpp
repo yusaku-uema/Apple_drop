@@ -387,7 +387,10 @@ void GameMain(void)
     SetFontSize(16);
     DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
 
+    //STARTボタンでポーズ画面へ
     if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
+    //BACKボタンで強制終了
+    if (g_KeyFlg & PAD_INPUT_7)g_GameState = 4;
 }
 void Pause(void) {
     BackScrool();
