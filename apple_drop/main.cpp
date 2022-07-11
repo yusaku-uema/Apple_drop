@@ -66,7 +66,7 @@ struct PLAYER g_player;
 //アイテムの最大数
 const int ITEM_MAX = 3;
 
-//ステック？
+//ステック
 struct DINPUT_JOYSTATE
 {
     int		X;		// スティックのＸ軸パラメータ( -1000～1000 )
@@ -89,16 +89,6 @@ struct RankingData {
     long score;
 };
 struct RankingData g_Ranking[RANKING_DATA];
-
-
-
-
-
-
-
-
-
-
 
 /***********************************************
  * 関数のプロトタイプ宣言
