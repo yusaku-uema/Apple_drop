@@ -289,19 +289,19 @@ void DrawHelp(void)
     //タイトル画像表示//
     DrawGraph(0, 0, g_TitleImage, FALSE);
     SetFontSize(16);
-    /*DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
+    DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
 
-    DrawString(20, 160, "これは障害物を避けながら", 0xffffff, 0);
-    DrawString(20, 180, "走り続けるゲームです", 0xffffff);
-    DrawString(20, 200, "燃料が尽きるか障害物に", 0xffffff, 0);
-    DrawString(20, 220, "数回当たるとゲームオーバーです。", 0xffffff, 0);
-    DrawString(20, 250, "アイテム一覧", 0xffffff, 0);
+    DrawString(20, 160, "これはリンゴを採るゲームです。", 0xffffff, 0);
+    DrawString(20, 180, "4つのリンゴが落ちてきますが、毒リンゴを採ると大きな失点になります。", 0xffffff);
+    DrawString(20, 200, "制限時間内にリンゴをとりハイスコアを目指そう", 0xffffff, 0);
+    DrawString(20, 220, "ゲーム中の操作", 0xffffff, 0);
+    DrawString(20, 250, "Aボタンが決定ボタン", 0xffffff, 0);
     DrawGraph(20, 260, g_Item[0], TRUE);
-    DrawString(20, 315, "取ると燃料が回復するよ。", 0xffffff, 0);
+    DrawString(20, 315, "左スティックがプレイヤー移動取ると燃料が回復するよ。", 0xffffff, 0);
     DrawGraph(20, 335, g_Item[1], TRUE);
     DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
     DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);
-    DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);*/
+    DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
 
     //int Pad;        //ジョイパッドの入力状態格納用変数
 
