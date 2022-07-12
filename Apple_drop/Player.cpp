@@ -3,7 +3,7 @@
 #include"Apple.h"
 #include"common.h"
 
-//extern ENEMY Enemy;
+
 
 /***********************************************
  * プレイヤーの移動処理
@@ -158,6 +158,7 @@ void PLAYER::PlayerImage(void)
     }
 }
 
+
 /***********************************************
  * 自機と敵機の当たり判定（四角）
  * 引  数:PLAYERポインタ
@@ -184,7 +185,7 @@ int PLAYER::HitBoxPlayer(Player* p, Enemy* e)
     return FALSE;
 }
 
-void PLAYER::PlayerInit()
+void PLAYER::PlayerInit(void)
 {
     g_player.flg = TRUE;
     g_player.x = PLAYER_POS_X;
@@ -194,4 +195,13 @@ void PLAYER::PlayerInit()
 
     g_player.count = 0;
     g_player.speed = PLAYER_SPEED;
+}
+
+PLAYER::PLAYER()
+{
+    struct Player g_player = { TRUE,PLAYER_POS_X,PLAYER_POS_Y,PLAYER_WIDTH,PLAYER_HEIGHT,0,PLAYER_SPEED };
+    int image = 0;  //プレイヤーの歩く画像を変更するときの変数
+    int walkspeed = 0;
+    int oldkey = 0;
+    int ATARI_HANTEI = 0;
 }

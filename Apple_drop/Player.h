@@ -24,13 +24,15 @@ public:
 
 	int g_PlayerImage[16];  //©‹@‰æ‘œ //ƒLƒƒƒ‰‰æ‘œ•Ï”
 
+    PLAYER();
     void PlayerControl(); //©‹@ˆ—
     void PlayerWalkStart(int a, int b);
     void PlayerWalkEnd(int);
     void PlayerImage(void);
 
     int HitBoxPlayer(Player* p, Enemy* e);
-    void PlayerInit();
+    void PlayerInit(void);
 };
 
-extern int AX;
+
+extern PLAYER player;

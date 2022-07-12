@@ -2,8 +2,7 @@
 #include"common.h"
 #include"Player.h"
 
-extern PLAYER Player;
-//struct ENEMY g_enemy[ENEMY_MAX];
+struct ENEMY g_enemy[ENEMY_MAX];
 
 ENEMY::ENEMY()
 {
@@ -18,7 +17,7 @@ void ENEMY::EnemyMove()
         if (g_enemy[i].flg == TRUE)
         {
 
-            if (Player.g_player.flg == FALSE)continue;
+            if (player.g_player.flg == FALSE)continue;
 
             //‚Ü‚Á‚·‚®‰º‚ÉˆÚ“®
             g_enemy[i].y += g_enemy[i].speed;// + g_player.speed - PLAYER_SPEED + 1;
@@ -27,7 +26,7 @@ void ENEMY::EnemyMove()
             if (g_enemy[i].y > SCREEN_HEIGHT + g_enemy[i].h) g_enemy[i].flg = FALSE;
 
             //“–‚½‚è”»’è
-            if (Player.HitBoxPlayer(&Player.g_player, &g_enemy[i]) == TRUE)
+            if (player.HitBoxPlayer(&player.g_player, &g_enemy[i]) == TRUE)
             {
                 g_enemy[i].flg = FALSE;
             }

@@ -31,4 +31,4 @@ public:
     
 };
 
-//extern Enemy enemy;
+extern ENEMY enemy;
