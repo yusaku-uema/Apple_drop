@@ -46,6 +46,7 @@ int g_teki;
 int g_Applec; //タイトルカーソル変数　消さないで
 
 int g_StageBGM; //mainのBGM追加します
+
 int g_SE1;
 //追加します
 int g_ky;
@@ -511,8 +512,8 @@ int LoadSounds() {
 
     //ステージBGMデータの読み込み
     if ((g_StageBGM = LoadSoundMem("sounds/Chapter9/MusMus-BGM-104.wav")) == -1)return -1;
-    if ((g_SE1 = LoadSoundMem("sounds/Chapter9/sentaku.wav")) == -1)return -1;
-}
+    //タイトルSE
+}if ((g_SE1 = LoadSoundMem("sounds/Chapter9/sentaku.wav")) == -1)return -1;
 /***********************************************
  * ランキング並び替え
  ***********************************************/
