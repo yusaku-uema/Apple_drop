@@ -127,9 +127,6 @@ void BackScrool(); //背景画像スクロール処理
 
 int LoadSounds(); //サウンドの読み込み処理
 
-//void PlayerWalkStart(int a, int b);
-//void PlayerWalkEnd(int);
-//void PlayerImage(void);
 void Pause(); //ポーズ画面
 
 /***********************************************
@@ -151,25 +148,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     if (ReadRanking() == -1) return -1;//ランキングデータの読込み
 
-    //アイテム画像の読込み
-    if ((g_Item[0] = LoadGraph("images/Chapter5/gasoline.bmp")) == -1)return -1;
-    if ((g_Item[1] = LoadGraph("images/Chapter5/supana.bmp")) == -1)return -1;
-
-    //ランキングデータの読込み
-    if ((g_RankingImage = LoadGraph("images/Chapter5/Ranking.bmp")) == -1)return-1;
-
-    //エンディング画像の読込み  
-    if ((g_EndImage = LoadGraph("images/Chapter5/GameEnd.png")) == -1)return -1;
-
-    //敵
-    if (LoadDivGraph("images/Chapter5/apple.png", 4, 4, 1, 50, 50, g_Teki) == -1)return-1;
-
-    //ステージ背景
-    if ((g_StageImage = LoadGraph("images/Chapter5/haikei_abcd.png")) == -1)return -1;
-
-    //プレイヤー
-    if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
-    //if ((g_Barrier = LoadGraph("images/Chapter5/barrier.png")) == -1)return -1;
 
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
     if (LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
@@ -224,6 +202,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     //ソフトの終了 
     return 0;
+
 }
 
 /***********************************************
@@ -247,14 +226,9 @@ void DrawGameTitle(void) {
     //タイトル画像表示
     DrawGraph(0, 0, g_TitleImage, FALSE);
 
-    //メニュー
-    //DrawGraph(120, 200, g_Menu, TRUE);
-
       //メニュー
     DrawGraph(310, 220 + MenuNo * 50, g_Applec, TRUE);
 
-    ////メニューカーソル
-    //DrawRotaGraph(90, 220 + MenuNo * 40, 0.7f, M_PI / 2, g_Cone, TRUE);
 }
 
 /***********************************************
@@ -282,7 +256,6 @@ void GameInit(void)
 
     g_Time2 = GetNowCount();
 
-
     //ゲームメイン処理へ
     g_GameState = 5;
 }
@@ -304,6 +277,7 @@ void DrawRanking(void)
     }
     DrawString(100, 450, "----スペースキーを押してタイトルに戻る ----", 0xffffff, 0);
 }
+
 /***********************************************
  * ゲームヘルプ描画処理
  ***********************************************/
@@ -316,37 +290,7 @@ void DrawHelp(void)
     DrawGraph(0, 0, g_HelpImage, FALSE);
 
 
-  /*  SetFontSize(16);
 
-    DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
-
-    DrawString(20, 160, "これはリンゴを採るゲームです。", 0xffffff, 0);
-    DrawString(20, 180, "4つのリンゴが落ちてきますが、毒リンゴを採ると大きな失点になります。", 0xffffff);
-    DrawString(20, 200, "制限時間内にリンゴをとりハイスコアを目指そう", 0xffffff, 0);
-    DrawString(20, 220, "ゲーム中の操作", 0xffffff, 0);
-    DrawString(20, 250, "Aボタンが決定ボタン", 0xffffff, 0);
-    DrawGraph(20, 260, g_Item[0], TRUE);
-    DrawString(20, 315, "左スティックがプレイヤー移動取ると燃料が回復するよ。", 0xffffff, 0);
-    DrawGraph(20, 335, g_Item[1], TRUE);
-    DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
-    DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);*/
-    //DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
-
-    
-
-    //int Pad;        //ジョイパッドの入力状態格納用変数
-
-    //    // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    //// while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    //while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
-    //    Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
-    //    if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Aです");
-    //    }
-    //    if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Bです");
-    //    }
-    //}
 }
 
 /***********************************************
@@ -356,9 +300,6 @@ void DrawEnd(void)
 {
     //エンド画像表示
     DrawGraph(0, 0, g_EndImage, FALSE);
-
-   /* SetFontSize(24);
-    DrawString(360, 480 - 24, "Thank you for Playing", 0xffffff, 0);*/
 
     //タイムの加算処理＆終了（3秒後）
     if (++g_WaitTime > 180)g_GameState = 99;
@@ -394,10 +335,6 @@ void GameMain(void)
     }
 
 
-    //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
-    //if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
-    //DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
-
     SetFontSize(16);
 
     //STARTボタンでポーズ画面へ
@@ -407,7 +344,7 @@ void GameMain(void)
 }
 
 
-
+//ポーズ画面追加
 void Pause(void) {
     BackScrool();
     DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
@@ -441,35 +378,6 @@ void DrawGameOver(void)
             g_GameState = 7;
         }
     }
-
-    //DrawBox(150, 150, 490, 330, 0x009900, TRUE);
-    //DrawBox(150, 150, 490, 330, 0x000000, FALSE);
-
-    //SetFontSize(20);
-    //DrawString(220, 170, "ゲームオーバー", 0xcc0000);
-    //SetFontSize(16);
-    //DrawString(180, 200, "走行距離   ", 0x000000);
-    //DrawRotaGraph(230, 230, 0.3f, M_PI / 2, g_Teki[2], TRUE, FALSE);
-
-    //DrawRotaGraph(230, 250, 0.3f, M_PI / 2, g_Teki[1], TRUE, FALSE);
-
-    //DrawRotaGraph(230, 270, 0.3f, M_PI / 2, g_Teki[0], TRUE, FALSE);
-
-    //DrawFormatString(260, 200, 0xFFFFFF, "%6d x 10=%6d", g_MileageB / 10, g_MileageB / 10 * 10);
-
-    //DrawFormatString(260, 222, 0xFFFFFF, "%6d x 50=%6d", g_EnemyCount3, g_EnemyCount3 * 50);
-
-    //DrawFormatString(260, 243, 0xFFFFFF, "%6dx 100=%6d", g_EnemyCount2, g_EnemyCount2 * 100);
-
-    //DrawFormatString(260, 264, 0xFFFFFF, "%6dx 200=%6d", g_EnemyCount1, g_EnemyCount1 * 200);
-
-    //DrawString(300, 290, "スコア", 0x000000);
-
-    //DrawFormatString(260, 290, 0xFFFFFF, "           =%6d", g_Score);
-
-    //DrawString(150, 450, "---スペースキーを押してタイトルへ戻る ---", 0xffffff, 0);
-
-    //StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
     
 }
 /***********************************************
@@ -528,8 +436,8 @@ int LoadImages()
 
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
-    //if ((g_Barrier = LoadGraph("images/Chapter5/barrier.png")) == -1)return -1;
-    return 0;
+ 
+
 }
 //サウンド読み込み
 int LoadSounds() {
