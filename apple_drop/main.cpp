@@ -46,10 +46,7 @@ int g_teki;
 int g_Applec; //タイトルカーソル変数　消さないで
 
 int g_StageBGM; //mainのBGM追加します
-
-
 int g_SE1;
-
 
 //追加します
 int g_ky;
@@ -240,8 +237,6 @@ void DrawGameTitle(void) {
         PlaySoundMem(g_SE1, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = MenuNo + 1;
     }
-
-
     //タイトル画像表示
     DrawGraph(0, 0, g_TitleImage, FALSE);
 
@@ -272,13 +267,12 @@ void GameInit(void)
     g_EnemyCount2 = 0;
     g_EnemyCount3 = 0;
 
-
     player.PlayerInit();
     enemy.InitEnemy();
    
     //現在の経過時間を得る
     g_StartTime = GetNowCount();
-
+    
     //ゲームメイン処理へ
     g_GameState = 5;
 }
@@ -358,6 +352,8 @@ void DrawEnd(void)
 
     //タイムの加算処理＆終了（3秒後）
     if (++g_WaitTime > 180)g_GameState = 99;
+
+    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
 }
 /***********************************************
  * ゲームメイン
@@ -368,23 +364,21 @@ void GameMain(void)
     PlaySoundMem(g_StageBGM, DX_PLAYTYPE_BACK, FALSE);
 
     BackScrool();
+    player.PlayerControl();
 
     UIView();
     TimeCount();
 
     enemy.EnemyDraw();
     enemy.EnemyMove();
-    player.PlayerControl();
 
 
     //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
     //if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
-
-    SetFontSize(16);
-
     //DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
 
     SetFontSize(16);
+
     //STARTボタンでポーズ画面へ
     if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
     //BACKボタンで強制終了
@@ -397,7 +391,7 @@ void Pause(void) {
     BackScrool();
     DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
     enemy.EnemyDraw();
-
+    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
     if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
     SetFontSize(30);
     DrawString(225, 250, "---Pause中---", GetColor(255, 0, 0), 0);
@@ -454,7 +448,7 @@ void DrawGameOver(void)
 
     //DrawString(150, 450, "---スペースキーを押してタイトルへ戻る ---", 0xffffff, 0);
 
-    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+    //StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
     
 }
 /***********************************************
@@ -521,8 +515,6 @@ int LoadSounds() {
 
     //ステージBGMデータの読み込み
     if ((g_StageBGM = LoadSoundMem("sounds/Chapter9/MusMus-BGM-104.wav")) == -1)return -1;
-
-
     //タイトルSE
     if ((g_SE1 = LoadSoundMem("sounds/Chapter9/sentaku.wav")) == -1)return -1;
 
@@ -629,9 +621,11 @@ void TimeCount(void)
     if (Time <= 0)
     {
         if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
+            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
             g_GameState = 2;
         }
         else {
+            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
             g_GameState = 7;
         }
     }
@@ -658,3 +652,4 @@ void UIView(void)
     SetFontSize(45);
     DrawString(510, 320, "SCORE", 0xffffff, 0);
 }
+
