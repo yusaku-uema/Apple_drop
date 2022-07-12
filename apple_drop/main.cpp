@@ -58,6 +58,10 @@ int AX, AY; //コントローラ左スティック座標消さないで
 
 int g_HelpImage;
 
+//ランキング入力変数消さないで
+int Cr; //カラー取得
+char nameInput[10];
+
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -92,14 +96,24 @@ struct DINPUT_JOYSTATE
 //ランキングデータ（構造体）
 struct RankingData {
     int no;
-    char name[11];
+    char name[10];
     long score;
 };
 struct RankingData g_Ranking[RANKING_DATA];
 
 
+int g_rankingnum[1][10] = {
+    {0,1,2,3,4,5,6,7,8,9}
+};
 
-
+int lowercaseletter[2][13] = {
+    {'a','b','c','d','e','f','g','h','i','j','k','l','m'},
+    {'n','o','p','q','r','s','t','u','v','w','x','y','z'}
+};
+int uppercaseletter[2][13] = {
+    {'A','B','C','D','E','F','G','H','I','J','K','L','M'},
+    {'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'}
+};
 /***********************************************
  * 関数のプロトタイプ宣言
  ***********************************************/
@@ -183,6 +197,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         // 画面の初期化 
         ClearDrawScreen();
 
+
+       
         switch (g_GameState) {
         case 0:
             DrawGameTitle(); //ゲームタイトル描画処理
@@ -310,38 +326,6 @@ void DrawHelp(void)
     //タイトル画像表示//
     DrawGraph(0, 0, g_HelpImage, FALSE);
 
-
-  /*  SetFontSize(16);
-
-    DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
-
-    DrawString(20, 160, "これはリンゴを採るゲームです。", 0xffffff, 0);
-    DrawString(20, 180, "4つのリンゴが落ちてきますが、毒リンゴを採ると大きな失点になります。", 0xffffff);
-    DrawString(20, 200, "制限時間内にリンゴをとりハイスコアを目指そう", 0xffffff, 0);
-    DrawString(20, 220, "ゲーム中の操作", 0xffffff, 0);
-    DrawString(20, 250, "Aボタンが決定ボタン", 0xffffff, 0);
-    DrawGraph(20, 260, g_Item[0], TRUE);
-    DrawString(20, 315, "左スティックがプレイヤー移動取ると燃料が回復するよ。", 0xffffff, 0);
-    DrawGraph(20, 335, g_Item[1], TRUE);
-    DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
-    DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);*/
-    //DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
-
-    
-
-    //int Pad;        //ジョイパッドの入力状態格納用変数
-
-    //    // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    //// while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    //while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
-    //    Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
-    //    if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Aです");
-    //    }
-    //    if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
-    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Bです");
-    //    }
-    //}
 }
 
 /***********************************************
@@ -408,6 +392,7 @@ void Pause(void) {
  ***********************************************/
 void DrawGameOver(void)
 {
+    g_GameState = 7;
     BackScrool();//チャレンジ3
     DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
     g_Score = (g_MileageB / 10 * 10) + g_EnemyCount3 * 50 + g_EnemyCount2 * 100 + g_EnemyCount1 * 200;
@@ -461,23 +446,45 @@ void InputRanking(void)
     //ランキング画像表示
     DrawGraph(0, 0, g_RankingImage, FALSE);
 
+    // 黄色の値を取得
+     Cr= GetColor(255, 255, 0);
+
+    // 三角形を描画
+    DrawTriangle(150, 305, 140, 295, 140, 315, Cr, TRUE);
     //フォントサイズの設定
     SetFontSize(20);
 
     //名前入力指示文字列の描画
     DrawString(150, 240, "ランキングに登録します", 0xFFFFFF);
-    DrawString(150, 270, "名前を英字で入力してください", 0xFFFFFF);
+    DrawString(150, 270, "名前入力してください", 0xFFFFFF);
 
+    //フォントサイズの設定
+    SetFontSize(30);
+
+    DrawString(150, 290, "0 1 2 3 4 5 6 7 8 9", 0xFFFFFF);
+    DrawString(150, 320, "a b c d e f g h i j k l m", 0xFFFFFF);
+    DrawString(150, 355, "A B C D E F G H I J K L M", 0xFFFFFF);
+    DrawString(150, 385, "n o p q r s t u v w x y z", 0xFFFFFF);
+    DrawString(150, 420, "N O P Q R S T U V W X Y Z", 0xFFFFFF);
+    //フォントサイズの設定
+    SetFontSize(20);
     //名前の入力
-    DrawString(150, 310, "> ", 0xFFFFFF);
-    DrawBox(160, 305, 300, 335, 0x000055, TRUE);
-    if (KeyInputSingleCharString(170, 310, 10, g_Ranking[4].name, FALSE) == 1) {
+    GetKeyInputString(g_Ranking[4].name, nameInput[0]);
+    DrawString(150, 210, "> ", 0xFFFFFF);
+    DrawBox(160, 205, 300, 235, 0x000055, TRUE);
+    if (KeyInputSingleCharString(170, 210, 10, g_Ranking[4].name, FALSE) == 1) {
         g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
         SortRanking();		// ランキング並べ替え
         SaveRanking();		// ランキングデータの保存
         g_GameState = 2;		// ゲームモードの変更
     }
-
+    //使う予定
+    /*if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
+        g_GameState = 0;
+    }
+    else {
+        g_GameState = 7;
+    }*/
 }
 /***********************************************
  * 画像読み込み
@@ -624,12 +631,13 @@ void TimeCount(void)
     int Time = TIMELIMIT - (GetNowCount() - g_StartTime);
     if (Time <= 0)
     {
-        if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
+        g_GameState = 7;
+      /*  if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
             g_GameState = 2;
         }
         else {
             g_GameState = 7;
-        }
+        }*/
     }
     SetFontSize(50);
     DrawFormatString(550, 100, 0xffffff, "%2d", Time / 1000);
