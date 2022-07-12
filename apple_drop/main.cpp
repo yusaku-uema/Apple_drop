@@ -53,7 +53,7 @@ int g_teki;
 int g_Applec; //タイトルカーソル変数　消さないで
 
 int g_StageBGM; //mainのBGM追加します
-int g_SE1;
+int g_TitleBGM;//タイトルBGM
 
 //追加します
 int g_ky;
@@ -209,6 +209,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
  * ゲームタイトル表示
  ***********************************************/
 void DrawGameTitle(void) {
+
+    //TitleにBGMを流す。消さないで
+    PlaySoundMem(g_TitleBGM, DX_PLAYTYPE_BACK, FALSE);
     static int MenuNo = 0;
 
     //メニューカーソル移動処理
@@ -220,7 +223,6 @@ void DrawGameTitle(void) {
     }
     //zキーでメニュー選択
     if (g_KeyFlg & PAD_INPUT_A) {
-        PlaySoundMem(g_SE1, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = MenuNo + 1;
     }
     //タイトル画像表示
@@ -276,6 +278,7 @@ void DrawRanking(void)
         DrawFormatString(50, 170 + i * 25, 0xffffff, "%2d %-10s %10d", g_Ranking[i].no, g_Ranking[i].name, g_Ranking[i].score);
     }
     DrawString(100, 450, "----スペースキーを押してタイトルに戻る ----", 0xffffff, 0);
+    StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
 }
 
 /***********************************************
@@ -288,7 +291,7 @@ void DrawHelp(void)
 
     //タイトル画像表示//
     DrawGraph(0, 0, g_HelpImage, FALSE);
-
+    StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
 
 
 }
@@ -305,6 +308,7 @@ void DrawEnd(void)
     if (++g_WaitTime > 180)g_GameState = 99;
 
     StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+    StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
 }
 /***********************************************
  * ゲームメイン
@@ -444,8 +448,10 @@ int LoadSounds() {
 
     //ステージBGMデータの読み込み
     if ((g_StageBGM = LoadSoundMem("sounds/Chapter9/MusMus-BGM-104.wav")) == -1)return -1;
-    //タイトルSE
-    if ((g_SE1 = LoadSoundMem("sounds/Chapter9/sentaku.wav")) == -1)return -1;
+   
+    //タイトルBGM
+    if ((g_TitleBGM = LoadSoundMem("sounds/Chapter9/TitleBGM.wav")) == -1)return -1;
+
 
  
 }
