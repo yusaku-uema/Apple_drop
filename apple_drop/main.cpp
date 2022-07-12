@@ -238,13 +238,12 @@ void GameInit(void)
     g_EnemyCount2 = 0;
     g_EnemyCount3 = 0;
 
+
     player.PlayerInit();
     enemy.InitEnemy();
    
     //現在の経過時間を得る
     g_StartTime = GetNowCount();
-
-    
 
     //ゲームメイン処理へ
     g_GameState = 5;
@@ -317,19 +316,19 @@ void GameMain(void)
     PlaySoundMem(g_StageBGM, DX_PLAYTYPE_BACK, FALSE);
 
     BackScrool();
-    player.PlayerControl();
 
     UIView();
     TimeCount();
 
     enemy.EnemyDraw();
     enemy.EnemyMove();
+    player.PlayerControl();
 
 
     //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
-    if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
+    //if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
     SetFontSize(16);
-    DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
+    //DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
 
     if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
 }

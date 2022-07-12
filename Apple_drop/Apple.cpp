@@ -2,11 +2,12 @@
 #include"common.h"
 #include"Player.h"
 
-struct ENEMY g_enemy[ENEMY_MAX];
+//struct ENEMY g_enemy[ENEMY_MAX];
+struct Enemy g_enemy[ENEMY_MAX];
 
 ENEMY::ENEMY()
 {
-    struct Enemy g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
+    g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
     g_Mileage = 0;
 }
 
@@ -17,7 +18,7 @@ void ENEMY::EnemyMove()
         if (g_enemy[i].flg == TRUE)
         {
 
-            if (player.g_player.flg == FALSE)continue;
+            //if (player.g_player.flg == FALSE)continue;
 
             //‚Ü‚Á‚·‚®‰º‚ÉˆÚ“®
             g_enemy[i].y += g_enemy[i].speed;// + g_player.speed - PLAYER_SPEED + 1;
@@ -26,9 +27,14 @@ void ENEMY::EnemyMove()
             if (g_enemy[i].y > SCREEN_HEIGHT + g_enemy[i].h) g_enemy[i].flg = FALSE;
 
             //“–‚½‚è”»’è
-            if (player.HitBoxPlayer(&player.g_player, &g_enemy[i]) == TRUE)
+            if (player.HitBoxPlayer(&player.g_player, &g_enemy[i]) == TRUE && player.g_player.flg == TRUE)
             {
                 g_enemy[i].flg = FALSE;
+
+                if (g_enemy[i].type == 3)
+                {
+                    player.g_player.flg = FALSE;
+                }
             }
         }
 

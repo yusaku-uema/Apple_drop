@@ -20,6 +20,9 @@ public:
     int image;  //プレイヤーの歩く画像を変更するときの変数
     int walkspeed;
     int oldkey;
+    int blinktime; //点滅
+    int invincibletime; //無敵時間
+    int blinkflg;
     int ATARI_HANTEI = 0;
 
 	int g_PlayerImage[16];  //自機画像 //キャラ画像変数
@@ -32,6 +35,8 @@ public:
 
     int HitBoxPlayer(Player* p, Enemy* e);
     void PlayerInit(void);
+    void Blink(void);
+
 };
 
 

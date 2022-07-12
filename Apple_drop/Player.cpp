@@ -13,8 +13,6 @@
 void PLAYER::PlayerControl()
 {
     //左右移動
-    if (g_player.flg == TRUE)
-    {
         if (AX < -0)
         {
             if (oldkey == 0 || oldkey == 1 || oldkey == 2)
@@ -48,10 +46,9 @@ void PLAYER::PlayerControl()
             }
         }
 
-        DrawFormatString(0, 50, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
+        /*DrawFormatString(0, 50, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
         DrawFormatString(0, 70, 0x00ffff, "プレイヤー画像　 = %2d", image);
-        DrawFormatString(0, 33, 0x00ffff, "当たり判定 = %d", ATARI_HANTEI);
-    }
+        DrawFormatString(0, 33, 0x00ffff, "当たり判定 = %d", ATARI_HANTEI);*/
 
     //画面をはみ出さないようにする
     if (g_player.x < 0)
@@ -65,7 +62,14 @@ void PLAYER::PlayerControl()
         g_player.speed = 1;
     }
 
-    DrawGraph(g_player.x, g_player.y, g_PlayerImage[image], TRUE);
+
+
+    if (g_player.flg == TRUE || blinkflg == FALSE)
+    {
+        DrawGraph(g_player.x, g_player.y, g_PlayerImage[image], TRUE);
+    }
+
+    if (g_player.flg == FALSE) Blink();
 }
 
 void PLAYER::PlayerWalkEnd(int a)
@@ -187,21 +191,46 @@ int PLAYER::HitBoxPlayer(Player* p, Enemy* e)
 
 void PLAYER::PlayerInit(void)
 {
-    g_player.flg = TRUE;
-    g_player.x = PLAYER_POS_X;
-    g_player.y = PLAYER_POS_Y;
-    g_player.w = PLAYER_WIDTH;
-    g_player.h = PLAYER_HEIGHT;
-
-    g_player.count = 0;
-    g_player.speed = PLAYER_SPEED;
+    g_player = { TRUE,PLAYER_POS_X,PLAYER_POS_Y,PLAYER_WIDTH,PLAYER_HEIGHT,0,PLAYER_SPEED };
+    image = 0;  //プレイヤーの歩く画像を変更するときの変数
+    walkspeed = 0;
+    oldkey = 0;
+    ATARI_HANTEI = 0;
+    blinktime = 0;
+    invincibletime = 0;
+    blinkflg = TRUE;
 }
 
 PLAYER::PLAYER()
 {
-    struct Player g_player = { TRUE,PLAYER_POS_X,PLAYER_POS_Y,PLAYER_WIDTH,PLAYER_HEIGHT,0,PLAYER_SPEED };
-    int image = 0;  //プレイヤーの歩く画像を変更するときの変数
-    int walkspeed = 0;
-    int oldkey = 0;
-    int ATARI_HANTEI = 0;
+    g_player = { TRUE,PLAYER_POS_X,PLAYER_POS_Y,PLAYER_WIDTH,PLAYER_HEIGHT,0,PLAYER_SPEED };
+    image = 0;  //プレイヤーの歩く画像を変更するときの変数
+    walkspeed = 0;
+    oldkey = 0;
+    ATARI_HANTEI = 0;
+    blinktime = 0;
+    invincibletime = 0;
+    blinkflg = TRUE;
+}
+
+void PLAYER::Blink(void)
+{
+    if (invincibletime <= 119)
+    {
+        invincibletime++;
+        blinktime++;
+
+        if (blinktime >= 19)
+        {
+            blinktime = 0;
+            if (blinkflg == FALSE) blinkflg = TRUE;
+            else blinkflg = FALSE;
+        }
+    }
+
+    else if (invincibletime > 119)
+    {
+        invincibletime = 0;
+        g_player.flg = TRUE;
+    }
 }
