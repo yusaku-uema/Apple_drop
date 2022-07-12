@@ -377,10 +377,10 @@ void GameMain(void)
 
 
     //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
-    if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
-    SetFontSize(16);
-    DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
+    //if (g_KeyFlg & PAD_INPUT_M)g_GameState = 6;
+    //DrawString(150, 450, "---スペースキーを押してゲームオーバーへ---", 0xffffff, 0);
 
+    SetFontSize(16);
     //STARTボタンでポーズ画面へ
     if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
     //BACKボタンで強制終了
@@ -423,32 +423,32 @@ void DrawGameOver(void)
         }
     }
 
-    DrawBox(150, 150, 490, 330, 0x009900, TRUE);
-    DrawBox(150, 150, 490, 330, 0x000000, FALSE);
+    //DrawBox(150, 150, 490, 330, 0x009900, TRUE);
+    //DrawBox(150, 150, 490, 330, 0x000000, FALSE);
 
-    SetFontSize(20);
-    DrawString(220, 170, "ゲームオーバー", 0xcc0000);
-    SetFontSize(16);
-    DrawString(180, 200, "走行距離   ", 0x000000);
-    DrawRotaGraph(230, 230, 0.3f, M_PI / 2, g_Teki[2], TRUE, FALSE);
+    //SetFontSize(20);
+    //DrawString(220, 170, "ゲームオーバー", 0xcc0000);
+    //SetFontSize(16);
+    //DrawString(180, 200, "走行距離   ", 0x000000);
+    //DrawRotaGraph(230, 230, 0.3f, M_PI / 2, g_Teki[2], TRUE, FALSE);
 
-    DrawRotaGraph(230, 250, 0.3f, M_PI / 2, g_Teki[1], TRUE, FALSE);
+    //DrawRotaGraph(230, 250, 0.3f, M_PI / 2, g_Teki[1], TRUE, FALSE);
 
-    DrawRotaGraph(230, 270, 0.3f, M_PI / 2, g_Teki[0], TRUE, FALSE);
+    //DrawRotaGraph(230, 270, 0.3f, M_PI / 2, g_Teki[0], TRUE, FALSE);
 
-    DrawFormatString(260, 200, 0xFFFFFF, "%6d x 10=%6d", g_MileageB / 10, g_MileageB / 10 * 10);
+    //DrawFormatString(260, 200, 0xFFFFFF, "%6d x 10=%6d", g_MileageB / 10, g_MileageB / 10 * 10);
 
-    DrawFormatString(260, 222, 0xFFFFFF, "%6d x 50=%6d", g_EnemyCount3, g_EnemyCount3 * 50);
+    //DrawFormatString(260, 222, 0xFFFFFF, "%6d x 50=%6d", g_EnemyCount3, g_EnemyCount3 * 50);
 
-    DrawFormatString(260, 243, 0xFFFFFF, "%6dx 100=%6d", g_EnemyCount2, g_EnemyCount2 * 100);
+    //DrawFormatString(260, 243, 0xFFFFFF, "%6dx 100=%6d", g_EnemyCount2, g_EnemyCount2 * 100);
 
-    DrawFormatString(260, 264, 0xFFFFFF, "%6dx 200=%6d", g_EnemyCount1, g_EnemyCount1 * 200);
+    //DrawFormatString(260, 264, 0xFFFFFF, "%6dx 200=%6d", g_EnemyCount1, g_EnemyCount1 * 200);
 
-    DrawString(300, 290, "スコア", 0x000000);
+    //DrawString(300, 290, "スコア", 0x000000);
 
-    DrawFormatString(260, 290, 0xFFFFFF, "           =%6d", g_Score);
+    //DrawFormatString(260, 290, 0xFFFFFF, "           =%6d", g_Score);
 
-    DrawString(150, 450, "---スペースキーを押してタイトルへ戻る ---", 0xffffff, 0);
+    //DrawString(150, 450, "---スペースキーを押してタイトルへ戻る ---", 0xffffff, 0);
 
     StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
     
