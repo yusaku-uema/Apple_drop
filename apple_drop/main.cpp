@@ -35,6 +35,13 @@ int g_Mileage; //走行距離
 int g_MileageB; //止め
 int g_EnemyCount1, g_EnemyCount2, g_EnemyCount3; //敵カウント
 int g_StartTime;   // スタート時間
+
+
+int g_Time2; //スタート時間2 かみこうが使うよ
+int fpscount = 0;  //かみこうが使うよ
+int fps = 0;  //かみこうが使うよ
+
+
 int Time;   // 現在時間
 
 int g_Teki[4]; //キャラ画像変数
@@ -272,7 +279,10 @@ void GameInit(void)
    
     //現在の経過時間を得る
     g_StartTime = GetNowCount();
-    
+
+    g_Time2 = GetNowCount();
+
+
     //ゲームメイン処理へ
     g_GameState = 5;
 }
@@ -371,6 +381,17 @@ void GameMain(void)
 
     enemy.EnemyDraw();
     enemy.EnemyMove();
+
+
+    fpscount++;
+    SetFontSize(18);
+    DrawFormatString(0, 70, 0x00ffff, "fps　 = %d", fps);
+    if ((GetNowCount() - g_Time2) >= 1000)
+    {
+        fps = fpscount;
+        fpscount = 0;
+        g_Time2 = GetNowCount();
+    }
 
 
     //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
