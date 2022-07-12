@@ -12,8 +12,8 @@
 #include"Apple.h"
 
 
-ENEMY Enemy;
-PLAYER Player;
+ENEMY enemy;
+PLAYER player;
 
 /***********************************************
  * 変数の宣言
@@ -238,11 +238,13 @@ void GameInit(void)
     g_EnemyCount2 = 0;
     g_EnemyCount3 = 0;
 
-    Player.PlayerInit();
-    Enemy.InitEnemy();
+    player.PlayerInit();
+    enemy.InitEnemy();
    
     //現在の経過時間を得る
     g_StartTime = GetNowCount();
+
+    
 
     //ゲームメイン処理へ
     g_GameState = 5;
@@ -315,13 +317,13 @@ void GameMain(void)
     PlaySoundMem(g_StageBGM, DX_PLAYTYPE_BACK, FALSE);
 
     BackScrool();
-    Player.PlayerControl();
+    player.PlayerControl();
 
     UIView();
     TimeCount();
 
-    Enemy.EnemyDraw();
-    Enemy.EnemyMove();
+    enemy.EnemyDraw();
+    enemy.EnemyMove();
 
 
     //スペースキーでメニューに戻る　ゲームメインからタイトルに戻る追加
@@ -331,10 +333,12 @@ void GameMain(void)
 
     if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
 }
+
+
 void Pause(void) {
     BackScrool();
-    DrawGraph(Player.g_player.x, Player.g_player.y, Player.g_PlayerImage[Player.image], TRUE);
-    Enemy.EnemyDraw();
+    DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
+    enemy.EnemyDraw();
 
     if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
     SetFontSize(30);
@@ -347,7 +351,7 @@ void Pause(void) {
 void DrawGameOver(void)
 {
     BackScrool();//チャレンジ3
-    DrawGraph(Player.g_player.x, Player.g_player.y, Player.g_PlayerImage[Player.image], TRUE);
+    DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
     g_Score = (g_MileageB / 10 * 10) + g_EnemyCount3 * 50 + g_EnemyCount2 * 100 + g_EnemyCount1 * 200;
 
 
@@ -443,7 +447,7 @@ int LoadImages()
     if ((g_StageImage = LoadGraph("images/Chapter5/haikei.png")) == -1)return -1;
 
     //プレイヤー
-    if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, Player.g_PlayerImage) == -1) return -1; //自機画像
+    if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
     //if ((g_Barrier = LoadGraph("images/Chapter5/barrier.png")) == -1)return -1;
     return 0;
 }
