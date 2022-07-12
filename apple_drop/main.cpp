@@ -52,6 +52,8 @@ int g_ky;
 
 int AX, AY; //コントローラ左スティック座標消さないで
 
+int g_HelpImage;
+
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -300,8 +302,10 @@ void DrawHelp(void)
     if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
 
     //タイトル画像表示//
-    DrawGraph(0, 0, g_TitleImage, FALSE);
-    SetFontSize(16);
+    DrawGraph(0, 0, g_HelpImage, FALSE);
+
+
+  /*  SetFontSize(16);
 
     DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
 
@@ -314,24 +318,24 @@ void DrawHelp(void)
     DrawString(20, 315, "左スティックがプレイヤー移動取ると燃料が回復するよ。", 0xffffff, 0);
     DrawGraph(20, 335, g_Item[1], TRUE);
     DrawString(20, 385, "ダメージを受けている時に取ると耐久回復", 0xffffff, 0);
-    DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);
-    DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
+    DrawString(20, 405, "耐久が減っていなかったら燃料が少し回復しますよ。", 0xffffff, 0);*/
+    //DrawString(150, 450, "---- スペースキーを押してタイトルへ戻る ----", 0xffffff, 0);
 
     
 
-    int Pad;        //ジョイパッドの入力状態格納用変数
+    //int Pad;        //ジョイパッドの入力状態格納用変数
 
-        // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
-        Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
-        if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
-            DrawFormatString(0, 0, GetColor(255, 255, 255), "Aです");
-        }
-        if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
-            DrawFormatString(0, 0, GetColor(255, 255, 255), "Bです");
-        }
-    }
+    //    // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
+    //// while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
+    //while (!ScreenFlip() && !ProcessMessage() && !ClearDrawScreen()) {
+    //    Pad = GetJoypadInputState(DX_INPUT_PAD1);        //入力状態をPadに格納
+    //    if (Pad & PAD_INPUT_A) {        //ボタン1の入力フラグが立っていたら
+    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Aです");
+    //    }
+    //    if (Pad & PAD_INPUT_B) {        //ボタン1の入力フラグが立っていたら
+    //        DrawFormatString(0, 0, GetColor(255, 255, 255), "Bです");
+    //    }
+    //}
 }
 
 /***********************************************
@@ -483,7 +487,7 @@ int LoadImages()
     if ((g_Item[1] = LoadGraph("images/Chapter5/supana.bmp")) == -1)return -1;
 
     //ランキングデータの読込み
-    if ((g_RankingImage = LoadGraph("images/Chapter5/Ranking.bmp")) == -1)return-1;
+    if ((g_RankingImage = LoadGraph("images/Chapter5/ranking.png")) == -1)return-1;
 
     //エンディング画像の読込み  
     if ((g_EndImage = LoadGraph("images/Chapter5/GameEnd.png")) == -1)return -1;
@@ -493,6 +497,9 @@ int LoadImages()
 
     //ステージ背景
     if ((g_StageImage = LoadGraph("images/Chapter5/haikei_abcd.png")) == -1)return -1;
+
+    //ヘルプ画面
+    if ((g_HelpImage = LoadGraph("images/Chapter5/help2.png")) == -1)return -1;
 
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
@@ -614,7 +621,7 @@ void TimeCount(void)
         }
     }
     SetFontSize(50);
-    DrawFormatString(570, 100, 0xffffff, "%2d", Time / 1000);
+    DrawFormatString(550, 100, 0xffffff, "%2d", Time / 1000);
 }
 
 void UIView(void)
