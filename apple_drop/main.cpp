@@ -46,6 +46,11 @@ int g_teki;
 int g_Applec; //タイトルカーソル変数　消さないで
 
 int g_StageBGM; //mainのBGM追加します
+
+
+int g_SE1;
+
+
 //追加します
 int g_ky;
 
@@ -231,7 +236,11 @@ void DrawGameTitle(void) {
         if (--MenuNo < 0)MenuNo = 3;
     }
     //zキーでメニュー選択
-    if (g_KeyFlg & PAD_INPUT_A)g_GameState = MenuNo + 1;
+    if (g_KeyFlg & PAD_INPUT_A) {
+        PlaySoundMem(g_SE1, DX_PLAYTYPE_BACK, TRUE);
+        g_GameState = MenuNo + 1;
+    }
+
 
     //タイトル画像表示
     DrawGraph(0, 0, g_TitleImage, FALSE);
@@ -508,6 +517,12 @@ int LoadSounds() {
 
     //ステージBGMデータの読み込み
     if ((g_StageBGM = LoadSoundMem("sounds/Chapter9/MusMus-BGM-104.wav")) == -1)return -1;
+
+
+    //タイトルSE
+    if ((g_SE1 = LoadSoundMem("sounds/Chapter9/sentaku.wav")) == -1)return -1;
+
+ 
 }
 /***********************************************
  * ランキング並び替え
