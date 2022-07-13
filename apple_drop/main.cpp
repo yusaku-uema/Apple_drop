@@ -61,6 +61,8 @@ int g_HelpImage;
 //ランキング入力変数消さないで
 int Cr; //カラー取得
 char nameInput[10];
+//ランキングカーソル(DrawTriangle)三角形
+int cursor_X1, cursor_Y1, cursor_X2, cursor_Y2, cursor_X3, cursor_Y3;
 
 /***********************************************
  * 定数を宣言
@@ -102,18 +104,14 @@ struct RankingData {
 struct RankingData g_Ranking[RANKING_DATA];
 
 
-int g_rankingnum[1][10] = {
-    {0,1,2,3,4,5,6,7,8,9}
-};
-
-int lowercaseletter[2][13] = {
+int alpha_numeral[5][13] = {
+    {0,1,2,3,4,5,6,7,8,9,TRUE},
     {'a','b','c','d','e','f','g','h','i','j','k','l','m'},
-    {'n','o','p','q','r','s','t','u','v','w','x','y','z'}
-};
-int uppercaseletter[2][13] = {
     {'A','B','C','D','E','F','G','H','I','J','K','L','M'},
+    {'n','o','p','q','r','s','t','u','v','w','x','y','z'},
     {'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'}
 };
+
 /***********************************************
  * 関数のプロトタイプ宣言
  ***********************************************/
@@ -446,22 +444,27 @@ void InputRanking(void)
     //ランキング画像表示
     DrawGraph(0, 0, g_RankingImage, FALSE);
 
+    //カーソル位置初期化
+    cursor_X1 = 150; //X座標
+    cursor_Y1 = 305; //Y座標
+    cursor_X2 = 140;
+    cursor_Y2 = 295;
+    cursor_X3 = 140;
+    cursor_Y3 = 315;
     // 黄色の値を取得
      Cr= GetColor(255, 255, 0);
 
-    // 三角形を描画
-    DrawTriangle(150, 305, 140, 295, 140, 315, Cr, TRUE);
+   
     //フォントサイズの設定
     SetFontSize(20);
 
     //名前入力指示文字列の描画
-    DrawString(150, 240, "ランキングに登録します", 0xFFFFFF);
-    DrawString(150, 270, "名前入力してください", 0xFFFFFF);
+    DrawString(150, 260, "名前入力してください", 0xFFFFFF);
 
     //フォントサイズの設定
     SetFontSize(30);
 
-    DrawString(150, 290, "0 1 2 3 4 5 6 7 8 9", 0xFFFFFF);
+    DrawString(150, 290, "0 1 2 3 4 5 6 7 8 9 削除", 0xFFFFFF);
     DrawString(150, 320, "a b c d e f g h i j k l m", 0xFFFFFF);
     DrawString(150, 355, "A B C D E F G H I J K L M", 0xFFFFFF);
     DrawString(150, 385, "n o p q r s t u v w x y z", 0xFFFFFF);
@@ -472,13 +475,26 @@ void InputRanking(void)
     GetKeyInputString(g_Ranking[4].name, nameInput[0]);
     DrawString(150, 210, "> ", 0xFFFFFF);
     DrawBox(160, 205, 300, 235, 0x000055, TRUE);
+   
+         // 三角形を描画
+        DrawTriangle(cursor_X1, cursor_Y1, cursor_X2, cursor_Y2, cursor_X3, cursor_Y3, Cr, TRUE);
+
+        if (PAD_INPUT_DOWN) {
+            cursor_Y1 = +10;
+            cursor_Y2 = +10;
+            cursor_Y3 = +10;
+        }
+
+   
+   
     if (KeyInputSingleCharString(170, 210, 10, g_Ranking[4].name, FALSE) == 1) {
         g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
         SortRanking();		// ランキング並べ替え
         SaveRanking();		// ランキングデータの保存
         g_GameState = 2;		// ゲームモードの変更
-    }
-    //使う予定
+    } 
+   
+    //使う
     /*if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
         g_GameState = 0;
     }
