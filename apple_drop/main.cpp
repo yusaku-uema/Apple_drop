@@ -233,8 +233,7 @@ void DrawGameTitle(void) {
         PlaySoundMem(g_SE1, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = MenuNo + 1;
     }
-
-
+    
     //タイトル画像表示
     DrawGraph(0, 0, g_TitleImage, FALSE);
 
@@ -333,7 +332,11 @@ void DrawEnd(void)
     //エンド画像表示
     DrawGraph(0, 0, g_EndImage, FALSE);
 
-    DrawString(225, 250, "使用イラスト", GetColor(255, 0, 0), 0);
+
+    SetFontSize(30);
+    DrawString(150, 240, "使用イラスト", 0xFFFFFF);
+    DrawString(150, 300, "使用BGM　SE", 0xFFFFFF);
+   
 
 
     //タイムの加算処理＆終了（3秒後）
