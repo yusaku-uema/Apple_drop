@@ -22,12 +22,17 @@ public:
     struct Enemy g_enemy00;
 
     int g_Mileage; //‘–s‹——£
+    int applecheck; //ƒŠƒ“ƒS‚ÌŒÂ”‚ğƒ`ƒFƒbƒN‚·‚é‚½‚ß‚Ì•Ï”
+    int applecount; //•`‰æ‚³‚ê‚Ä‚¢‚éƒŠƒ“ƒS‚Ì”‚ğ“ü‚ê‚é
+    double drawapple;  //•\¦‚³‚¹‚éƒŠƒ“ƒS‚Ì”
+    int appletype;
 
     ENEMY();
     void EnemyMove();
     void EnemyDraw();
     void InitEnemy();
     int CreateEnemy();
+    void CheckApple(); //•`‰æ‚³‚ê‚Ä‚¢‚éƒŠƒ“ƒS‚ÌŒÂ”‚ğ”‚¦‚éŠÖ”
     
 };
 
