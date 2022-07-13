@@ -64,6 +64,9 @@ int g_SE1;//選択BGM
 int g_ky;
 
 int AX, AY; //コントローラ左スティック座標消さないで
+int cursor_X, cursor_Y; //カーソル
+//カラー取得
+int Cr;
 
 int g_HelpImage;
 
@@ -275,6 +278,12 @@ void GameInit(void)
 
     g_Time2 = GetNowCount();
 
+    //カーソル
+    cursor_X = 0;
+    cursor_Y = 0;
+
+    Cr = GetColor(255, 255, 0);
+
     //ゲームメイン処理へ
     g_GameState = 5;
 }
@@ -430,17 +439,32 @@ void InputRanking(void)
     SetFontSize(20);
 
     //名前入力指示文字列の描画
-    DrawString(150, 240, "ランキングに登録します", 0xFFFFFF);
-    DrawString(150, 270, "名前を英字で入力してください", 0xFFFFFF);
+    DrawString(150, 260, "名前を入力してください", 0xFFFFFF);
 
-    //名前の入力
-    DrawString(150, 310, "> ", 0xFFFFFF);
-    DrawBox(160, 305, 300, 335, 0x000055, TRUE);
-    if (KeyInputSingleCharString(170, 310, 10, g_Ranking[4].name, FALSE) == 1) {
+    //フォントサイズの設定
+    SetFontSize(30);
+
+    DrawString(150, 290, "0 1 2 3 4 5 6 7 8 9 削除", 0xFFFFFF);
+    DrawString(150, 320, "a b c d e f g h i j k l m", 0xFFFFFF);
+    DrawString(150, 355, "A B C D E F G H I J K L M", 0xFFFFFF);
+    DrawString(150, 385, "n o p q r s t u v w x y z", 0xFFFFFF);
+    DrawString(150, 420, "N O P Q R S T U V W X Y Z", 0xFFFFFF);
+    //フォントサイズの設定
+    SetFontSize(20);
+
+
+    DrawString(150, 210, "> ", 0xFFFFFF);
+    DrawBox(160, 205, 300, 235, 0x000055, TRUE);
+
+    if (g_KeyFlg & PAD_INPUT_DOWN) {
+        cursor_Y = 10 + cursor_Y;
+    }
+    DrawTriangle(150 + cursor_X, 305 + cursor_Y, 140 + cursor_X, 295 + cursor_Y, 140 + cursor_X, 315 + cursor_Y, Cr, TRUE);
+    if (g_KeyFlg & PAD_INPUT_A) {
         g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
         SortRanking();		// ランキング並べ替え
         SaveRanking();		// ランキングデータの保存
-        g_GameState = 2;		// ゲームモードの変更
+        g_GameState = 2;		// ゲームモードの変更  // 三角形を描画
     }
 
 }
