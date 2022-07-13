@@ -55,6 +55,7 @@ int g_Applec; //タイトルカーソル変数　消さないで
 int g_StageBGM; //mainのBGM追加します
 int g_TitleBGM;//タイトルBGM
 
+int g_SE1;//選択BGM
 //追加します
 int g_ky;
 
@@ -212,6 +213,8 @@ void DrawGameTitle(void) {
 
     //TitleにBGMを流す。消さないで
     PlaySoundMem(g_TitleBGM, DX_PLAYTYPE_BACK, FALSE);
+    // 音量の設定
+    ChangeVolumeSoundMem(255 * 30 / 100, g_TitleBGM);
     static int MenuNo = 0;
 
     //メニューカーソル移動処理
@@ -223,8 +226,12 @@ void DrawGameTitle(void) {
     }
     //zキーでメニュー選択
     if (g_KeyFlg & PAD_INPUT_A) {
+        PlaySoundMem(g_SE1, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = MenuNo + 1;
     }
+
+    // 音量の設定
+    ChangeVolumeSoundMem(255 * 80 / 100, g_SE1);
     //タイトル画像表示
     DrawGraph(0, 0, g_TitleImage, FALSE);
 
@@ -450,8 +457,9 @@ int LoadSounds() {
     if ((g_StageBGM = LoadSoundMem("sounds/Chapter9/MusMus-BGM-104.wav")) == -1)return -1;
    
     //タイトルBGM
-    if ((g_TitleBGM = LoadSoundMem("sounds/Chapter9/TitleBGM.wav")) == -1)return -1;
+    if ((g_TitleBGM = LoadSoundMem("sounds/Chapter9/TitleBGm.wav")) == -1)return -1;
 
+    if ((g_SE1 = LoadSoundMem("sounds/Chapter9/sentaku.wav")) == -1)return -1;
 
  
 }
