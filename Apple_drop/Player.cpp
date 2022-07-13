@@ -18,7 +18,6 @@ void PLAYER::PlayerControl()
             if (oldkey == 0 || oldkey == 1 || oldkey == 2)
             {
                 PlayerWalkStart(1, -1);
-                //PlayerImage();
             }
         }
 
@@ -46,9 +45,11 @@ void PLAYER::PlayerControl()
             }
         }
 
-        /*DrawFormatString(0, 50, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
-        DrawFormatString(0, 70, 0x00ffff, "プレイヤー画像　 = %2d", image);
-        DrawFormatString(0, 33, 0x00ffff, "当たり判定 = %d", ATARI_HANTEI);*/
+        SetFontSize(18);
+        DrawFormatString(0, 10, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
+        DrawFormatString(0, 30, 0x00ffff, "プレイヤー画像　 = %2d", image);
+        DrawFormatString(0, 70, 0x00ffff, "プレイヤーX軸 　 = %d", g_player.x);
+
 
     //画面をはみ出さないようにする
     if (g_player.x < 0)
@@ -215,12 +216,11 @@ PLAYER::PLAYER()
 
 void PLAYER::Blink(void)
 {
-    if (invincibletime <= 119)
+    if (invincibletime < 120)
     {
-        invincibletime++;
         blinktime++;
 
-        if (blinktime >= 19)
+        if (blinktime >= 20)
         {
             blinktime = 0;
             if (blinkflg == FALSE) blinkflg = TRUE;
@@ -228,7 +228,9 @@ void PLAYER::Blink(void)
         }
     }
 
-    else if (invincibletime > 119)
+    invincibletime++;
+
+    if (invincibletime >= 120)
     {
         invincibletime = 0;
         g_player.flg = TRUE;

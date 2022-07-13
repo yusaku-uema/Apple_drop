@@ -127,9 +127,6 @@ void BackScrool(); //背景画像スクロール処理
 
 int LoadSounds(); //サウンドの読み込み処理
 
-//void PlayerWalkStart(int a, int b);
-//void PlayerWalkEnd(int);
-//void PlayerImage(void);
 void Pause(); //ポーズ画面
 
 /***********************************************
@@ -385,7 +382,7 @@ void GameMain(void)
 
     fpscount++;
     SetFontSize(18);
-    DrawFormatString(0, 70, 0x00ffff, "fps　 = %d", fps);
+    DrawFormatString(0, 50, 0x00ffff, "fps　 = %d", fps);
     if ((GetNowCount() - g_Time2) >= 1000)
     {
         fps = fpscount;

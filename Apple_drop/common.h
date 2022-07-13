@@ -5,7 +5,7 @@
 //‰æ–Ê—Ìˆæ‚Ì‘å‚«‚³
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-const int PLAYER_POS_X = SCREEN_WIDTH / 2;
+const int PLAYER_POS_X = 225;
 const int PLAYER_POS_Y = SCREEN_HEIGHT - 100;
 const int PLAYER_WIDTH = 65; //–{“–‚Í76
 const int PLAYER_HEIGHT = 90; //–{“–‚Í100
