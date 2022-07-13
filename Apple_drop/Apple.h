@@ -26,6 +26,8 @@ public:
     int applecount; //•`‰æ‚³‚ê‚Ä‚¢‚éƒŠƒ“ƒS‚Ì”‚ğ“ü‚ê‚é
     double drawapple;  //•\¦‚³‚¹‚éƒŠƒ“ƒS‚Ì”
     int appletype;
+    int g_EnemyCount1, g_EnemyCount2, g_EnemyCount3; //ƒŠƒ“ƒS‚ğæ“¾‚µ‚½”‚ğ“ü‚ê‚é•Ï”
+    int g_Score; //ƒXƒRƒA
 
     ENEMY();
     void EnemyMove();
@@ -33,6 +35,7 @@ public:
     void InitEnemy();
     int CreateEnemy();
     void CheckApple(); //•`‰æ‚³‚ê‚Ä‚¢‚éƒŠƒ“ƒS‚ÌŒÂ”‚ğ”‚¦‚éŠÖ”
+
     
 };
 
