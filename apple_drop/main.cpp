@@ -436,58 +436,49 @@ void DrawGameOver(void)
  ***********************************************/
 void InputRanking(void)
 { 
-    // 黄色の値を取得
-     Cr= GetColor(255, 255, 0);
+    //// 黄色の値を取得
+    // Cr= GetColor(255, 255, 0);
  
-       //ランキング画像表示
-      DrawGraph(0, 0, g_RankingImage, FALSE);
+    //   //ランキング画像表示
+    //  DrawGraph(0, 0, g_RankingImage, FALSE);
 
-    //フォントサイズの設定
-    SetFontSize(20);
+    ////フォントサイズの設定
+    //SetFontSize(20);
 
-    //名前入力指示文字列の描画
-    DrawString(150, 260, "名前を入力してください", 0xFFFFFF);
+    ////名前入力指示文字列の描画
+    //DrawString(150, 260, "名前を入力してください", 0xFFFFFF);
 
-    //フォントサイズの設定
-    SetFontSize(30);
+    ////フォントサイズの設定
+    //SetFontSize(30);
 
-    DrawString(150, 290, "0 1 2 3 4 5 6 7 8 9 削除", 0xFFFFFF);
-    DrawString(150, 320, "a b c d e f g h i j k l m", 0xFFFFFF);
-    DrawString(150, 355, "A B C D E F G H I J K L M", 0xFFFFFF);
-    DrawString(150, 385, "n o p q r s t u v w x y z", 0xFFFFFF);
-    DrawString(150, 420, "N O P Q R S T U V W X Y Z", 0xFFFFFF);
-    //フォントサイズの設定
-    SetFontSize(20);
+    //DrawString(150, 290, "0 1 2 3 4 5 6 7 8 9 削除", 0xFFFFFF);
+    //DrawString(150, 320, "a b c d e f g h i j k l m", 0xFFFFFF);
+    //DrawString(150, 355, "A B C D E F G H I J K L M", 0xFFFFFF);
+    //DrawString(150, 385, "n o p q r s t u v w x y z", 0xFFFFFF);
+    //DrawString(150, 420, "N O P Q R S T U V W X Y Z", 0xFFFFFF);
+    ////フォントサイズの設定
+    //SetFontSize(20);
 
-    
-    DrawString(150, 210, "> ", 0xFFFFFF);
-    DrawBox(160, 205, 300, 235, 0x000055, TRUE);
-    
-     
-            if (g_KeyFlg & PAD_INPUT_DOWN) {
-              cursor_Y = 10 + cursor_Y;
-          }
-             DrawTriangle(150 + cursor_X, 305 + cursor_Y, 140 + cursor_X, 295 + cursor_Y, 140 + cursor_X, 315 + cursor_Y, Cr, TRUE);
-     if(g_KeyFlg&PAD_INPUT_A){
-        g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
-        SortRanking();		// ランキング並べ替え
-        SaveRanking();		// ランキングデータの保存
-        g_GameState = 2;		// ゲームモードの変更  // 三角形を描画
-       }
-       
-     
-            
-    
-    //使う
-    /*if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
-        g_GameState = 0;
-    }
-    else {
-        g_GameState = 7;
-    }*/
-     //名前の入力
-    //GetKeyInputString(g_Ranking[4].name, nameInput[0]);
- 
+    //
+    //DrawString(150, 210, "> ", 0xFFFFFF);
+    //DrawBox(160, 205, 300, 235, 0x000055, TRUE);
+    //
+    // 
+    //        if (g_KeyFlg & PAD_INPUT_DOWN) {
+    //          cursor_Y = 10 + cursor_Y;
+    //      }
+    //         DrawTriangle(150 + cursor_X, 305 + cursor_Y, 140 + cursor_X, 295 + cursor_Y, 140 + cursor_X, 315 + cursor_Y, Cr, TRUE);
+    // if(g_KeyFlg&PAD_INPUT_A){
+    //    g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
+    //    SortRanking();		// ランキング並べ替え
+    //    SaveRanking();		// ランキングデータの保存
+    //    g_GameState = 2;		// ゲームモードの変更  // 三角形を描画
+    //   }
+    //   
+    // 
+    //        
+    //
+   
 }
 /***********************************************
  * 画像読み込み
