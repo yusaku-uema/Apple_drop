@@ -10,9 +10,12 @@ ENEMY::ENEMY()
 {
     g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
     g_Mileage = 0;
-    applecheck = 0;
+    /*applecheck = 0;
     applecount = 0;
     drawapple = 0;
+    g_EnemyCount1 = 0;
+    g_EnemyCount2 = 0;
+    g_EnemyCount3 = 0;*/
 }
 
 void ENEMY::EnemyMove()
@@ -35,7 +38,29 @@ void ENEMY::EnemyMove()
             {
                 g_enemy[i].flg = FALSE;
 
+                if (g_enemy[i].type == 0)
+                {
+                    g_EnemyCount1++;
+                    g_Score += g_enemy[i].point;
+                }
+                if (g_enemy[i].type == 1)
+                {
+                    g_EnemyCount2++;
+                    g_Score += g_enemy[i].point;
+                }
+                if (g_enemy[i].type == 2)
+                {
+                    g_EnemyCount3++;
+                    g_Score += g_enemy[i].point;
+                }
                 if (g_enemy[i].type == 3)
+                {
+                    g_Score += g_enemy[i].point;
+                }
+                if (g_Score <= 0) g_Score = 0;
+
+
+                if (g_enemy[i].type == 3)  //当たったリンゴがタイプ3（毒リンゴ）の時、プレイヤーフラグをFALSEにする
                 {
                     player.g_player.flg = FALSE;
                 }
@@ -87,31 +112,40 @@ int ENEMY::CreateEnemy()
                 g_enemy[i] = g_enemy00;
                 g_enemy[i].flg = TRUE;
 
-                appletype = GetRand(10);
-                if (appletype >= 0 && appletype <= 5) g_enemy[i].type = 0;
-                if (appletype >= 6 && appletype <= 7) g_enemy[i].type = 1;
+                appletype = GetRand(9);
+                if (appletype >= 0 && appletype <= 5) g_enemy[i].type = 2;
+                if (appletype >= 6 && appletype <= 7) g_enemy[i].type = 2;
                 if (appletype == 8) g_enemy[i].type = 2;
-                if (appletype == 9) g_enemy[i].type = 3;
+                if (appletype == 9) g_enemy[i].type = 2;
 
                 g_enemy[i].img = g_Teki[g_enemy[i].type];
                 g_enemy[i].x = GetRand(6) * 70 + 30;
 
+
+                //リンゴのスピードとポイントを入れる処理
                 if (g_enemy[i].type == 0)
                 {
                     g_enemy[i].speed = 2;
+                    g_enemy[i].point = 150;
+
                 }
                 if (g_enemy[i].type == 1)
                 {
                     g_enemy[i].speed = 5;
+                    g_enemy[i].point = 300;
                 }
                 if (g_enemy[i].type == 2)
                 {
                     g_enemy[i].speed = 10;
+                    g_enemy[i].point = 500;
                 }
                 if (g_enemy[i].type == 3)
                 {
                     g_enemy[i].speed = 1;
+                    g_enemy[i].point = -1000;
                 }
+
+
 
                 drawapple--;
 
@@ -125,12 +159,22 @@ int ENEMY::CreateEnemy()
     return FALSE;
 }
 
-void ENEMY::InitEnemy() {
+void ENEMY::InitEnemy() 
+{
 
     //エネミーの初期処理
-    for (int i = 0; i < ENEMY_MAX; i++) {
+    for (int i = 0; i < ENEMY_MAX; i++) 
+    {
         g_enemy[i].flg = FALSE;
     }
+
+    applecheck = 0;
+    applecount = 0;
+    drawapple = 0;
+    g_EnemyCount1 = 0;
+    g_EnemyCount2 = 0;
+    g_EnemyCount3 = 0;
+    g_Score = 0;
 }
 
 void ENEMY::CheckApple()
