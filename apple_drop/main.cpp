@@ -62,7 +62,7 @@ int g_HelpImage;
 int Cr; //カラー取得
 char nameInput[10];
 //ランキングカーソル(DrawTriangle)三角形
-int cursor_X1, cursor_Y1, cursor_X2, cursor_Y2, cursor_X3, cursor_Y3;
+int cursor_X, cursor_Y;
 
 /***********************************************
  * 定数を宣言
@@ -183,7 +183,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
 
       //ゲームループ 
-    while (ProcessMessage() == 0 && g_GameState != 99) {// && !(g_KeyFlg & PAD_INPUT_START)
+    while (ProcessMessage() == 0 && g_GameState != 99 ) {
         //キー入力取得 
         g_OldKey = g_NowKey;
         g_NowKey = GetJoypadInputState(DX_INPUT_PAD1);
@@ -195,8 +195,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         // 画面の初期化 
         ClearDrawScreen();
 
-
-       
         switch (g_GameState) {
         case 0:
             DrawGameTitle(); //ゲームタイトル描画処理
@@ -259,14 +257,11 @@ void DrawGameTitle(void) {
     //タイトル画像表示
     DrawGraph(0, 0, g_TitleImage, FALSE);
 
-    //メニュー
-    //DrawGraph(120, 200, g_Menu, TRUE);
-
+   
       //メニュー
     DrawGraph(310, 220 + MenuNo * 50, g_Applec, TRUE);
 
-    ////メニューカーソル
-    //DrawRotaGraph(90, 220 + MenuNo * 40, 0.7f, M_PI / 2, g_Cone, TRUE);
+   
 }
 
 /***********************************************
@@ -440,26 +435,18 @@ void DrawGameOver(void)
  * ランキング入力処理
  ***********************************************/
 void InputRanking(void)
-{
-    //ランキング画像表示
-    DrawGraph(0, 0, g_RankingImage, FALSE);
-
-    //カーソル位置初期化
-    cursor_X1 = 150; //X座標
-    cursor_Y1 = 305; //Y座標
-    cursor_X2 = 140;
-    cursor_Y2 = 295;
-    cursor_X3 = 140;
-    cursor_Y3 = 315;
+{ 
     // 黄色の値を取得
      Cr= GetColor(255, 255, 0);
+ 
+       //ランキング画像表示
+      DrawGraph(0, 0, g_RankingImage, FALSE);
 
-   
     //フォントサイズの設定
     SetFontSize(20);
 
     //名前入力指示文字列の描画
-    DrawString(150, 260, "名前入力してください", 0xFFFFFF);
+    DrawString(150, 260, "名前を入力してください", 0xFFFFFF);
 
     //フォントサイズの設定
     SetFontSize(30);
@@ -471,29 +458,26 @@ void InputRanking(void)
     DrawString(150, 420, "N O P Q R S T U V W X Y Z", 0xFFFFFF);
     //フォントサイズの設定
     SetFontSize(20);
-    //名前の入力
-    GetKeyInputString(g_Ranking[4].name, nameInput[0]);
+
+    
     DrawString(150, 210, "> ", 0xFFFFFF);
     DrawBox(160, 205, 300, 235, 0x000055, TRUE);
-   
-         // 三角形を描画
-        DrawTriangle(cursor_X1, cursor_Y1, cursor_X2, cursor_Y2, cursor_X3, cursor_Y3, Cr, TRUE);
-
-        if (PAD_INPUT_DOWN) {
-            cursor_Y1 = +10;
-            cursor_Y2 = +10;
-            cursor_Y3 = +10;
-        }
-
-   
-   
-    if (KeyInputSingleCharString(170, 210, 10, g_Ranking[4].name, FALSE) == 1) {
+    
+     
+            if (g_KeyFlg & PAD_INPUT_DOWN) {
+              cursor_Y = 10 + cursor_Y;
+          }
+             DrawTriangle(150 + cursor_X, 305 + cursor_Y, 140 + cursor_X, 295 + cursor_Y, 140 + cursor_X, 315 + cursor_Y, Cr, TRUE);
+     if(g_KeyFlg&PAD_INPUT_A){
         g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
         SortRanking();		// ランキング並べ替え
         SaveRanking();		// ランキングデータの保存
-        g_GameState = 2;		// ゲームモードの変更
-    } 
-   
+        g_GameState = 2;		// ゲームモードの変更  // 三角形を描画
+       }
+       
+     
+            
+    
     //使う
     /*if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
         g_GameState = 0;
@@ -501,6 +485,9 @@ void InputRanking(void)
     else {
         g_GameState = 7;
     }*/
+     //名前の入力
+    //GetKeyInputString(g_Ranking[4].name, nameInput[0]);
+ 
 }
 /***********************************************
  * 画像読み込み
