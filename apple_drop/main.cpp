@@ -58,8 +58,10 @@ int g_RankingBGM;//ランキングBGM
 int g_HelpBGM;//ヘルプBGM
 int g_EndBGM;//エンドBGM
 
-int g_SE1;//選択BGM
-
+int g_SE1;//選択SE
+int g_SE2;//ポーズ画面選択SE
+int g_SE3;//ポーズ画面からメインに戻るSE
+int g_SE4;
 //追加します
 int g_ky;
 
@@ -332,12 +334,21 @@ void DrawEnd(void)
     //エンド画像表示
     DrawGraph(0, 0, g_EndImage, FALSE);
 
-
-    SetFontSize(30);
-    DrawString(100, 120, "使用イラスト",0xFFFFFF);
-
-
-    DrawString(100, 270, "使用BGMとSE", 0xFFFFFF);
+    //使用イラストとBGM、SEの描画処理
+    SetFontSize(35);
+    DrawString(100, 110, "使用イラスト",0xFFFFFF);
+    SetFontSize(25);
+    DrawString(100, 150, "いらすとやｓん", 0xFFFFFF);
+    DrawString(100, 180, "freepikさん",0xFFFFFF);
+    DrawString(100, 210, "illstACさん", 0xFFFFFF);
+    DrawString(100, 240, "パブリックドメインQさん", 0xFFFFFF);
+    SetFontSize(35);
+    DrawString(100, 280, "使用BGMとSE", 0xFFFFFF);
+    SetFontSize(25);
+    DrawString(100, 320, "MUSMUSさん", 0xFFFFFF);
+    DrawString(100, 350, "甘茶の音楽公房さん", 0xFFFFFF);
+    DrawString(100, 380, "無料効果音で遊ぼう！さん",0xFFFFFF);
+    DrawString(100, 410,"効果音ラボさん",0xFFFFFF);
 
  
    
@@ -383,9 +394,19 @@ void GameMain(void)
     SetFontSize(16);
 
     //STARTボタンでポーズ画面へ
-    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
+    if (g_KeyFlg & PAD_INPUT_8) {
+        PlaySoundMem(g_SE2, DX_PLAYTYPE_BACK, TRUE);
+        g_GameState = 8;
+    }
     //BACKボタンで強制終了
-    if (g_KeyFlg & PAD_INPUT_7)g_GameState = 4;
+    if (g_KeyFlg & PAD_INPUT_7) {
+        PlaySoundMem(g_SE4, DX_PLAYTYPE_BACK, TRUE);
+        g_GameState = 4;
+    }
+    // ポーズSE"の音量の設定
+    ChangeVolumeSoundMem(255 * 80 / 100, g_SE2);
+    // ポーズSE"の音量の設定
+    ChangeVolumeSoundMem(255 * 80 / 100, g_SE4);
 }
 
 
@@ -395,10 +416,16 @@ void Pause(void) {
     DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
     enemy.EnemyDraw();
     StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
-    if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
+    if (g_KeyFlg & PAD_INPUT_2) {
+        PlaySoundMem(g_SE3, DX_PLAYTYPE_BACK,TRUE);
+        g_GameState = 5;
+    }
     SetFontSize(30);
     DrawString(225, 250, "---Pause中---", GetColor(255, 0, 0), 0);
     DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 0, 0), 0);
+
+    // 音量の設定
+    ChangeVolumeSoundMem(255 * 80 / 100, g_SE3);
 }
 
 
@@ -498,9 +525,13 @@ int LoadSounds() {
     //エンドBGM
     if ((g_EndBGM = LoadSoundMem("sounds/Chapter9/EndBGM.wav")) == -1)return -1;
     //SE1
-    if ((g_SE1 = LoadSoundMem("sounds/Chapter9/sentaku.wav")) == -1)return -1;
-
- 
+    if ((g_SE1 = LoadSoundMem("sounds/Chapter9/sentakuSE.wav")) == -1)return -1;
+    //SE2プーズ画面に行くボタン
+    if ((g_SE2 = LoadSoundMem("sounds/Chapter9/pausesentakuSE.wav")) == -1)return -1;
+    //SE3メインに戻るSE
+    if ((g_SE3 = LoadSoundMem("sounds/Chapter9/meinnimodoruSE.wav")) == -1)return -1;
+    //SE4強制終了SE
+    if ((g_SE4 = LoadSoundMem("sounds/Chapter9/endSE.wav")) == -1)return -1;
 }
 /***********************************************
  * ランキング並び替え
