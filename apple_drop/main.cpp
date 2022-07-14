@@ -161,7 +161,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
 
       //ゲームループ 
-    while (ProcessMessage() == 0 && g_GameState != 99) {// && !(g_KeyFlg & PAD_INPUT_START)
+    while (ProcessMessage() == 0 && g_GameState != 99) {
         //キー入力取得 
         g_OldKey = g_NowKey;
         g_NowKey = GetJoypadInputState(DX_INPUT_PAD1);
@@ -193,11 +193,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
             GameMain();
             break;
         case 6:
-            DrawGameOver();
-            break;
-        case 7:
             InputRanking();
-        case 8:
+        case 7:
             Pause();
             break;
         }
@@ -385,7 +382,7 @@ void GameMain(void)
     SetFontSize(16);
 
     //STARTボタンでポーズ画面へ
-    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 8;
+    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 7;
     //BACKボタンで強制終了
     if (g_KeyFlg & PAD_INPUT_7)g_GameState = 4;
 }
@@ -396,42 +393,19 @@ void Pause(void) {
     BackScrool();
     DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
     enemy.EnemyDraw();
-    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+    StopSoundMem(g_StageBGM); 
     if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
     SetFontSize(30);
     DrawString(225, 250, "---Pause中---", GetColor(255, 0, 0), 0);
     DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 0, 0), 0);
 }
 
-
-
-
-/***********************************************
- *ゲームオーバー画面描画処理
- ***********************************************/
-void DrawGameOver(void)
-{
-    BackScrool();//チャレンジ3
-    DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
-    g_Score = (g_MileageB / 10 * 10) + g_EnemyCount3 * 50 + g_EnemyCount2 * 100 + g_EnemyCount1 * 200;
-
-
-    //スペースキーでメニューに戻る
-    if (g_KeyFlg & PAD_INPUT_M) {
-        if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
-            g_GameState = 0;
-        }
-        else {
-            g_GameState = 7;
-        }
-    }
-    
-}
 /***********************************************
  * ランキング入力処理
  ***********************************************/
 void InputRanking(void)
 {
+
     //ランキング画像表示
     DrawGraph(0, 0, g_RankingImage, FALSE);
 
@@ -464,9 +438,9 @@ void InputRanking(void)
         g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
         SortRanking();		// ランキング並べ替え
         SaveRanking();		// ランキングデータの保存
-        g_GameState = 2;		// ゲームモードの変更  // 三角形を描画
+        g_GameState = 2;		// ゲームモードの変更
     }
-
+   
 }
 /***********************************************
  * 画像読み込み
@@ -561,7 +535,7 @@ int  SaveRanking(void)
 #pragma warning(disable:4996)
 
    
-    if ((fp = fopen("dat/Chapter5/rankingdata.txt", "w")) == NULL) {
+    if ((fp = fopen("dat/rankingdata.txt", "w")) == NULL) {
         /* エラー処理 */
         printf("Ranking Data Error\n");
         return -1;
@@ -586,7 +560,7 @@ int ReadRanking(void)
 #pragma warning(disable:4996)
 
     //ファイルオープン
-    if ((fp = fopen("dat/Chapter5/rankingdata.txt", "r")) == NULL) {
+    if ((fp = fopen("dat/rankingdata.txt", "r")) == NULL) {
         //エラー処理
         printf("Ranking Data Error\n");
         return -1;
@@ -620,12 +594,12 @@ void TimeCount(void)
     if (Time <= 0)
     {
         if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
-            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
-            g_GameState = 2;
+            StopSoundMem(g_StageBGM); 
+            g_GameState = 6;
         }
         else {
-            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
-            g_GameState = 7;
+            StopSoundMem(g_StageBGM); 
+            g_GameState = 2;
         }
     }
     SetFontSize(50);
