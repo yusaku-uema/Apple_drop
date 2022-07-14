@@ -1,6 +1,7 @@
 #pragma once
 #include"DxLib.h"
 #include"Apple.h"
+#define RANKING_DATA 5
 
 //画面領域の大きさ
 const int SCREEN_WIDTH = 640;
@@ -17,3 +18,15 @@ const int APPLE_HEIGHT = 40; //本当は50
 
 extern int g_Teki[4];
 extern int AX;
+extern int g_KeyFlg;
+extern int g_GameState;
+extern int g_StageBGM;
+
+//ランキングデータ（構造体）
+struct RankingData {
+    int no;
+    char name[11];
+    long score;
+};
+
+extern struct RankingData g_Ranking[RANKING_DATA];

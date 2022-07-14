@@ -1,4 +1,4 @@
-/********************************************************************
+#/********************************************************************
 ** 第5章 ミニゲームを作る
 ** （2)　レース＆避けゲー
 ********************************************************************/
@@ -658,7 +658,6 @@ void UIView(void)
     DrawRotaGraph(573, 220, 0.5f, 0, g_Teki[1], TRUE, FALSE);
     DrawRotaGraph(623, 220, 0.5f, 0, g_Teki[2], TRUE, FALSE);
     DrawFormatString(510, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount1);
-    DrawFormatString(560, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount2);
     DrawFormatString(610, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount3);
 
     //UI「SCORE」表示
