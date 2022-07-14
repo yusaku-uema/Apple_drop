@@ -113,10 +113,10 @@ int ENEMY::CreateEnemy()
                 g_enemy[i].flg = TRUE;
 
                 appletype = GetRand(9);
-                if (appletype >= 0 && appletype <= 5) g_enemy[i].type = 2;
-                if (appletype >= 6 && appletype <= 7) g_enemy[i].type = 2;
+                if (appletype >= 0 && appletype <= 5) g_enemy[i].type = 0;
+                if (appletype >= 6 && appletype <= 7) g_enemy[i].type = 1;
                 if (appletype == 8) g_enemy[i].type = 2;
-                if (appletype == 9) g_enemy[i].type = 2;
+                if (appletype == 9) g_enemy[i].type = 3;
 
                 g_enemy[i].img = g_Teki[g_enemy[i].type];
                 g_enemy[i].x = GetRand(6) * 70 + 30;
