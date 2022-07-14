@@ -334,8 +334,10 @@ void DrawEnd(void)
 
 
     SetFontSize(30);
-    DrawString(150, 240, "使用イラスト", 0xFFFFFF);
-    DrawString(150, 300, "使用BGM　SE", 0xFFFFFF);
+    DrawString(100, 120, "使用イラスト",0xFFFFFF);
+
+
+ 
    
 
 
@@ -367,7 +369,7 @@ void GameMain(void)
 
     fpscount++;
     SetFontSize(18);
-    DrawFormatString(0, 70, 0x00ffff, "fps　 = %d", fps);
+    DrawFormatString(0, 50, 0x00ffff, "fps　 = %d", fps);
     if ((GetNowCount() - g_Time2) >= 1000)
     {
         fps = fpscount;
