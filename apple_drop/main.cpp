@@ -1,4 +1,4 @@
-#/********************************************************************
+/********************************************************************
 ** 第5章 ミニゲームを作る
 ** （2)　レース＆避けゲー
 ********************************************************************/
@@ -10,11 +10,11 @@
 
 #include"Player.h"
 #include"Apple.h"
-
+#include"UI.h"
 
 ENEMY enemy;
 PLAYER player;
-
+UI ui;
 /***********************************************
  * 変数の宣言
  ***********************************************/
@@ -42,7 +42,7 @@ int fpscount = 0;  //かみこうが使うよ
 int fps = 0;  //かみこうが使うよ
 
 
-int Time;   // 現在時間
+//int Time;   // 現在時間
 
 int g_Teki[4]; //キャラ画像変数
 
@@ -79,7 +79,7 @@ const int PLAYER_FUEL = 20000;
 const int PLAYER_BARRIER = 3;
 const int PLAYER_BARRIERUP = 10;
 //制限時間
-const int TIMELIMIT = 30000;
+//const int TIMELIMIT = 30000;
 
 //アイテムの最大数
 const int ITEM_MAX = 3;
@@ -100,12 +100,12 @@ struct DINPUT_JOYSTATE
     unsigned char	Buttons[32];	// ボタン３２個( 押されたボタンは 128 になる )
 };
 
-//ランキングデータ（構造体）
-struct RankingData {
-    int no;
-    char name[11];
-    long score;
-};
+////ランキングデータ（構造体）
+//struct RankingData {
+//    int no;
+//    char name[11];
+//    long score;
+//};
 struct RankingData g_Ranking[RANKING_DATA];
 
 
@@ -271,10 +271,12 @@ void GameInit(void)
     player.PlayerInit();
     enemy.InitEnemy();
 
-    //現在の経過時間を得る
-    g_StartTime = GetNowCount();
+    ////現在の経過時間を得る
+    //g_StartTime = GetNowCount();
 
     g_Time2 = GetNowCount();
+
+    ui.UIInit();
 
     //ゲームメイン処理へ
     g_GameState = 5;
@@ -354,6 +356,7 @@ void DrawEnd(void)
 
 
 
+
     //タイムの加算処理＆終了（3秒後）
     if (++g_WaitTime > 180)g_GameState = 99;
 
@@ -373,8 +376,8 @@ void GameMain(void)
     BackScrool();
     player.PlayerControl();
 
-    UIView();
-    TimeCount();
+    ui.UIView();
+    ui.TimeCount();
 
     enemy.EnemyDraw();
     enemy.EnemyMove();
@@ -416,8 +419,10 @@ void Pause(void) {
     DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
     enemy.EnemyDraw();
     StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+    ui.UIView();
     if (g_KeyFlg & PAD_INPUT_2) {
         PlaySoundMem(g_SE3, DX_PLAYTYPE_BACK, TRUE);
+        ui.StopTime();
         g_GameState = 5;
     }
     SetFontSize(30);
@@ -627,43 +632,43 @@ void BackScrool()
     DrawGraph(0, 0, g_StageImage, FALSE);
 }
 
-void TimeCount(void)
-{
-    //制限時間を過ぎたらゲームオーバー
-    int Time = TIMELIMIT - (GetNowCount() - g_StartTime);
-    if (Time <= 0)
-    {
-        if (g_Ranking[RANKING_DATA - 1].score >= enemy.g_Score) {
-            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
-            g_GameState = 2;
-        }
-        else {
-            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
-            g_GameState = 7;
-        }
-    }
-    SetFontSize(50);
-    DrawFormatString(550, 100, 0xffffff, "%2d", Time / 1000);
-}
-
-void UIView(void)
-{
-    //UI「TIME」表示
-    SetFontSize(50);
-    DrawString(520, 40, "TIME", 0xffffff, 0);
-
-    //拾った数を表示
-    SetFontSize(16);
-    DrawRotaGraph(523, 220, 0.5f, 0, g_Teki[0], TRUE, FALSE);
-    DrawRotaGraph(573, 220, 0.5f, 0, g_Teki[1], TRUE, FALSE);
-    DrawRotaGraph(623, 220, 0.5f, 0, g_Teki[2], TRUE, FALSE);
-    DrawFormatString(510, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount1);
-    DrawFormatString(610, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount3);
-
-    //UI「SCORE」表示
-    SetFontSize(45);
-    DrawString(510, 320, "SCORE", 0xFFFFFF, 0);
-    SetFontSize(35);
-    DrawFormatString(530, 370, 0xFFFFFF, "%05d", enemy.g_Score);
-}
+//void TimeCount(void)
+//{
+//    //制限時間を過ぎたらゲームオーバー
+//    int Time = TIMELIMIT - (GetNowCount() - g_StartTime);
+//    if (Time <= 0)
+//    {
+//        if (g_Ranking[RANKING_DATA - 1].score >= enemy.g_Score) {
+//            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+//            g_GameState = 2;
+//        }
+//        else {
+//            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+//            g_GameState = 7;
+//        }
+//    }
+//    SetFontSize(50);
+//    DrawFormatString(550, 100, 0xffffff, "%2d", Time / 1000);
+//}
+//
+//void UIView(void)
+//{
+//    //UI「TIME」表示
+//    SetFontSize(50);
+//    DrawString(520, 40, "TIME", 0xffffff, 0);
+//
+//    //拾った数を表示
+//    SetFontSize(16);
+//    DrawRotaGraph(523, 220, 0.5f, 0, g_Teki[0], TRUE, FALSE);
+//    DrawRotaGraph(573, 220, 0.5f, 0, g_Teki[1], TRUE, FALSE);
+//    DrawRotaGraph(623, 220, 0.5f, 0, g_Teki[2], TRUE, FALSE);
+//    DrawFormatString(510, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount1);
+//    DrawFormatString(610, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount3);
+//
+//    //UI「SCORE」表示
+//    SetFontSize(45);
+//    DrawString(510, 320, "SCORE", 0xFFFFFF, 0);
+//    SetFontSize(35);
+//    DrawFormatString(530, 370, 0xFFFFFF, "%05d", enemy.g_Score);
+//}
 
