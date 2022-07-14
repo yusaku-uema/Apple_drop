@@ -72,8 +72,8 @@ int g_HelpImage;
 /***********************************************
  * 定数を宣言
  ***********************************************/
- 
-//自機の機体
+
+ //自機の機体
 const int PLAYER_HP = 1000;
 const int PLAYER_FUEL = 20000;
 const int PLAYER_BARRIER = 3;
@@ -235,11 +235,11 @@ void DrawGameTitle(void) {
         PlaySoundMem(g_SE1, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = MenuNo + 1;
     }
-    
+
     //タイトル画像表示
     DrawGraph(0, 0, g_TitleImage, FALSE);
 
-      //メニュー
+    //メニュー
     DrawGraph(310, 220 + MenuNo * 50, g_Applec, TRUE);
     // 音量の設定
     ChangeVolumeSoundMem(255 * 80 / 100, g_SE1);
@@ -248,7 +248,7 @@ void DrawGameTitle(void) {
     //ヘルプBGMを止める　ヘルプ画面からタイトルに戻るときにヘルプBGMが流れないように
     StopSoundMem(g_HelpBGM);
     //エンドBGMを止める　エンド画面からタイトルに戻るときにエンドBGMが流れないように
-    StopSoundMem(g_EndBGM); 
+    StopSoundMem(g_EndBGM);
 }
 
 /***********************************************
@@ -260,7 +260,7 @@ void GameInit(void)
     //g_Score = 0;
 
     //走行距離を初期化
-    
+
     g_MileageB = 0;
 
     ////敵１を避けた数の初期設定
@@ -270,7 +270,7 @@ void GameInit(void)
 
     player.PlayerInit();
     enemy.InitEnemy();
-   
+
     //現在の経過時間を得る
     g_StartTime = GetNowCount();
 
@@ -330,16 +330,16 @@ void DrawEnd(void)
     //エンドBGM
     PlaySoundMem(g_EndBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 *30 / 100, g_EndBGM);
+    ChangeVolumeSoundMem(255 * 30 / 100, g_EndBGM);
     //エンド画像表示
     DrawGraph(0, 0, g_EndImage, FALSE);
 
     //使用イラストとBGM、SEの描画処理
     SetFontSize(35);
-    DrawString(100, 110, "使用イラスト",0xFFFFFF);
+    DrawString(100, 110, "使用イラスト", 0xFFFFFF);
     SetFontSize(25);
     DrawString(100, 150, "いらすとやｓん", 0xFFFFFF);
-    DrawString(100, 180, "freepikさん",0xFFFFFF);
+    DrawString(100, 180, "freepikさん", 0xFFFFFF);
     DrawString(100, 210, "illstACさん", 0xFFFFFF);
     DrawString(100, 240, "パブリックドメインQさん", 0xFFFFFF);
     SetFontSize(35);
@@ -347,11 +347,11 @@ void DrawEnd(void)
     SetFontSize(25);
     DrawString(100, 320, "MUSMUSさん", 0xFFFFFF);
     DrawString(100, 350, "甘茶の音楽公房さん", 0xFFFFFF);
-    DrawString(100, 380, "無料効果音で遊ぼう！さん",0xFFFFFF);
-    DrawString(100, 410,"効果音ラボさん",0xFFFFFF);
+    DrawString(100, 380, "無料効果音で遊ぼう！さん", 0xFFFFFF);
+    DrawString(100, 410, "効果音ラボさん", 0xFFFFFF);
 
- 
-   
+
+
 
 
     //タイムの加算処理＆終了（3秒後）
@@ -369,7 +369,7 @@ void GameMain(void)
     PlaySoundMem(g_StageBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
     ChangeVolumeSoundMem(255 * 30 / 100, g_StageBGM);
- 
+
     BackScrool();
     player.PlayerControl();
 
@@ -417,7 +417,7 @@ void Pause(void) {
     enemy.EnemyDraw();
     StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
     if (g_KeyFlg & PAD_INPUT_2) {
-        PlaySoundMem(g_SE3, DX_PLAYTYPE_BACK,TRUE);
+        PlaySoundMem(g_SE3, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = 5;
     }
     SetFontSize(30);
@@ -450,7 +450,7 @@ void DrawGameOver(void)
             g_GameState = 7;
         }
     }
-    
+
 }
 /***********************************************
  * ランキング入力処理
@@ -508,7 +508,7 @@ int LoadImages()
 
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
- 
+
 
 }
 //サウンド読み込み
@@ -574,7 +574,7 @@ int  SaveRanking(void)
     FILE* fp;
 #pragma warning(disable:4996)
 
-   
+
     if ((fp = fopen("dat/Chapter5/rankingdata.txt", "w")) == NULL) {
         /* エラー処理 */
         printf("Ranking Data Error\n");
