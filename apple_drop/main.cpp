@@ -216,6 +216,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
             break;
         case 6:
             InputRanking();
+            break;
         case 7:
             Pause();
             break;
@@ -403,7 +404,7 @@ void GameMain(void)
     SetFontSize(16);
 
     //STARTボタンでポーズ画面へ
-    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 7;
+    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 6;//７変更
 }
 
 
@@ -428,92 +429,99 @@ void InputRanking(void)
    // //ランキング画像表示
    DrawGraph(0, 0, g_RankingImage, FALSE);
 
-   ////フォントサイズの設定
-   // SetFontSize(20);
+   //フォントサイズの設定
+    SetFontSize(20);
 
-   // //名前入力指示文字列の描画
-   // //DrawString(150, 240, "ランキングに登録します", 0xFFFFFF);
-   // //DrawString(150, 270, "名前を英字で入力してください", 0xFFFFFF);
+    //名前入力指示文字列の描画
+    //DrawString(150, 240, "ランキングに登録します", 0xFFFFFF);
+    //DrawString(150, 270, "名前を英字で入力してください", 0xFFFFFF);
 
-   // //名前の入力
-   //// DrawString(150, 310, "> ", 0xFFFFFF);
-   //// DrawBox(160, 305, 300, 335, 0x000055, TRUE);
+    //名前の入力
+   // DrawString(150, 310, "> ", 0xFFFFFF);
+   // DrawBox(160, 305, 300, 335, 0x000055, TRUE);
 
-    //if (fonttime >= 7 || g_OldKey == 0)
-    //{
-    //    if (AX > 0)
-    //    {
-    //        g_nowfontX++;
-    //        if (g_nowfontX > 9) g_nowfontX = 0;
-    //    }
-    //    else if (AX < 0)
-    //    {
-    //        g_nowfontX--;
-    //        if (g_nowfontX < 0) g_nowfontX = 9;
-    //    }
-    //    else if (AY > 0)
-    //    {
-    //        g_nowfontY++;
-    //        if (g_nowfontY > 3) g_nowfontY = 0;
-    //    }
-    //    else if (AY < 0)
-    //    {
-    //        g_nowfontY--;
-    //        if (g_nowfontY < 0) g_nowfontY = 3;
-    //    }
+    if (fonttime >= 7)// || g_OldKey == 0)
+    {
+        if (AX > 0)
+        {
+            g_nowfontX++;
+            if (g_nowfontX > 12) g_nowfontX = 0;
+            fonttime = 0;
+        }
+        else if (AX < 0)
+        {
+            g_nowfontX--;
+            if (g_nowfontX < 0) g_nowfontX = 12;
+            fonttime = 0;
+        }
+        else if (AY > 0)
+        {
+            g_nowfontY++;
+            if (g_nowfontY > 4) g_nowfontY = 0;
+            fonttime = 0;
+        }
+        else if (AY < 0)
+        {
+            g_nowfontY--;
+            if (g_nowfontY < 0) g_nowfontY = 4;
+            fonttime = 0;
+        }
+    }
 
-    //    fonttime = 0;
-
-    //}
-    //fonttime++;
-
-
-    //SetFontSize(30);
-    //for (int i = 0; i < 5; i++)
-    //{
-    //    for (int j = 0; j < 13; j++)
-    //    {
-    //        if (i == g_nowfontY && j == g_nowfontX)
-    //        {
-    //            color = red;
-    //        }
-    //        DrawFormatString(g_fontX, g_fontY, color, "%c", name[i][j]);
-    //        color = white;
-    //        g_fontX += 35;
-    //    }
-    //    g_fontX = 100;
-    //    g_fontY += 35;
-    //}
-    //g_fontY = 200;
-
-
-    //if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A && g_OldKey == 0)
-    //{
-    //    if (fontno < 9)
-    //    {
-    //        g_Ranking[4].name[fontno] = name[g_nowfontY][g_nowfontX];
-    //        fontno++;
-    //        //fonttime = 0;
-    //    }
-    //    /*(170, 310, 10, g_Ranking[4].name, FALSE);*/
+    SetFontSize(30);
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 13; j++)
+        {
+            if (i == g_nowfontY && j == g_nowfontX)
+            {
+                color = red;
+            }
+            DrawFormatString(g_fontX, g_fontY, color, "%c", name[i][j]);
+            color = white;
+            g_fontX += 35;
+        }
+        g_fontX = 100;
+        g_fontY += 35;
+    }
+    g_fontY = 200;
 
 
-    //}
+    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A/* && g_OldKey == 0*/)
+    {
+        if (fonttime >= 10)
+        {
+            if (fontno < 9)
+            {
+                g_Ranking[4].name[fontno] = name[g_nowfontY][g_nowfontX];
+                fontno++;
+                
+            }
+            fonttime = 0;
+        }
+        /*(170, 310, 10, g_Ranking[4].name, FALSE);*/
 
-    //if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B && g_OldKey == 0)
-    //{
-    //    fontno--;
-    //    g_Ranking[4].name[fontno] = '\0';
-    //    if (fontno < 0)fontno = 0;
-    //    //fonttime = 0;
 
-    //}
+    }
 
+    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B /*&& g_OldKey == 0*/)
+    {
 
+        if (fonttime >= 10)
+        {
+            fontno--;
+            g_Ranking[4].name[fontno] = '\0';
+            if (fontno < 0)fontno = 0;
+            fonttime = 0;
+        }
 
-    //DrawFormatString(0, 0, color, "%s", g_Ranking[4].name);
+    }
 
-    //
+    fonttime++;
+
+    DrawFormatString(0, 0, color, "%s", g_Ranking[4].name);
+
+    
     //if (KeyInputSingleCharString(170, 310, 10, g_Ranking[4].name, FALSE) == 1) 
     //{
     //    g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
