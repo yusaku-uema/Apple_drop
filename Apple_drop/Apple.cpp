@@ -67,7 +67,7 @@ void ENEMY::EnemyMove()
             }
         }
 
-        
+
     }
 
     //走行距離ごとに敵出現パターンを制御する
@@ -159,11 +159,11 @@ int ENEMY::CreateEnemy()
     return FALSE;
 }
 
-void ENEMY::InitEnemy() 
+void ENEMY::InitEnemy()
 {
 
     //エネミーの初期処理
-    for (int i = 0; i < ENEMY_MAX; i++) 
+    for (int i = 0; i < ENEMY_MAX; i++)
     {
         g_enemy[i].flg = FALSE;
     }
@@ -189,4 +189,3 @@ void ENEMY::CheckApple()
     drawapple = ceil(((double)ENEMY_MAX - (double)applecount) / 2);
     applecount = 0;
 }
-
