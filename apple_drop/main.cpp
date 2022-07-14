@@ -77,7 +77,7 @@ const int PLAYER_FUEL = 20000;
 const int PLAYER_BARRIER = 3;
 const int PLAYER_BARRIERUP = 10;
 //制限時間
-const int TIMELIMIT = 30000;
+ int TIMELIMIT = 30000;
 
 //アイテムの最大数
 const int ITEM_MAX = 3;
@@ -383,15 +383,20 @@ void GameMain(void)
     //BACKボタンで強制終了
     if (g_KeyFlg & PAD_INPUT_7)g_GameState = 4;
 }
-
-
-//ポーズ画面追加
+/***********************************************
+ *ポーズ画面
+ ***********************************************/
 void Pause(void) {
     BackScrool();
     DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
     enemy.EnemyDraw();
     StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
-    if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
+    UIView();
+    if (g_KeyFlg & PAD_INPUT_2) {
+        TIMELIMIT = Time;
+       g_StartTime = GetNowCount();
+        g_GameState = 5;
+    }
     SetFontSize(30);
     DrawString(225, 250, "---Pause中---", GetColor(255, 0, 0), 0);
     DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 0, 0), 0);
@@ -595,7 +600,7 @@ void BackScrool()
 void TimeCount(void)
 {
     //制限時間を過ぎたらゲームオーバー
-    int Time = TIMELIMIT - (GetNowCount() - g_StartTime);
+    Time = TIMELIMIT - (GetNowCount() - g_StartTime);
     if (Time <= 0)
     {
         if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
@@ -607,8 +612,7 @@ void TimeCount(void)
             g_GameState = 7;
         }
     }
-    SetFontSize(50);
-    DrawFormatString(550, 100, 0xffffff, "%2d", Time / 1000);
+    
 }
 
 void UIView(void)
@@ -629,5 +633,10 @@ void UIView(void)
     //UI「SCORE」表示
     SetFontSize(45);
     DrawString(510, 320, "SCORE", 0xffffff, 0);
+
+    //時間を表示
+    SetFontSize(50);
+    DrawFormatString(550, 100, 0xffffff, "%2d", Time / 1000);
 }
+
 
