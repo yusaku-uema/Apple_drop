@@ -497,7 +497,7 @@ void InputRanking(void)
 {
 
    // //ランキング画像表示
-    if ((0,0,g_RankingInputImage , FALSE));
+    DrawGraph( 0, 0, g_RankingInputImage , FALSE);
 
    //フォントサイズの設定
     SetFontSize(20);
