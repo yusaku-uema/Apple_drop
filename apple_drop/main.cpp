@@ -83,6 +83,9 @@ int color = white;
 
 int g_HelpImage;
 
+const int FONT_X = 100;
+const int FONT_Y = 200;
+
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -139,7 +142,6 @@ void GameInit(void); //ゲーム初期処理
 void GameMain(void); //ゲームメイン処理
 
 void DrawGameTitle(void); //タイトル描画処理
-void DrawGameOver(void); //ゲームオーバー画面描画処理
 void DrawEnd(void); //ゲームエンド描画処理
 void DrawHelp(void); //ゲームヘルプ描画処理
 
