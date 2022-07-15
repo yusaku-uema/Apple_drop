@@ -618,7 +618,7 @@ int LoadImages()
     if ((g_StageImage = LoadGraph("images/Chapter5/haikei_abcd.png")) == -1)return -1;
 
     //ヘルプ画面
-    if ((g_HelpImage = LoadGraph("images/Chapter5/Help.png")) == -1)return -1;
+    if ((g_HelpImage = LoadGraph("images/Chapter5/Help2.png")) == -1)return -1;
 
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
