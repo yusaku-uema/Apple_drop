@@ -15,6 +15,26 @@
 ENEMY enemy;
 PLAYER player;
 UI ui;
+
+
+/***********************************************
+ * 定数を宣言
+ ***********************************************/
+
+ //自機の機体
+const int PLAYER_HP = 1000;
+const int PLAYER_FUEL = 20000;
+const int PLAYER_BARRIER = 3;
+const int PLAYER_BARRIERUP = 10;
+//制限時間
+//const int TIMELIMIT = 30000;
+
+//アイテムの最大数
+const int ITEM_MAX = 3;
+
+const int FONT_X = 100;
+const int FONT_Y = 200;
+
 /***********************************************
  * 変数の宣言
  ***********************************************/
@@ -66,8 +86,8 @@ int g_SE4;
 int g_ky;
 
 int AX, AY; //コントローラ左スティック座標消さないで
-int g_fontX = 100;
-int g_fontY = 200;
+int g_fontX = FONT_X;
+int g_fontY = FONT_Y;
 int g_nowfontX = 0;
 int g_nowfontY = 0;
 
@@ -83,23 +103,13 @@ int color = white;
 
 int g_HelpImage;
 
-const int FONT_X = 100;
-const int FONT_Y = 200;
 
-/***********************************************
- * 定数を宣言
- ***********************************************/
 
- //自機の機体
-const int PLAYER_HP = 1000;
-const int PLAYER_FUEL = 20000;
-const int PLAYER_BARRIER = 3;
-const int PLAYER_BARRIERUP = 10;
-//制限時間
-//const int TIMELIMIT = 30000;
 
-//アイテムの最大数
-const int ITEM_MAX = 3;
+
+
+
+
 
 //ステック
 struct DINPUT_JOYSTATE
@@ -117,7 +127,7 @@ struct DINPUT_JOYSTATE
     unsigned char	Buttons[32];	// ボタン３２個( 押されたボタンは 128 になる )
 };
 
-////ランキングデータ（構造体）
+//ランキングデータ（構造体）
 //struct RankingData {
 //    int no;
 //    char name[10];
@@ -158,6 +168,7 @@ void BackScrool(); //背景画像スクロール処理
 int LoadSounds(); //サウンドの読み込み処理
 
 void Pause(); //ポーズ画面
+void InputRankingInit(void);
 
 /***********************************************
  * プログラムの開始
@@ -301,6 +312,7 @@ void GameInit(void)
     g_Time2 = GetNowCount();
 
     ui.UIInit();
+    InputRankingInit();
 
     //ゲームメイン処理へ
     g_GameState = 5;
@@ -457,6 +469,15 @@ void Pause(void) {
     ChangeVolumeSoundMem(255 * 80 / 100, g_SE3);
 }
 
+void InputRankingInit(void)
+{
+    for (int i = 0; i < 11; i++)
+    {
+        g_Ranking[4].name[i] = '\0';
+    }
+    g_GameState = 7;
+}
+
 /***********************************************
  * ランキング入力処理
  ***********************************************/
@@ -468,8 +489,8 @@ void InputRanking(void)
 
    //フォントサイズの設定
     SetFontSize(20);
-    DrawBox(90, 195, 550, 385, 0x000000, TRUE);
-    DrawBox(90, 195, 550, 385, white, FALSE);
+    DrawBox(FONT_X - 10, FONT_Y - 5, FONT_X + 450, FONT_Y + 175, 0x000000, TRUE);
+    DrawBox(FONT_X - 10, FONT_Y - 5, FONT_X + 450, FONT_Y + 175, white, FALSE);
 
     if (fonttime >= 7)// || g_OldKey == 0)
     {
@@ -512,10 +533,10 @@ void InputRanking(void)
             color = white;
             g_fontX += 35;
         }
-        g_fontX = 100;
+        g_fontX = FONT_X;
         g_fontY += 35;
     }
-    g_fontY = 200;
+    g_fontY = FONT_Y;
 
 
     if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B/* && g_OldKey == 0*/)//決定
