@@ -16,7 +16,30 @@
 ENEMY enemy;
 PLAYER player;
 UI ui;
+
 BGMSE bgmse;
+
+
+
+/***********************************************
+ * 定数を宣言
+ ***********************************************/
+
+ //自機の機体
+const int PLAYER_HP = 1000;
+const int PLAYER_FUEL = 20000;
+const int PLAYER_BARRIER = 3;
+const int PLAYER_BARRIERUP = 10;
+//制限時間
+//const int TIMELIMIT = 30000;
+
+//アイテムの最大数
+const int ITEM_MAX = 3;
+
+const int FONT_X = 100;
+const int FONT_Y = 200;
+
+
 /***********************************************
  * 変数の宣言
  ***********************************************/
@@ -49,6 +72,7 @@ int fps = 0;  //かみこうが使うよ
 int g_Teki[4]; //キャラ画像変数
 
 int g_StageImage;
+int g_RankingInputImage;//ランキングインプット画面
 int g_teki;
 //int g_PlayerImage[16];  //自機画像 //キャラ画像変数
 
@@ -59,8 +83,8 @@ int g_Applec; //タイトルカーソル変数　消さないで
 int g_ky;
 
 int AX, AY; //コントローラ左スティック座標消さないで
-int g_fontX = 100;
-int g_fontY = 200;
+int g_fontX = FONT_X;
+int g_fontY = FONT_Y;
 int g_nowfontX = 0;
 int g_nowfontY = 0;
 
@@ -76,24 +100,19 @@ int color = white;
 
 int g_HelpImage;
 
+<<<<<<< HEAD
 const int FONT_X = 100;
 const int FONT_Y = 200;
 int Decision = 0;
+=======
+>>>>>>> main
 
-/***********************************************
- * 定数を宣言
- ***********************************************/
 
- //自機の機体
-const int PLAYER_HP = 1000;
-const int PLAYER_FUEL = 20000;
-const int PLAYER_BARRIER = 3;
-const int PLAYER_BARRIERUP = 10;
-//制限時間
-//const int TIMELIMIT = 30000;
 
-//アイテムの最大数
-const int ITEM_MAX = 3;
+
+
+
+
 
 //ステック
 struct DINPUT_JOYSTATE
@@ -111,7 +130,16 @@ struct DINPUT_JOYSTATE
     unsigned char	Buttons[32];	// ボタン３２個( 押されたボタンは 128 になる )
 };
 
+<<<<<<< HEAD
 
+=======
+//ランキングデータ（構造体）
+//struct RankingData {
+//    int no;
+//    char name[10];
+//    long score;
+//};
+>>>>>>> main
 struct RankingData g_Ranking[RANKING_DATA];
 
 
@@ -129,21 +157,21 @@ char name[5][13] = {
  ***********************************************/
 void GameInit(void); //ゲーム初期処理
 void GameMain(void); //ゲームメイン処理
-
 void DrawGameTitle(void); //タイトル描画処理
 void DrawEnd(void); //ゲームエンド描画処理
 void DrawHelp(void); //ゲームヘルプ描画処理
-
 void DrawRanking(void); //ランキング描画処理
 void InputRanking(void);//ランキング入力
 int LoadImages(); //画像読み込み
 void SortRanking(void); //ランキンググ並び替え
 int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
-void BackScrool(); //背景画像スクロール処
-//int LoadSounds(); //サウンドの読み込み処理
+
+void BackScrool(); //背景画像スクロール処理
+int LoadSounds(); //サウンドの読み込み処理
 
 void Pause(); //ポーズ画面
+void InputRankingInit(void);
 
 /***********************************************
  * プログラムの開始
@@ -290,6 +318,7 @@ void GameInit(void)
     g_Time2 = GetNowCount();
 
     ui.UIInit();
+    InputRankingInit();
 
     //ゲームメイン処理へ
     g_GameState = 5;
@@ -310,11 +339,12 @@ void DrawRanking(void)
     DrawGraph(0, 0, g_RankingImage, FALSE);
 
     //ランキング一覧を表示
-    SetFontSize(18);
+    SetFontSize(30);
     for (int i = 0; i < RANKING_DATA; i++) {
-        DrawFormatString(50, 170 + i * 25, 0xffffff, "%2d %-10s %10d", g_Ranking[i].no, g_Ranking[i].name, g_Ranking[i].score);
+        DrawFormatString(120, 170 + i * 25, 0xffffff, "%2d %-10s %10d", g_Ranking[i].no, g_Ranking[i].name, g_Ranking[i].score);
     }
-    DrawString(100, 450, "----Bボタン押してタイトルに戻る ----", 0xffffff, 0);
+    SetFontSize(30);
+    DrawString(50, 450, "----Bボタン押してタイトルに戻る----", 0xffffff, 0);
     //Bボタンでタイトルに戻る
     if (g_KeyFlg & PAD_INPUT_B) g_GameState = 0;
     StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
@@ -337,8 +367,23 @@ void DrawHelp(void)
     DrawGraph(0, 0, g_HelpImage, FALSE);
     StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
     SetFontSize(30);
-    DrawString(100, 110, "ゲームをしてね", 0xFFFFFF);
+    DrawString(160, 110, "Lスティック…移動操作", 0xFFFFFF);
+    SetFontSize(30);
+    DrawString(160, 160, "Aボタン…決定", 0xFFFFFF);
+    SetFontSize(30);
+    DrawString(160, 210, "Bボタン…戻る", 0xFFFFFF);
+    SetFontSize(30);
+    DrawString(100, 260, "STARTボタン…ポーズ画面に移動する", 0xFFFFFF);
+    SetFontSize(30);
+    DrawString(140, 310, "BACKボタン…ゲームを終了する", 0xFFFFFF);
 
+    SetFontSize(30);
+    DrawString(20, 390, "---Aボタン押してゲームをスタートする---", 0xffffff, 0);
+    SetFontSize(30);
+    DrawString(300, 420, "OR", 0xffffff, 0);
+    SetFontSize(30);
+    DrawString(50, 450, "----Bボタン押してタイトルに戻る----", 0xffffff, 0);
+    //Bボタンでタイトルに戻る
 }
 
 /***********************************************
@@ -446,6 +491,15 @@ void Pause(void) {
     ChangeVolumeSoundMem(255 * 80 / 100, bgmse.g_SE3);
 }
 
+void InputRankingInit(void)
+{
+    for (int i = 0; i < 11; i++)
+    {
+        g_Ranking[4].name[i] = '\0';
+    }
+    g_GameState = 7;
+}
+
 /***********************************************
  * ランキング入力処理
  ***********************************************/
@@ -453,12 +507,12 @@ void InputRanking(void)
 {
 
    // //ランキング画像表示
-   DrawGraph(0, 0, g_RankingImage, FALSE);
+    DrawGraph( 0, 0, g_RankingInputImage , FALSE);
 
    //フォントサイズの設定
     SetFontSize(20);
-    DrawBox(90, 195, 550, 385, 0x000000, TRUE);
-    DrawBox(90, 195, 550, 385, white, FALSE);
+    DrawBox(FONT_X - 10, FONT_Y - 5, FONT_X + 450, FONT_Y + 175, 0x000000, TRUE);
+    DrawBox(FONT_X - 10, FONT_Y - 5, FONT_X + 450, FONT_Y + 175, white, FALSE);
 
     if (fonttime >= 7)
     {
@@ -501,10 +555,10 @@ void InputRanking(void)
             color = white;
             g_fontX += 35;
         }
-        g_fontX = 100;
+        g_fontX = FONT_X;
         g_fontY += 35;
     }
-    g_fontY = 200;
+    g_fontY = FONT_Y;
 
 
     if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A/* && g_OldKey == 0*/)//決定
@@ -584,6 +638,8 @@ int LoadImages()
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
 
+    //ランキング入力画面
+    if ((g_RankingInputImage = LoadGraph("images/Chapter5/rankingnyuuryoku.png")) == -1)return -1;
 
 }
 
