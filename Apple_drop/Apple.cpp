@@ -2,6 +2,7 @@
 #include"Apple.h"
 #include"common.h"
 #include"Player.h"
+#include"BGMandSE.h"
 
 //struct ENEMY g_enemy[ENEMY_MAX];
 struct Enemy g_enemy[ENEMY_MAX];
@@ -40,21 +41,25 @@ void ENEMY::EnemyMove()
 
                 if (g_enemy[i].type == 0)
                 {
+                    PlaySoundMem(bgmse.g_SE6, DX_PLAYTYPE_BACK, TRUE);
                     g_EnemyCount1++;
                     g_Score += g_enemy[i].point;
                 }
                 if (g_enemy[i].type == 1)
                 {
+                    PlaySoundMem(bgmse.g_SE6, DX_PLAYTYPE_BACK, TRUE);
                     g_EnemyCount2++;
                     g_Score += g_enemy[i].point;
                 }
                 if (g_enemy[i].type == 2)
                 {
+                    PlaySoundMem(bgmse.g_SE6, DX_PLAYTYPE_BACK, TRUE);
                     g_EnemyCount3++;
                     g_Score += g_enemy[i].point;
                 }
                 if (g_enemy[i].type == 3)
                 {
+                    PlaySoundMem(bgmse.g_SE5, DX_PLAYTYPE_BACK, TRUE);
                     g_Score += g_enemy[i].point;
                 }
                 if (g_Score <= 0) g_Score = 0;
