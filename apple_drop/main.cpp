@@ -184,7 +184,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
         //BACKÉ{É^ÉìÇ≈ã≠êßèIóπ
         if (g_KeyFlg & PAD_INPUT_7) {
-            PlaySoundMem(g_SE4, DX_PLAYTYPE_BACK, FALSE);
+            PlaySoundMem(bgmse.g_SE4, DX_PLAYTYPE_BACK, FALSE);
             g_GameState = 4;
         }
 

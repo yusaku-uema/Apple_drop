@@ -12,13 +12,13 @@ void UI::TimeCount()
     Time = TIMELIMIT - (GetNowCount() - g_StartTime);
     if (Time <= 0)
     {
-        if (g_Ranking[RANKING_DATA - 1].score >= enemy.g_Score) {
+        if (g_Ranking[RANKING_DATA - 1].score <= enemy.g_Score) {
             StopSoundMem(bgmse.g_StageBGM); //ゲームオーバーに追加する
-            g_GameState = 2;
+            g_GameState = 6;
         }
         else {
             StopSoundMem(bgmse.g_StageBGM); //ゲームオーバーに追加する
-            g_GameState = 7;
+            g_GameState = 2;
         }
     }
 }
