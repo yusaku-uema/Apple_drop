@@ -3,7 +3,6 @@
 #include"BGMandSE.h"
 
 //サウンド読み込み
-
 int  BGMSE ::LoadSounds() {
 
     //ステージBGMデータの読み込み
@@ -28,5 +27,9 @@ int  BGMSE ::LoadSounds() {
     if ((g_SE5 = LoadSoundMem("sounds/Chapter9/dokuringoSE.wav")) == -1)return -1;
     //SE6りんごabcのSE
     if ((g_SE6 = LoadSoundMem("sounds/Chapter9/ringokakutokuSE.wav")) == -1)return -1;
+    //SE7ランキング入力画面選択SE
+    if ((g_SE7 = LoadSoundMem("sounds/Chapter9/inputSE.wav")) == -1)return -1;
+    //SE8ランキング削除SE
+    if ((g_SE8 = LoadSoundMem("sounds/Chapter9/sakujyoSE.wav")) == -1)return -1;
 }
 

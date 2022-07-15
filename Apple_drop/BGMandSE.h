@@ -16,6 +16,8 @@ public:
 	int g_SE4;//強制終了SE
 	int g_SE5;//毒リンゴSE
 	int g_SE6;//リンゴSE
+	int g_SE7;//ランキング入力選択SE
+	int g_SE8;//ランキング削除SE
 
 	int LoadSounds();
 

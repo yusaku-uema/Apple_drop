@@ -16,7 +16,6 @@
 ENEMY enemy;
 PLAYER player;
 UI ui;
-
 BGMSE bgmse;
 
 
@@ -158,7 +157,7 @@ int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
 
 void BackScrool(); //背景画像スクロール処理
-int LoadSounds(); //サウンドの読み込み処理
+//int LoadSounds(); //サウンドの読み込み処理
 
 void Pause(); //ポーズ画面
 void InputRankingInit(void);
@@ -184,7 +183,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
-    if (bgmse.LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
+    if (bgmse.LoadSounds() == -1) return -1; //サウンド読みこみ関数を呼び出し
 
       //ゲームループ 
     while (ProcessMessage() == 0 && g_GameState != 99) {
@@ -553,8 +552,10 @@ void InputRanking(void)
 
     if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A/* && g_OldKey == 0*/)//決定
     {
+       
         if (fonttime >= 10)
         {
+            PlaySoundMem(bgmse.g_SE7, DX_PLAYTYPE_BACK, TRUE);//ランキング入力画面の選択SE
             if (fontno < 9)
             {
                 g_Ranking[4].name[fontno] = name[g_nowfontY][g_nowfontX];
@@ -570,9 +571,9 @@ void InputRanking(void)
 
     if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B /*&& g_OldKey == 0*/)//消去
     {
-
         if (fonttime >= 10)
         {
+            PlaySoundMem(bgmse.g_SE8, DX_PLAYTYPE_BACK, TRUE);//ランキング削除SE
             fontno--;
             g_Ranking[4].name[fontno] = '\0';
             if (fontno < 0)fontno = 0;
