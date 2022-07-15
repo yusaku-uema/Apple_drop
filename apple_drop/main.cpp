@@ -404,7 +404,7 @@ void GameMain(void)
     SetFontSize(16);
 
     //STARTボタンでポーズ画面へ
-    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 6;//７変更
+    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 6;//７変更　7に戻すこと
 }
 
 
@@ -438,7 +438,8 @@ void InputRanking(void)
 
     //名前の入力
    // DrawString(150, 310, "> ", 0xFFFFFF);
-   // DrawBox(160, 305, 300, 335, 0x000055, TRUE);
+    DrawBox(90, 195, 550, 385, 0x000000, TRUE);
+    DrawBox(90, 195, 550, 385, white, FALSE);
 
     if (fonttime >= 7)// || g_OldKey == 0)
     {
@@ -522,13 +523,13 @@ void InputRanking(void)
     DrawFormatString(0, 0, color, "%s", g_Ranking[4].name);
 
     
-    //if (KeyInputSingleCharString(170, 310, 10, g_Ranking[4].name, FALSE) == 1) 
-    //{
-    //    g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
-    //    SortRanking();		// ランキング並べ替え
-    //    SaveRanking();		// ランキングデータの保存
-    //    g_GameState = 2;		// ゲームモードの変更
-    //}
+    if (g_KeyFlg & PAD_INPUT_8) 
+    {
+        g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
+        SortRanking();		// ランキング並べ替え
+        SaveRanking();		// ランキングデータの保存
+        g_GameState = 2;		// ゲームモードの変更
+    }
 }
 /***********************************************
  * 画像読み込み
