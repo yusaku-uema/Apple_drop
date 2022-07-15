@@ -140,11 +140,9 @@ char name[5][13] = {
  ***********************************************/
 void GameInit(void); //ゲーム初期処理
 void GameMain(void); //ゲームメイン処理
-
 void DrawGameTitle(void); //タイトル描画処理
 void DrawEnd(void); //ゲームエンド描画処理
 void DrawHelp(void); //ゲームヘルプ描画処理
-
 void DrawRanking(void); //ランキング描画処理
 void InputRanking(void);//ランキング入力
 int LoadImages(); //画像読み込み
@@ -154,9 +152,7 @@ void SortRanking(void); //ランキンググ並び替え
 int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
 void BackScrool(); //背景画像スクロール処理
-
 int LoadSounds(); //サウンドの読み込み処理
-
 void Pause(); //ポーズ画面
 
 /***********************************************
@@ -321,11 +317,12 @@ void DrawRanking(void)
     DrawGraph(0, 0, g_RankingImage, FALSE);
 
     //ランキング一覧を表示
-    SetFontSize(18);
+    SetFontSize(30);
     for (int i = 0; i < RANKING_DATA; i++) {
-        DrawFormatString(50, 170 + i * 25, 0xffffff, "%2d %-10s %10d", g_Ranking[i].no, g_Ranking[i].name, g_Ranking[i].score);
+        DrawFormatString(120, 170 + i * 25, 0xffffff, "%2d %-10s %10d", g_Ranking[i].no, g_Ranking[i].name, g_Ranking[i].score);
     }
-    DrawString(100, 450, "----Bボタン押してタイトルに戻る ----", 0xffffff, 0);
+    SetFontSize(30);
+    DrawString(50, 450, "----Bボタン押してタイトルに戻る----", 0xffffff, 0);
     //Bボタンでタイトルに戻る
     if (g_KeyFlg & PAD_INPUT_B) g_GameState = 0;
     StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
@@ -348,8 +345,23 @@ void DrawHelp(void)
     DrawGraph(0, 0, g_HelpImage, FALSE);
     StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
     SetFontSize(30);
-    DrawString(100, 110, "ゲームをしてね", 0xFFFFFF);
+    DrawString(160, 110, "Lスティック…移動操作", 0xFFFFFF);
+    SetFontSize(30);
+    DrawString(160, 160, "Aボタン…決定", 0xFFFFFF);
+    SetFontSize(30);
+    DrawString(160, 210, "Bボタン…戻る", 0xFFFFFF);
+    SetFontSize(30);
+    DrawString(100, 260, "STARTボタン…ポーズ画面に移動する", 0xFFFFFF);
+    SetFontSize(30);
+    DrawString(140, 310, "BACKボタン…ゲームを終了する", 0xFFFFFF);
 
+    SetFontSize(30);
+    DrawString(20, 390, "---Aボタン押してゲームをスタートする---", 0xffffff, 0);
+    SetFontSize(30);
+    DrawString(300, 420, "OR", 0xffffff, 0);
+    SetFontSize(30);
+    DrawString(50, 450, "----Bボタン押してタイトルに戻る----", 0xffffff, 0);
+    //Bボタンでタイトルに戻る
 }
 
 /***********************************************
@@ -585,7 +597,7 @@ int LoadImages()
     if ((g_StageImage = LoadGraph("images/Chapter5/haikei_abcd.png")) == -1)return -1;
 
     //ヘルプ画面
-    if ((g_HelpImage = LoadGraph("images/Chapter5/Help2.png")) == -1)return -1;
+    if ((g_HelpImage = LoadGraph("images/Chapter5/Help.png")) == -1)return -1;
 
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
