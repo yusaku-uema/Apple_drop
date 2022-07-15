@@ -27,6 +27,9 @@
     <ClCompile Include="UI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="BGMandSE.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ranking.h">
@@ -42,6 +45,9 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="BGMandSE.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>

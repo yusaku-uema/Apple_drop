@@ -11,10 +11,12 @@
 #include"Player.h"
 #include"Apple.h"
 #include"UI.h"
+#include"BGMandSE.h"
 
 ENEMY enemy;
 PLAYER player;
 UI ui;
+BGMSE bgmse;
 /***********************************************
  * 変数の宣言
  ***********************************************/
@@ -52,16 +54,7 @@ int g_teki;
 
 int g_Applec; //タイトルカーソル変数　消さないで
 
-int g_StageBGM; //mainのBGM追加します
-int g_TitleBGM;//タイトルBGM
-int g_RankingBGM;//ランキングBGM
-int g_HelpBGM;//ヘルプBGM
-int g_EndBGM;//エンドBGM
 
-int g_SE1;//選択SE
-int g_SE2;//ポーズ画面選択SE
-int g_SE3;//ポーズ画面からメインに戻るSE
-int g_SE4;
 //追加します
 int g_ky;
 
@@ -153,9 +146,8 @@ void TimeCount();
 void SortRanking(void); //ランキンググ並び替え
 int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
-void BackScrool(); //背景画像スクロール処理
-
-int LoadSounds(); //サウンドの読み込み処理
+void BackScrool(); //背景画像スクロール処
+//int LoadSounds(); //サウンドの読み込み処理
 
 void Pause(); //ポーズ画面
 
@@ -180,7 +172,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
-    if (LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
+    if (bgmse.LoadSounds() == -1) return -1;      //サウンド読みこみ関数を呼び出し
 
       //ゲームループ 
     while (ProcessMessage() == 0 && g_GameState != 99) {
@@ -242,9 +234,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 void DrawGameTitle(void) {
 
     //TitleにBGMを流す。消さないで
-    PlaySoundMem(g_TitleBGM, DX_PLAYTYPE_BACK, FALSE);
+    PlaySoundMem(bgmse.g_TitleBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 50 / 100, g_TitleBGM);
+    ChangeVolumeSoundMem(255 * 50 / 100, bgmse.g_TitleBGM);
     static int MenuNo = 0;
 
     //メニューカーソル移動処理
@@ -256,7 +248,7 @@ void DrawGameTitle(void) {
     }
     //zキーでメニュー選択
     if (g_KeyFlg & PAD_INPUT_A) {
-        PlaySoundMem(g_SE1, DX_PLAYTYPE_BACK, TRUE);
+        PlaySoundMem(bgmse.g_SE1, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = MenuNo + 1;
     }
 
@@ -266,13 +258,13 @@ void DrawGameTitle(void) {
     //メニュー
     DrawGraph(310, 220 + MenuNo * 50, g_Applec, TRUE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 80 / 100, g_SE1);
+    ChangeVolumeSoundMem(255 * 80 / 100, bgmse.g_SE1);
     //ランキングBGMを止める　ランキング画面からタイトルに戻るときにランキングBGMが流れないように
-    StopSoundMem(g_RankingBGM);
+    StopSoundMem(bgmse.g_RankingBGM);
     //ヘルプBGMを止める　ヘルプ画面からタイトルに戻るときにヘルプBGMが流れないように
-    StopSoundMem(g_HelpBGM);
+    StopSoundMem(bgmse.g_HelpBGM);
     //エンドBGMを止める　エンド画面からタイトルに戻るときにエンドBGMが流れないように
-    StopSoundMem(g_EndBGM);
+    StopSoundMem(bgmse.g_EndBGM);
 }
 
 /***********************************************
@@ -311,9 +303,9 @@ void GameInit(void)
 void DrawRanking(void)
 {
     //ランキングサウンド
-    PlaySoundMem(g_RankingBGM, DX_PLAYTYPE_BACK, FALSE);
+    PlaySoundMem(bgmse.g_RankingBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 50 / 100, g_RankingBGM);
+    ChangeVolumeSoundMem(255 * 50 / 100, bgmse.g_RankingBGM);
     //スペースキーでメニューに戻る
     if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
 
@@ -325,10 +317,15 @@ void DrawRanking(void)
     for (int i = 0; i < RANKING_DATA; i++) {
         DrawFormatString(50, 170 + i * 25, 0xffffff, "%2d %-10s %10d", g_Ranking[i].no, g_Ranking[i].name, g_Ranking[i].score);
     }
+
     DrawString(100, 450, "----Bボタン押してタイトルに戻る ----", 0xffffff, 0);
     //Bボタンでタイトルに戻る
     if (g_KeyFlg & PAD_INPUT_B) g_GameState = 0;
-    StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
+    StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
+
+    DrawString(100, 450, "----スペースキーを押してタイトルに戻る ----", 0xffffff, 0);
+    StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
+
 }
 
 /***********************************************
@@ -337,16 +334,23 @@ void DrawRanking(void)
 void DrawHelp(void)
 {
     //ヘルプのBGM
-    PlaySoundMem(g_HelpBGM, DX_PLAYTYPE_BACK, FALSE);
+    PlaySoundMem(bgmse.g_HelpBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 30 / 100, g_HelpBGM);
+
+    ChangeVolumeSoundMem(255 * 30 / 100, bgmse.g_HelpBGM);
     //Bボタンでタイトルに戻る
     if (g_KeyFlg & PAD_INPUT_B) g_GameState = 0;
     //Aボタンでゲームメイン
     if (g_KeyFlg & PAD_INPUT_A) g_GameState = 1;
+
+    ChangeVolumeSoundMem(255 * 50 / 100, bgmse.g_HelpBGM);
+    //スペースキーでメニューに戻る
+    if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
+
+
     //タイトル画像表示//
     DrawGraph(0, 0, g_HelpImage, FALSE);
-    StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
+    StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
     SetFontSize(30);
     DrawString(100, 110, "ゲームをしてね", 0xFFFFFF);
 
@@ -358,9 +362,9 @@ void DrawHelp(void)
 void DrawEnd(void)
 {
     //エンドBGM
-    PlaySoundMem(g_EndBGM, DX_PLAYTYPE_BACK, FALSE);
+    PlaySoundMem(bgmse.g_EndBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 50 / 100, g_EndBGM);
+    ChangeVolumeSoundMem(255 * 50 / 100, bgmse.g_EndBGM);
     //エンド画像表示
     DrawGraph(0, 0, g_EndImage, FALSE);
 
@@ -388,8 +392,8 @@ void DrawEnd(void)
     //タイムの加算処理＆終了（3秒後）
     if (++g_WaitTime > 180)g_GameState = 99;
 
-    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
-    StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
+    StopSoundMem(bgmse.g_StageBGM); //ゲームオーバーに追加する
+    StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
 }
 /***********************************************
  * ゲームメイン
@@ -397,9 +401,9 @@ void DrawEnd(void)
 void GameMain(void)
 {
     //mainにBGMを流す。消さないで
-    PlaySoundMem(g_StageBGM, DX_PLAYTYPE_BACK, FALSE);
+    PlaySoundMem(bgmse.g_StageBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 50 / 100, g_StageBGM);
+    ChangeVolumeSoundMem(255 * 50 / 100, bgmse.g_StageBGM);
 
     BackScrool();
     player.PlayerControl();
@@ -421,19 +425,29 @@ void GameMain(void)
         g_Time2 = GetNowCount();
     }
 
-    StopSoundMem(g_TitleBGM);
+    StopSoundMem(bgmse.g_TitleBGM);
     SetFontSize(16);
 
     //STARTボタンでポーズ画面へ
     if (g_KeyFlg & PAD_INPUT_8) {
-        PlaySoundMem(g_SE2, DX_PLAYTYPE_BACK, TRUE);
+
+        PlaySoundMem(bgmse.g_SE2, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = 7;
+
+       /* PlaySoundMem(bgmse.g_SE2, DX_PLAYTYPE_BACK, TRUE);
+        g_GameState = 7;*/
+    }
+    //BACKボタンで強制終了
+    if (g_KeyFlg & PAD_INPUT_7) {
+        PlaySoundMem(bgmse.g_SE4, DX_PLAYTYPE_BACK, TRUE);
+        g_GameState = 4;
+
     }
    
     // ポーズSE"の音量の設定
-    ChangeVolumeSoundMem(255 * 80 / 100, g_SE2);
+    ChangeVolumeSoundMem(255 * 80 / 100, bgmse.g_SE2);
     // ポーズSE"の音量の設定
-    ChangeVolumeSoundMem(255 * 80 / 100, g_SE4);
+    ChangeVolumeSoundMem(255 * 80 / 100, bgmse.g_SE4);
 }
 
 
@@ -442,10 +456,10 @@ void Pause(void) {
     BackScrool();
     DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
     enemy.EnemyDraw();
-    StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+    StopSoundMem(bgmse.g_StageBGM); //ゲームオーバーに追加する
     ui.UIView();
     if (g_KeyFlg & PAD_INPUT_2) {
-        PlaySoundMem(g_SE3, DX_PLAYTYPE_BACK, TRUE);
+        PlaySoundMem(bgmse.g_SE3, DX_PLAYTYPE_BACK, TRUE);
         ui.StopTime();
         g_GameState = 5;
     }
@@ -454,7 +468,7 @@ void Pause(void) {
     DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 0, 0), 0);
 
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 80 / 100, g_SE3);
+    ChangeVolumeSoundMem(255 * 80 / 100, bgmse.g_SE3);
 }
 
 /***********************************************
@@ -592,28 +606,7 @@ int LoadImages()
 
 
 }
-//サウンド読み込み
-int LoadSounds() {
 
-    //ステージBGMデータの読み込み
-    if ((g_StageBGM = LoadSoundMem("sounds/Chapter9/StageBGM.wav")) == -1)return -1;
-    //タイトルBGM
-    if ((g_TitleBGM = LoadSoundMem("sounds/Chapter9/TitleBGm.wav")) == -1)return -1;
-    //ランキングBGM
-    if ((g_RankingBGM = LoadSoundMem("sounds/Chapter9/RankingBGM.wav")) == -1)return -1;
-    //ヘルプBGM
-    if ((g_HelpBGM = LoadSoundMem("sounds/Chapter9/HelpBGM.wav")) == -1)return -1;
-    //エンドBGM
-    if ((g_EndBGM = LoadSoundMem("sounds/Chapter9/EndBGM.wav")) == -1)return -1;
-    //SE1
-    if ((g_SE1 = LoadSoundMem("sounds/Chapter9/sentakuSE.wav")) == -1)return -1;
-    //SE2プーズ画面に行くボタン
-    if ((g_SE2 = LoadSoundMem("sounds/Chapter9/pausesentakuSE.wav")) == -1)return -1;
-    //SE3メインに戻るSE
-    if ((g_SE3 = LoadSoundMem("sounds/Chapter9/meinnimodoruSE.wav")) == -1)return -1;
-    //SE4強制終了SE
-    if ((g_SE4 = LoadSoundMem("sounds/Chapter9/endSE.wav")) == -1)return -1;
-}
 /***********************************************
  * ランキング並び替え
  ***********************************************/
