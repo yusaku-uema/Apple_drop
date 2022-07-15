@@ -431,13 +431,6 @@ void InputRanking(void)
 
    //フォントサイズの設定
     SetFontSize(20);
-
-    //名前入力指示文字列の描画
-    //DrawString(150, 240, "ランキングに登録します", 0xFFFFFF);
-    //DrawString(150, 270, "名前を英字で入力してください", 0xFFFFFF);
-
-    //名前の入力
-   // DrawString(150, 310, "> ", 0xFFFFFF);
     DrawBox(90, 195, 550, 385, 0x000000, TRUE);
     DrawBox(90, 195, 550, 385, white, FALSE);
 
@@ -488,7 +481,7 @@ void InputRanking(void)
     g_fontY = 200;
 
 
-    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A/* && g_OldKey == 0*/)
+    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B/* && g_OldKey == 0*/)//決定
     {
         if (fonttime >= 10)
         {
@@ -505,7 +498,7 @@ void InputRanking(void)
 
     }
 
-    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B /*&& g_OldKey == 0*/)
+    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A /*&& g_OldKey == 0*/)//消去
     {
 
         if (fonttime >= 10)
@@ -538,11 +531,9 @@ int LoadImages()
 {
     //タイトル タイトル画像替えました。
     if ((g_TitleImage = LoadGraph("images/Chapter5/Title.png")) == -1) return -1;
+
     //メニュー
     if ((g_Applec = LoadGraph("images/Chapter5/Applec.png")) == -1) return -1;
-    //アイテム画像の読込み
-    if ((g_Item[0] = LoadGraph("images/Chapter5/gasoline.bmp")) == -1)return -1;
-    if ((g_Item[1] = LoadGraph("images/Chapter5/supana.bmp")) == -1)return -1;
 
     //ランキングデータの読込み
     if ((g_RankingImage = LoadGraph("images/Chapter5/ranking.png")) == -1)return-1;
