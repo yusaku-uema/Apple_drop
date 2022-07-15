@@ -100,18 +100,9 @@ int color = white;
 
 int g_HelpImage;
 
-<<<<<<< HEAD
-const int FONT_X = 100;
-const int FONT_Y = 200;
+//const int FONT_X = 100;
+//const int FONT_Y = 200;
 int Decision = 0;
-=======
->>>>>>> main
-
-
-
-
-
-
 
 
 //ステック
@@ -130,16 +121,7 @@ struct DINPUT_JOYSTATE
     unsigned char	Buttons[32];	// ボタン３２個( 押されたボタンは 128 になる )
 };
 
-<<<<<<< HEAD
 
-=======
-//ランキングデータ（構造体）
-//struct RankingData {
-//    int no;
-//    char name[10];
-//    long score;
-//};
->>>>>>> main
 struct RankingData g_Ranking[RANKING_DATA];
 
 
@@ -516,25 +498,25 @@ void InputRanking(void)
 
     if (fonttime >= 7)
     {
-        if (AX > 0)
+        if (AX > 0|| g_KeyFlg & PAD_INPUT_RIGHT)
         {
             g_nowfontX++;
             if (g_nowfontX > 12) g_nowfontX = 0;
             fonttime = 0;
         }
-        else if (AX < 0)
+        else if (AX < 0|| g_KeyFlg & PAD_INPUT_LEFT)
         {
             g_nowfontX--;
             if (g_nowfontX < 0) g_nowfontX = 12;
             fonttime = 0;
         }
-        else if (AY > 0)
+        else if (AY > 0|| g_KeyFlg & PAD_INPUT_DOWN)
         {
             g_nowfontY++;
             if (g_nowfontY > 4) g_nowfontY = 0;
             fonttime = 0;
         }
-        else if (AY < 0)
+        else if (AY < 0|| g_KeyFlg & PAD_INPUT_UP)
         {
             g_nowfontY--;
             if (g_nowfontY < 0) g_nowfontY = 4;
