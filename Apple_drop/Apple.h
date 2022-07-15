@@ -17,7 +17,7 @@ const int ENEMY_MAX = 10;
 
 class ENEMY {
 public:
-  
+
     struct Enemy g_enemy[ENEMY_MAX];
     struct Enemy g_enemy00;
 
@@ -36,7 +36,7 @@ public:
     int CreateEnemy();
     void CheckApple(); //•`‰æ‚³‚ê‚Ä‚¢‚éƒŠƒ“ƒS‚ÌŒÂ”‚ğ”‚¦‚éŠÖ”
 
-    
+
 };
 
 extern ENEMY enemy;

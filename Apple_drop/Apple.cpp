@@ -67,7 +67,7 @@ void ENEMY::EnemyMove()
             }
         }
 
-        
+
     }
 
     //走行距離ごとに敵出現パターンを制御する
@@ -113,10 +113,10 @@ int ENEMY::CreateEnemy()
                 g_enemy[i].flg = TRUE;
 
                 appletype = GetRand(9);
-                if (appletype >= 0 && appletype <= 5) g_enemy[i].type = 2;
-                if (appletype >= 6 && appletype <= 7) g_enemy[i].type = 2;
+                if (appletype >= 0 && appletype <= 5) g_enemy[i].type = 0;
+                if (appletype >= 6 && appletype <= 7) g_enemy[i].type = 1;
                 if (appletype == 8) g_enemy[i].type = 2;
-                if (appletype == 9) g_enemy[i].type = 2;
+                if (appletype == 9) g_enemy[i].type = 3;
 
                 g_enemy[i].img = g_Teki[g_enemy[i].type];
                 g_enemy[i].x = GetRand(6) * 70 + 30;
@@ -159,11 +159,11 @@ int ENEMY::CreateEnemy()
     return FALSE;
 }
 
-void ENEMY::InitEnemy() 
+void ENEMY::InitEnemy()
 {
 
     //エネミーの初期処理
-    for (int i = 0; i < ENEMY_MAX; i++) 
+    for (int i = 0; i < ENEMY_MAX; i++)
     {
         g_enemy[i].flg = FALSE;
     }
@@ -189,4 +189,3 @@ void ENEMY::CheckApple()
     drawapple = ceil(((double)ENEMY_MAX - (double)applecount) / 2);
     applecount = 0;
 }
-
