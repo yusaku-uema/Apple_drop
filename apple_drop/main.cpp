@@ -317,15 +317,10 @@ void DrawRanking(void)
     for (int i = 0; i < RANKING_DATA; i++) {
         DrawFormatString(50, 170 + i * 25, 0xffffff, "%2d %-10s %10d", g_Ranking[i].no, g_Ranking[i].name, g_Ranking[i].score);
     }
-
     DrawString(100, 450, "----Bボタン押してタイトルに戻る ----", 0xffffff, 0);
     //Bボタンでタイトルに戻る
     if (g_KeyFlg & PAD_INPUT_B) g_GameState = 0;
     StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
-
-    DrawString(100, 450, "----スペースキーを押してタイトルに戻る ----", 0xffffff, 0);
-    StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
-
 }
 
 /***********************************************
@@ -336,18 +331,11 @@ void DrawHelp(void)
     //ヘルプのBGM
     PlaySoundMem(bgmse.g_HelpBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-
     ChangeVolumeSoundMem(255 * 30 / 100, bgmse.g_HelpBGM);
     //Bボタンでタイトルに戻る
     if (g_KeyFlg & PAD_INPUT_B) g_GameState = 0;
     //Aボタンでゲームメイン
     if (g_KeyFlg & PAD_INPUT_A) g_GameState = 1;
-
-    ChangeVolumeSoundMem(255 * 50 / 100, bgmse.g_HelpBGM);
-    //スペースキーでメニューに戻る
-    if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
-
-
     //タイトル画像表示//
     DrawGraph(0, 0, g_HelpImage, FALSE);
     StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
@@ -430,18 +418,8 @@ void GameMain(void)
 
     //STARTボタンでポーズ画面へ
     if (g_KeyFlg & PAD_INPUT_8) {
-
         PlaySoundMem(bgmse.g_SE2, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = 7;
-
-       /* PlaySoundMem(bgmse.g_SE2, DX_PLAYTYPE_BACK, TRUE);
-        g_GameState = 7;*/
-    }
-    //BACKボタンで強制終了
-    if (g_KeyFlg & PAD_INPUT_7) {
-        PlaySoundMem(bgmse.g_SE4, DX_PLAYTYPE_BACK, TRUE);
-        g_GameState = 4;
-
     }
    
     // ポーズSE"の音量の設定
