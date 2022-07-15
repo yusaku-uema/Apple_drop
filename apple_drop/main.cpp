@@ -72,6 +72,7 @@ int fps = 0;  //かみこうが使うよ
 int g_Teki[4]; //キャラ画像変数
 
 int g_StageImage;
+int g_RankingInputImage;//ランキングインプット画面
 int g_teki;
 //int g_PlayerImage[16];  //自機画像 //キャラ画像変数
 
@@ -496,7 +497,7 @@ void InputRanking(void)
 {
 
    // //ランキング画像表示
-   DrawGraph(0, 0, g_RankingImage, FALSE);
+    if ((0,0,g_RankingInputImage , FALSE));
 
    //フォントサイズの設定
     SetFontSize(20);
@@ -622,6 +623,8 @@ int LoadImages()
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
 
+    //ランキング入力画面
+    if ((g_RankingInputImage = LoadGraph("images/Chapter5/rankingnyuuryoku.png")) == -1)return -1;
 
 }
 
