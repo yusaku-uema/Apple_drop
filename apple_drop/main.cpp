@@ -114,17 +114,14 @@ struct DINPUT_JOYSTATE
     unsigned char	Buttons[32];	// ボタン３２個( 押されたボタンは 128 になる )
 };
 
-
 //ランキングデータ（構造体）
 struct RankingData {
     int no;
     char name[10];
     long score;
 };
-
 struct RankingData g_Ranking[RANKING_DATA];
 
-char a = 'a';
 
 char name[5][13] = {
     {'a','b','c','d','e','f','g','h','i','j','k','l','m'},
@@ -301,11 +298,7 @@ void GameInit(void)
 
     g_Time2 = GetNowCount();
 
-
-    Cr = GetColor(255, 255, 0);
-
     ui.UIInit();
-
 
     //ゲームメイン処理へ
     g_GameState = 5;
@@ -344,18 +337,11 @@ void DrawHelp(void)
     //ヘルプのBGM
     PlaySoundMem(g_HelpBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-
     ChangeVolumeSoundMem(255 * 30 / 100, g_HelpBGM);
     //Bボタンでタイトルに戻る
     if (g_KeyFlg & PAD_INPUT_B) g_GameState = 0;
     //Aボタンでゲームメイン
     if (g_KeyFlg & PAD_INPUT_A) g_GameState = 1;
-
-    ChangeVolumeSoundMem(255 * 50 / 100, g_HelpBGM);
-    //スペースキーでメニューに戻る
-    if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
-
-
     //タイトル画像表示//
     DrawGraph(0, 0, g_HelpImage, FALSE);
     StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
@@ -438,9 +424,6 @@ void GameMain(void)
     SetFontSize(16);
 
     //STARTボタンでポーズ画面へ
-
-    if (g_KeyFlg & PAD_INPUT_8)g_GameState = 6;//７変更　7に戻すこと
-
     if (g_KeyFlg & PAD_INPUT_8) {
         PlaySoundMem(g_SE2, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = 8;
@@ -454,7 +437,6 @@ void GameMain(void)
     ChangeVolumeSoundMem(255 * 80 / 100, g_SE2);
     // ポーズSE"の音量の設定
     ChangeVolumeSoundMem(255 * 80 / 100, g_SE4);
-
 }
 
 
@@ -463,10 +445,6 @@ void Pause(void) {
     BackScrool();
     DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
     enemy.EnemyDraw();
-
-    StopSoundMem(g_StageBGM); 
-    if (g_KeyFlg & PAD_INPUT_2)g_GameState = 5;
-
     StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
     ui.UIView();
     if (g_KeyFlg & PAD_INPUT_2) {
@@ -474,40 +452,12 @@ void Pause(void) {
         ui.StopTime();
         g_GameState = 5;
     }
-
     SetFontSize(30);
     DrawString(225, 250, "---Pause中---", GetColor(255, 0, 0), 0);
     DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 0, 0), 0);
 
     // 音量の設定
     ChangeVolumeSoundMem(255 * 80 / 100, g_SE3);
-}
-
-
-
-
-
-
-/***********************************************
- *ゲームオーバー画面描画処理
- ***********************************************/
-void DrawGameOver(void)
-{
-    BackScrool();//チャレンジ3
-    DrawGraph(player.g_player.x, player.g_player.y, player.g_PlayerImage[player.image], TRUE);
-    //g_Score = (g_MileageB / 10 * 10) + g_EnemyCount3 * 50 + g_EnemyCount2 * 100 + g_EnemyCount1 * 200;
-
-
-    //スペースキーでメニューに戻る
-    if (g_KeyFlg & PAD_INPUT_M) {
-        if (g_Ranking[RANKING_DATA - 1].score >= enemy.g_Score) {
-            g_GameState = 0;
-        }
-        else {
-            g_GameState = 7;
-        }
-    }
-
 }
 
 /***********************************************
@@ -551,7 +501,6 @@ void InputRanking(void)
             fonttime = 0;
         }
     }
-
 
     SetFontSize(30);
     for (int i = 0; i < 5; i++)
@@ -610,13 +559,6 @@ void InputRanking(void)
     if (g_KeyFlg & PAD_INPUT_8) 
     {
         g_Ranking[4].score = g_Score;	// ランキングデータの5番目にスコアを登録
-
-    //名前の入力
-    DrawString(150, 310, "> ", 0xFFFFFF);
-    DrawBox(160, 305, 300, 335, 0x000055, TRUE);
-    if (KeyInputSingleCharString(170, 310, 10, g_Ranking[4].name, FALSE) == 1) {
-        g_Ranking[4].score = enemy.g_Score;	// ランキングデータの5番目にスコアを登録
-
         SortRanking();		// ランキング並べ替え
         SaveRanking();		// ランキングデータの保存
         g_GameState = 2;		// ゲームモードの変更
@@ -716,13 +658,8 @@ int  SaveRanking(void)
     FILE* fp;
 #pragma warning(disable:4996)
 
-
    
     if ((fp = fopen("dat/rankingdata.txt", "w")) == NULL) {
-
-
-    if ((fp = fopen("dat/Chapter5/rankingdata.txt", "w")) == NULL) {
-
         /* エラー処理 */
         printf("Ranking Data Error\n");
         return -1;
@@ -774,42 +711,43 @@ void BackScrool()
     DrawGraph(0, 0, g_StageImage, FALSE);
 }
 
-
 //void TimeCount(void)
 //{
 //    //制限時間を過ぎたらゲームオーバー
 //    int Time = TIMELIMIT - (GetNowCount() - g_StartTime);
 //    if (Time <= 0)
 //    {
-//        if (g_Ranking[RANKING_DATA - 1].score >= g_Score) {
-//            StopSoundMem(g_StageBGM); 
-//            g_GameState = 6;
+//        if (g_Ranking[RANKING_DATA - 1].score >= enemy.g_Score) {
+//            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+//            g_GameState = 2;
 //        }
 //        else {
-//            StopSoundMem(g_StageBGM); 
-//            g_GameState = 2;
+//            StopSoundMem(g_StageBGM); //ゲームオーバーに追加する
+//            g_GameState = 7;
 //        }
 //    }
 //    SetFontSize(50);
 //    DrawFormatString(550, 100, 0xffffff, "%2d", Time / 1000);
 //}
+//
+//void UIView(void)
+//{
+//    //UI「TIME」表示
+//    SetFontSize(50);
+//    DrawString(520, 40, "TIME", 0xffffff, 0);
+//
+//    //拾った数を表示
+//    SetFontSize(16);
+//    DrawRotaGraph(523, 220, 0.5f, 0, g_Teki[0], TRUE, FALSE);
+//    DrawRotaGraph(573, 220, 0.5f, 0, g_Teki[1], TRUE, FALSE);
+//    DrawRotaGraph(623, 220, 0.5f, 0, g_Teki[2], TRUE, FALSE);
+//    DrawFormatString(510, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount1);
+//    DrawFormatString(610, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount3);
+//
+//    //UI「SCORE」表示
+//    SetFontSize(45);
+//    DrawString(510, 320, "SCORE", 0xFFFFFF, 0);
+//    SetFontSize(35);
+//    DrawFormatString(530, 370, 0xFFFFFF, "%05d", enemy.g_Score);
+//}
 
-void UIView(void)
-{
-    //UI「TIME」表示
-    SetFontSize(50);
-    DrawString(520, 40, "TIME", 0xffffff, 0);
-
-    //拾った数を表示
-    SetFontSize(16);
-    DrawRotaGraph(523, 220, 0.5f, 0, g_Teki[0], TRUE, FALSE);
-    DrawRotaGraph(573, 220, 0.5f, 0, g_Teki[1], TRUE, FALSE);
-    DrawRotaGraph(623, 220, 0.5f, 0, g_Teki[2], TRUE, FALSE);
-    DrawFormatString(510, 240, 0xFFFFFF, "%03d", g_EnemyCount1);
-    DrawFormatString(560, 240, 0xFFFFFF, "%03d", g_EnemyCount2);
-    DrawFormatString(610, 240, 0xFFFFFF, "%03d", g_EnemyCount3);
-
-    //UI「SCORE」表示
-    SetFontSize(45);
-    DrawString(510, 320, "SCORE", 0xffffff, 0);
-}
