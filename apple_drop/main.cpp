@@ -141,8 +141,6 @@ void DrawHelp(void); //ゲームヘルプ描画処理
 void DrawRanking(void); //ランキング描画処理
 void InputRanking(void);//ランキング入力
 int LoadImages(); //画像読み込み
-void UIView();
-void TimeCount();
 void SortRanking(void); //ランキンググ並び替え
 int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
@@ -185,7 +183,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         GetJoypadAnalogInput(&AX, &AY, DX_INPUT_PAD1);
 
         //BACKボタンで強制終了
-        if (g_KeyFlg & PAD_INPUT_7)g_GameState = 4;
+        if (g_KeyFlg & PAD_INPUT_7) {
+            PlaySoundMem(g_SE4, DX_PLAYTYPE_BACK, FALSE);
+            g_GameState = 4;
+        }
 
         // 画面の初期化 
         ClearDrawScreen();
@@ -463,7 +464,7 @@ void InputRanking(void)
     DrawBox(90, 195, 550, 385, 0x000000, TRUE);
     DrawBox(90, 195, 550, 385, white, FALSE);
 
-    if (fonttime >= 7)// || g_OldKey == 0)
+    if (fonttime >= 7)
     {
         if (AX > 0)
         {
@@ -510,7 +511,7 @@ void InputRanking(void)
     g_fontY = 200;
 
 
-    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B/* && g_OldKey == 0*/)//決定
+    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A/* && g_OldKey == 0*/)//決定
     {
         if (fonttime >= 10)
         {
@@ -527,7 +528,7 @@ void InputRanking(void)
 
     }
 
-    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A /*&& g_OldKey == 0*/)//消去
+    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B /*&& g_OldKey == 0*/)//消去
     {
 
         if (fonttime >= 10)
