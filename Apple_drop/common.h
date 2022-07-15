@@ -25,7 +25,7 @@ extern int g_StageBGM;
 //ランキングデータ（構造体）
 struct RankingData {
     int no;
-    char name[11];
+    char name[10];
     long score;
 };
 
