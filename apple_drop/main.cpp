@@ -220,7 +220,7 @@ void DrawGameTitle(void) {
     //TitleにBGMを流す。消さないで
     PlaySoundMem(g_TitleBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 30 / 100, g_TitleBGM);
+    ChangeVolumeSoundMem(255 * 50 / 100, g_TitleBGM);
     static int MenuNo = 0;
 
     //メニューカーソル移動処理
@@ -289,7 +289,7 @@ void DrawRanking(void)
     //ランキングサウンド
     PlaySoundMem(g_RankingBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 30 / 100, g_RankingBGM);
+    ChangeVolumeSoundMem(255 * 50 / 100, g_RankingBGM);
     //スペースキーでメニューに戻る
     if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
 
@@ -313,13 +313,15 @@ void DrawHelp(void)
     //ヘルプのBGM
     PlaySoundMem(g_HelpBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 30 / 100, g_HelpBGM);
+    ChangeVolumeSoundMem(255 * 50 / 100, g_HelpBGM);
     //スペースキーでメニューに戻る
     if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
 
     //タイトル画像表示//
     DrawGraph(0, 0, g_HelpImage, FALSE);
     StopSoundMem(g_TitleBGM); //ゲームオーバーに追加する
+    SetFontSize(30);
+    DrawString(100, 110, "ゲームをしてね", 0xFFFFFF);
 
 
 }
@@ -332,7 +334,7 @@ void DrawEnd(void)
     //エンドBGM
     PlaySoundMem(g_EndBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 30 / 100, g_EndBGM);
+    ChangeVolumeSoundMem(255 * 50 / 100, g_EndBGM);
     //エンド画像表示
     DrawGraph(0, 0, g_EndImage, FALSE);
 
@@ -371,7 +373,7 @@ void GameMain(void)
     //mainにBGMを流す。消さないで
     PlaySoundMem(g_StageBGM, DX_PLAYTYPE_BACK, FALSE);
     // 音量の設定
-    ChangeVolumeSoundMem(255 * 30 / 100, g_StageBGM);
+    ChangeVolumeSoundMem(255 * 50 / 100, g_StageBGM);
 
     BackScrool();
     player.PlayerControl();
