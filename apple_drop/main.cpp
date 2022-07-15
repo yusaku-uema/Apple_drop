@@ -78,6 +78,7 @@ int g_HelpImage;
 
 const int FONT_X = 100;
 const int FONT_Y = 200;
+int Decision = 0;
 
 /***********************************************
  * 定数を宣言
@@ -110,12 +111,7 @@ struct DINPUT_JOYSTATE
     unsigned char	Buttons[32];	// ボタン３２個( 押されたボタンは 128 になる )
 };
 
-////ランキングデータ（構造体）
-//struct RankingData {
-//    int no;
-//    char name[10];
-//    long score;
-//};
+
 struct RankingData g_Ranking[RANKING_DATA];
 
 
@@ -124,7 +120,7 @@ char name[5][13] = {
     {'n','o','p','q','r','s','t','u','v','w','x','y','z'},
     {'A','B','C','D','E','F','G','H','I','J','K','L','M'},
     {'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'},
-    {'0','1','2','3','4','5','6','7','8','9','削除'}
+    {'0','1','2','3','4','5','6','7','8','9',}
 };
 
 
@@ -543,10 +539,15 @@ void InputRanking(void)
 
     fonttime++;
 
-    DrawFormatString(0, 0, color, "%s", g_Ranking[4].name);
+    DrawFormatString(210, 165, color, "%s", g_Ranking[4].name);
 
-    
-    if (g_KeyFlg & PAD_INPUT_8) 
+    if (g_KeyFlg & PAD_INPUT_8) {
+        Decision = 1;
+    }
+
+    DrawString(100, 410, "STARTボタン、決定", 0xFFFFFF);
+   
+    if (g_KeyFlg & PAD_INPUT_A && Decision== 1)
     {
         g_Ranking[4].score = enemy.g_Score;	// ランキングデータの5番目にスコアを登録
         SortRanking();		// ランキング並べ替え
