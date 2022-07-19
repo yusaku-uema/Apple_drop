@@ -3,6 +3,8 @@
 #include"Apple.h"
 #define RANKING_DATA 5
 
+void InputRankingInit(void);
+
 //‰æ–Ê—Ìˆæ‚Ì‘å‚«‚³
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;

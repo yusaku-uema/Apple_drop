@@ -14,6 +14,7 @@ void UI::TimeCount()
     {
         if (g_Ranking[RANKING_DATA - 1].score <= enemy.g_Score) {
             StopSoundMem(bgmse.g_StageBGM); //ゲームオーバーに追加する
+            InputRankingInit();
             g_GameState = 6;
         }
         else {

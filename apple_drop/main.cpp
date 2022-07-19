@@ -154,7 +154,6 @@ void BackScrool(); //背景画像スクロール処理
 //int LoadSounds(); //サウンドの読み込み処理
 
 void Pause(); //ポーズ画面
-void InputRankingInit(void);
 
 /***********************************************
  * プログラムの開始
@@ -301,7 +300,7 @@ void GameInit(void)
     g_Time2 = GetNowCount();
 
     ui.UIInit();
-    InputRankingInit();
+    //InputRankingInit();
 
     //ゲームメイン処理へ
     g_GameState = 5;
@@ -480,7 +479,6 @@ void InputRankingInit(void)
     {
         g_Ranking[4].name[i] = '\0';
     }
-    g_GameState = 7;
 }
 
 /***********************************************
@@ -499,31 +497,6 @@ void InputRanking(void)
 
     if (fonttime >= 7)
     {
-        /*if (AX > 0|| )
-        {
-            g_nowfontX++;
-            if (g_nowfontX > 12) g_nowfontX = 0;
-            fonttime = 0;
-        }
-        else if (AX < 0|| )
-        {
-            g_nowfontX--;
-            if (g_nowfontX < 0) g_nowfontX = 12;
-            fonttime = 0;
-        }
-        else if (AY > 0|| )
-        {
-            g_nowfontY++;
-            if (g_nowfontY > 4) g_nowfontY = 0;
-            fonttime = 0;
-        }
-        else if (AY < 0|| )
-        {
-            g_nowfontY--;
-            if (g_nowfontY < 0) g_nowfontY = 4;
-            fonttime = 0;
-        }*/
-
         if (AX > 0 || g_KeyFlg & PAD_INPUT_RIGHT)
         {
             if (g_nowfontY == 4 && g_nowfontX >= 10 && g_nowfontX <= 11)g_nowfontX = 12;
@@ -602,8 +575,6 @@ void InputRanking(void)
             fonttime = 0;
         }
         /*(170, 310, 10, g_Ranking[4].name, FALSE);*/
-
-
     }
 
     if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B)//消去
@@ -622,19 +593,7 @@ void InputRanking(void)
     fonttime++;
 
     DrawFormatString(210, 165, color, "%s", g_Ranking[4].name);
-    /*if (g_KeyFlg & PAD_INPUT_8) {
-        Decision = 1;
-    }*/
-
-    //DrawString(100, 410, "STARTボタン、決定", 0xFFFFFF);
-   
-    //if (g_KeyFlg & PAD_INPUT_A && Decision== 1)
-    //{
-    //    g_Ranking[4].score = enemy.g_Score;	// ランキングデータの5番目にスコアを登録
-    //    SortRanking();		// ランキング並べ替え
-    //    SaveRanking();		// ランキングデータの保存
-    //    g_GameState = 2;		// ゲームモードの変更
-    //}
+    
 }
 /***********************************************
  * 画像読み込み
