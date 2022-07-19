@@ -3,7 +3,7 @@
 #include"common.h"
 #include"BGMandSE.h"
 UI::UI() {
-    TIMELIMIT = 31000;
+   
 }
 
 void UI::TimeCount()
@@ -54,6 +54,7 @@ void UI::UIView()
 void UI::UIInit() {
     //åªç›ÇÃåoâﬂéûä‘ÇìæÇÈ
     g_StartTime = GetNowCount();
+    TIMELIMIT = 31000;
 }
 
 void UI::StopTime() {
