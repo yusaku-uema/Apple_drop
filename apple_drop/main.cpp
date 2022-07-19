@@ -649,7 +649,7 @@ void SortRanking(void)
     }
 
     //‡ˆÊ•t‚¯
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 5; i++) {
         g_Ranking[i].no = 1;
     }
     //“¾“_‚ª“¯‚¶ê‡‚ÍA“¯‚¶‡ˆÊ‚Æ‚·‚é
