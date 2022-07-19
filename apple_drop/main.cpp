@@ -161,7 +161,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     LPSTR lpCmdLine, int nCmdShow)
 {
     //タイトルを設定
-    SetMainWindowText("Drive&Avoid");
+    SetMainWindowText("リンゴ落としゲーム");
     //ウィンドウモードで起動する 
     ChangeWindowMode(TRUE);
 
@@ -262,7 +262,7 @@ void DrawGameTitle(void) {
     DrawGraph(0, 0, g_TitleImage, FALSE);
 
     //メニュー
-    DrawGraph(310, 220 + MenuNo * 50, g_Applec, TRUE);
+    DrawGraph(330, 232 + MenuNo * 52, g_Applec, TRUE);
     // 音量の設定
     ChangeVolumeSoundMem(255 * 80 / 100, bgmse.g_SE1);
     //ランキングBGMを止める　ランキング画面からタイトルに戻るときにランキングBGMが流れないように
@@ -383,7 +383,7 @@ void DrawEnd(void)
     SetFontSize(35);
     DrawString(100, 110, "使用イラスト", 0xFFFFFF);
     SetFontSize(25);
-    DrawString(100, 150, "いらすとやｓん", 0xFFFFFF);
+    DrawString(100, 150, "いらすとやさん", 0xFFFFFF);
     DrawString(100, 180, "freepikさん", 0xFFFFFF);
     DrawString(100, 210, "illstACさん", 0xFFFFFF);
     DrawString(100, 240, "パブリックドメインQさん", 0xFFFFFF);
@@ -577,7 +577,6 @@ void InputRanking(void)
     fonttime++;
 
     DrawFormatString(210, 165, color, "%s", g_Ranking[4].name);
-
     if (g_KeyFlg & PAD_INPUT_8) {
         Decision = 1;
     }

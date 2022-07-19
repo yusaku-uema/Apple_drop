@@ -3,7 +3,7 @@
 #include"common.h"
 #include"BGMandSE.h"
 UI::UI() {
-    TIMELIMIT = 30000;
+    TIMELIMIT = 31000;
 }
 
 void UI::TimeCount()
@@ -30,19 +30,20 @@ void UI::UIView()
     DrawString(520, 40, "TIME", 0xffffff, 0);
 
     //拾った数を表示
-    SetFontSize(16);
+    SetFontSize(20);
     DrawRotaGraph(523, 220, 0.5f, 0, g_Teki[0], TRUE, FALSE);
-    DrawRotaGraph(573, 220, 0.5f, 0, g_Teki[1], TRUE, FALSE);
-    DrawRotaGraph(623, 220, 0.5f, 0, g_Teki[2], TRUE, FALSE);
+    DrawRotaGraph(570, 220, 0.5f, 0, g_Teki[1], TRUE, FALSE);
+    DrawRotaGraph(620, 220, 0.5f, 0, g_Teki[2], TRUE, FALSE);
+    SetFontSize(19);
     DrawFormatString(510, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount1);
-    DrawFormatString(560, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount2);
-    DrawFormatString(610, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount3);
+    DrawFormatString(555, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount2);
+    DrawFormatString(605, 240, 0xFFFFFF, "%03d", enemy.g_EnemyCount3);
 
     //UI「SCORE」表示
-    SetFontSize(45);
-    DrawString(510, 320, "SCORE", 0xFFFFFF, 0);
     SetFontSize(35);
-    DrawFormatString(530, 370, 0xFFFFFF, "%05d", enemy.g_Score);
+    DrawString(525, 320, "SCORE", 0xFFFFFF, 0);
+    SetFontSize(40);
+    DrawFormatString(520, 370, 0xFFFFFF, "%05d", enemy.g_Score);
 
     //時間の表示
     SetFontSize(50);
