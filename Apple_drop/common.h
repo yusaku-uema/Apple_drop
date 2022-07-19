@@ -25,6 +25,7 @@ extern int g_GameState;
 extern int g_StageBGM;
 extern int g_PauseImage;
 
+
 //ランキングデータ（構造体）
 struct RankingData {
     int no;

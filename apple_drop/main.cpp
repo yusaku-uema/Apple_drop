@@ -477,6 +477,7 @@ void InputRankingInit(void)
     {
         g_Ranking[4].name[i] = '\0';
     }
+    fontno = 0;
 }
 
 /***********************************************
@@ -549,7 +550,7 @@ void InputRanking(void)
     g_fontY = FONT_Y;
 
 
-    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A/* && g_OldKey == 0*/)//Œˆ’è
+    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A)//Œˆ’è
     {
        
         if (fonttime >= 10)
@@ -558,8 +559,7 @@ void InputRanking(void)
             if (fontno < 9)
             {
                 g_Ranking[4].name[fontno] = g_name[g_nowfontY][g_nowfontX];
-                fontno++;
-                
+                fontno++;   
             }
 
             if (g_nowfontY == 4 && g_nowfontX >= 10 && g_nowfontX <= 12)
@@ -591,6 +591,7 @@ void InputRanking(void)
     fonttime++;
 
     DrawFormatString(210, 165, color, "%s", g_Ranking[4].name);
+    DrawFormatString(210, 185, color, "%d", fontno);
     
 }
 /***********************************************
