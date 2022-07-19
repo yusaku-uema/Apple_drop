@@ -279,23 +279,13 @@ void DrawGameTitle(void) {
  ***********************************************/
 void GameInit(void)
 {
-    //スコアの初期処理
-    //g_Score = 0;
 
     //走行距離を初期化
 
     g_MileageB = 0;
 
-    ////敵１を避けた数の初期設定
-    //g_EnemyCount1 = 0;
-    //g_EnemyCount2 = 0;
-    //g_EnemyCount3 = 0;
-
     player.PlayerInit();
     enemy.InitEnemy();
-
-    ////現在の経過時間を得る
-    //g_StartTime = GetNowCount();
 
     g_Time2 = GetNowCount();
 
