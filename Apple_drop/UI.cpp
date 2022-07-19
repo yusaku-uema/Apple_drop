@@ -62,3 +62,8 @@ void UI::StopTime() {
         g_StartTime = GetNowCount();
     }
 }
+
+void UI::Alpha() {
+    // 描画ブレンドモードをアルファブレンド（５０％）にする
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+}

@@ -59,7 +59,7 @@ int g_Mileage; //走行距離
 int g_MileageB; //止め
 //int g_EnemyCount1, g_EnemyCount2, g_EnemyCount3; //敵カウント
 int g_StartTime;   // スタート時間
-
+int g_PauseImage;
 
 int g_Time2; //スタート時間2 かみこうが使うよ
 int fpscount = 0;  //かみこうが使うよ
@@ -461,7 +461,11 @@ void Pause(void) {
     enemy.EnemyDraw();
     StopSoundMem(bgmse.g_StageBGM); //ゲームオーバーに追加する
     ui.UIView();
+    // 描画ブレンドモードをアルファブレンド（５０％）にする
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
     if (g_KeyFlg & PAD_INPUT_2) {
+        // 描画ブレンドモードをアルファブレンド（５０％）にする
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
         PlaySoundMem(bgmse.g_SE3, DX_PLAYTYPE_BACK, TRUE);
         ui.StopTime();
         g_GameState = 5;
@@ -668,6 +672,8 @@ int LoadImages()
     //ランキング入力画面
     if ((g_RankingInputImage = LoadGraph("images/Chapter5/rankingnyuuryoku.png")) == -1)return -1;
 
+    //ポーズ画面
+    if ((g_PauseImage = LoadGraph("images/Chapter5/black_00073.jpg")) == -1)return -1;
 }
 
 /***********************************************
