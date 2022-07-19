@@ -13,6 +13,7 @@ public:
 	void TimeCount();
 	void UIInit();
 	void StopTime();
+	void Alpha();
 };
 
 extern UI ui;
