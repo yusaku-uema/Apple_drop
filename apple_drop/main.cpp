@@ -7,7 +7,6 @@
 #include<math.h>
 #define RANKING_DATA 5
 #include"common.h"
-
 #include"Player.h"
 #include"Apple.h"
 #include"UI.h"
@@ -18,8 +17,6 @@ PLAYER player;
 UI ui;
 BGMSE bgmse;
 
-
-
 /***********************************************
  * 定数を宣言
  ***********************************************/
@@ -29,15 +26,10 @@ const int PLAYER_HP = 1000;
 const int PLAYER_FUEL = 20000;
 const int PLAYER_BARRIER = 3;
 const int PLAYER_BARRIERUP = 10;
-//制限時間
-//const int TIMELIMIT = 30000;
-
 //アイテムの最大数
 const int ITEM_MAX = 3;
-
 const int FONT_X = 100;
 const int FONT_Y = 200;
-
 
 /***********************************************
  * 変数の宣言
@@ -45,65 +37,41 @@ const int FONT_Y = 200;
 int g_OldKey;  // 前回の入力キー 
 int g_NowKey;  // 今回の入力キー 
 int g_KeyFlg;  // 入力キー情報 
-
 int g_GameState = 0;  // ゲームモード 
-
 int g_TitleImage; // 画像用変数 
-int g_Menu; //g//_Cone; //メニュー画面
-//int g_Score = 0; //スコア
+int g_Menu; //メニュー画面
 int g_RankingImage; //画像用変数
 int g_Item[2]; //アイテム画像変数
 int g_WaitTime = 0; //待ち時間
 int g_EndImage; //ゲームエンド
 int g_Mileage; //走行距離
 int g_MileageB; //止め
-//int g_EnemyCount1, g_EnemyCount2, g_EnemyCount3; //敵カウント
 int g_StartTime;   // スタート時間
 int g_PauseImage;
-
 int g_Time2; //スタート時間2 かみこうが使うよ
 int fpscount = 0;  //かみこうが使うよ
 int fps = 0;  //かみこうが使うよ
-
-
-//int Time;   // 現在時間
-
 int g_Teki[4]; //キャラ画像変数
-
 int g_StageImage;
 int g_RankingInputImage;//ランキングインプット画面
 int g_teki;
-//int g_PlayerImage[16];  //自機画像 //キャラ画像変数
-
 int g_Applec; //タイトルカーソル変数　消さないで
-
-
 //追加します
 int g_ky;
-
 int AX, AY; //コントローラ左スティック座標消さないで
 int g_fontX = FONT_X;
 int g_fontY = FONT_Y;
 int g_nowfontX = 0;
 int g_nowfontY = 0;
-
 int fonttime = 0;
-
 int fontno = 0;
-
 //カラー取得
 int Cr;
 int red = GetColor(255, 0, 0);
 int white = GetColor(255, 255, 255);
 int color = white;
-
 int g_HelpImage;
-
-//const int FONT_X = 100;
-//const int FONT_Y = 200;
 int Decision = 0;
-
-//int g_WaitTime = 0;
 //ステック
 struct DINPUT_JOYSTATE
 {
@@ -120,9 +88,7 @@ struct DINPUT_JOYSTATE
     unsigned char	Buttons[32];	// ボタン３２個( 押されたボタンは 128 になる )
 };
 
-
 struct RankingData g_Ranking[RANKING_DATA];
-
 
 char g_name[5][13] = {
     {'a','b','c','d','e','f','g','h','i','j','k','l','m'},
@@ -133,7 +99,6 @@ char g_name[5][13] = {
 };
 
 char kettei[5] = "決定";
-
 
 /***********************************************
  * 関数のプロトタイプ宣言
@@ -149,10 +114,7 @@ int LoadImages(); //画像読み込み
 void SortRanking(void); //ランキンググ並び替え
 int SaveRanking(void); //ランキングデータの保存
 int ReadRanking(void); //ランキングデータ読込み
-
 void BackScrool(); //背景画像スクロール処理
-//int LoadSounds(); //サウンドの読み込み処理
-
 void Pause(); //ポーズ画面
 
 /***********************************************
@@ -173,7 +135,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     SetDrawScreen(DX_SCREEN_BACK);
 
     if (ReadRanking() == -1) return -1;//ランキングデータの読込み
-
 
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
     if (bgmse.LoadSounds() == -1) return -1; //サウンド読みこみ関数を呼び出し
@@ -279,9 +240,6 @@ void DrawGameTitle(void) {
  ***********************************************/
 void GameInit(void)
 {
-
-    //走行距離を初期化
-
     g_MileageB = 0;
 
     player.PlayerInit();
@@ -290,8 +248,6 @@ void GameInit(void)
     g_Time2 = GetNowCount();
 
     ui.UIInit();
-    //InputRankingInit();
-
     //ゲームメイン処理へ
     g_GameState = 5;
 }
@@ -355,7 +311,7 @@ void DrawHelp(void)
     DrawString(300, 420, "OR", 0xffffff, 0);
     SetFontSize(30);
     DrawString(50, 450, "----Bボタン押してタイトルに戻る----", 0xffffff, 0);
-    //Bボタンでタイトルに戻る
+
 }
 
 /***********************************************
@@ -385,11 +341,6 @@ void DrawEnd(void)
     DrawString(100, 350, "甘茶の音楽公房さん", 0xFFFFFF);
     DrawString(100, 380, "無料効果音で遊ぼう！さん", 0xFFFFFF);
     DrawString(100, 410, "効果音ラボさん", 0xFFFFFF);
-
-
-
-
-
 
     //タイムの加算処理＆終了（3秒後）
     if (++g_WaitTime > 180)g_GameState = 99;
@@ -572,7 +523,7 @@ void InputRanking(void)
 
             fonttime = 0;
         }
-        /*(170, 310, 10, g_Ranking[4].name, FALSE);*/
+      
     }
 
     if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B)//消去
