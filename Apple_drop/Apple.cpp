@@ -38,27 +38,45 @@ void ENEMY::EnemyMove()
             if (player.HitBoxPlayer(&player.g_player, &g_enemy[i]) == TRUE && player.g_player.flg == TRUE)
             {
                 g_enemy[i].flg = FALSE;
+               
 
                 if (g_enemy[i].type == 0)
                 {
                     PlaySoundMem(bgmse.g_SE6, DX_PLAYTYPE_BACK, TRUE);
+                    applex = g_enemy[i].x;
+                    appley = g_enemy[i].y;
                     g_EnemyCount1++;
+                    SetFontSize(25);
+                    DrawString(applex,appley,"+150",0xFFFFFF); 
+                    WaitTime(1000);
                     g_Score += g_enemy[i].point;
                 }
                 if (g_enemy[i].type == 1)
                 {
                     PlaySoundMem(bgmse.g_SE6, DX_PLAYTYPE_BACK, TRUE);
+                    applex = g_enemy[i].x;
+                    appley = g_enemy[i].y;
                     g_EnemyCount2++;
+                    SetFontSize(25);
+                    DrawString(applex, appley, "+300", 0xFFFFFF);
                     g_Score += g_enemy[i].point;
                 }
                 if (g_enemy[i].type == 2)
                 {
                     PlaySoundMem(bgmse.g_SE6, DX_PLAYTYPE_BACK, TRUE);
+                    applex = g_enemy[i].x;
+                    appley = g_enemy[i].y;
                     g_EnemyCount3++;
+                    SetFontSize(25);
+                    DrawString(applex, appley, "+500", 0xFFFFFF);
                     g_Score += g_enemy[i].point;
                 }
                 if (g_enemy[i].type == 3)
                 {
+                    applex = g_enemy[i].x;
+                    appley = g_enemy[i].y;
+                    SetFontSize(25);
+                    DrawString(applex, appley, "-1000", 0xFFFFFF);
                     PlaySoundMem(bgmse.g_SE5, DX_PLAYTYPE_BACK, TRUE);
                     g_Score += g_enemy[i].point;
                 }
@@ -194,3 +212,4 @@ void ENEMY::CheckApple()
     drawapple = ceil(((double)ENEMY_MAX - (double)applecount) / 2);
     applecount = 0;
 }
+

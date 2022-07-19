@@ -1,6 +1,7 @@
 #pragma once
 #include"Apple.h"
 #include"common.h"
+#include"DxLib.h"
 
 //é©ã@ÇÃç\ë¢ëÃ
 struct Player

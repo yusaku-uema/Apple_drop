@@ -103,7 +103,7 @@ int g_HelpImage;
 //const int FONT_Y = 200;
 int Decision = 0;
 
-
+//int g_WaitTime = 0;
 //ステック
 struct DINPUT_JOYSTATE
 {
@@ -464,10 +464,14 @@ void Pause(void) {
         ui.StopTime();
         g_GameState = 5;
     }
-    SetFontSize(30);
-    DrawString(225, 250, "---Pause中---", GetColor(255, 0, 0), 0);
-    DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 0, 0), 0);
-
+    if (g_WaitTime > 60) {
+        g_WaitTime = 0;
+    }
+    if (++g_WaitTime < 30) {
+        SetFontSize(30);
+        DrawString(225, 250, "---Pause中---", GetColor(255, 255, 50), 0);
+        DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 255, 0), 0);
+    }
     // 音量の設定
     ChangeVolumeSoundMem(255 * 80 / 100, bgmse.g_SE3);
 }
