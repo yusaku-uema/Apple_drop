@@ -48,7 +48,6 @@ void ENEMY::EnemyMove()
                     g_EnemyCount1++;
                     SetFontSize(25);
                     DrawString(applex,appley,"+150",0xFFFFFF); 
-                    WaitTime(1000);
                     g_Score += g_enemy[i].point;
                 }
                 if (g_enemy[i].type == 1)
