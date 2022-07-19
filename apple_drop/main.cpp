@@ -124,13 +124,15 @@ struct DINPUT_JOYSTATE
 struct RankingData g_Ranking[RANKING_DATA];
 
 
-char name[5][13] = {
+char g_name[5][13] = {
     {'a','b','c','d','e','f','g','h','i','j','k','l','m'},
     {'n','o','p','q','r','s','t','u','v','w','x','y','z'},
     {'A','B','C','D','E','F','G','H','I','J','K','L','M'},
     {'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'},
     {'0','1','2','3','4','5','6','7','8','9',}
 };
+
+char kettei[5] = "決定";
 
 
 /***********************************************
@@ -497,25 +499,52 @@ void InputRanking(void)
 
     if (fonttime >= 7)
     {
-        if (AX > 0|| g_KeyFlg & PAD_INPUT_RIGHT)
+        /*if (AX > 0|| )
         {
             g_nowfontX++;
             if (g_nowfontX > 12) g_nowfontX = 0;
             fonttime = 0;
         }
-        else if (AX < 0|| g_KeyFlg & PAD_INPUT_LEFT)
+        else if (AX < 0|| )
         {
             g_nowfontX--;
             if (g_nowfontX < 0) g_nowfontX = 12;
             fonttime = 0;
         }
-        else if (AY > 0|| g_KeyFlg & PAD_INPUT_DOWN)
+        else if (AY > 0|| )
         {
             g_nowfontY++;
             if (g_nowfontY > 4) g_nowfontY = 0;
             fonttime = 0;
         }
-        else if (AY < 0|| g_KeyFlg & PAD_INPUT_UP)
+        else if (AY < 0|| )
+        {
+            g_nowfontY--;
+            if (g_nowfontY < 0) g_nowfontY = 4;
+            fonttime = 0;
+        }*/
+
+        if (AX > 0 || g_KeyFlg & PAD_INPUT_RIGHT)
+        {
+            if (g_nowfontY == 4 && g_nowfontX >= 10 && g_nowfontX <= 11)g_nowfontX = 12;
+            g_nowfontX++;
+            if (g_nowfontX > 12) g_nowfontX = 0;
+            fonttime = 0;
+        }
+        else if (AX < 0 || g_KeyFlg & PAD_INPUT_LEFT)
+        {
+            g_nowfontX--;
+            if (g_nowfontY == 4 && g_nowfontX <= 11 && g_nowfontX >= 10)g_nowfontX = 9;
+            if (g_nowfontX < 0) g_nowfontX = 12;
+            fonttime = 0;
+        }
+        else if (AY > 0 || g_KeyFlg & PAD_INPUT_DOWN)
+        {
+            g_nowfontY++;
+            if (g_nowfontY > 4) g_nowfontY = 0;
+            fonttime = 0;
+        }
+        else if (AY < 0 || g_KeyFlg & PAD_INPUT_UP)
         {
             g_nowfontY--;
             if (g_nowfontY < 0) g_nowfontY = 4;
@@ -532,7 +561,14 @@ void InputRanking(void)
             {
                 color = red;
             }
-            DrawFormatString(g_fontX, g_fontY, color, "%c", name[i][j]);
+            DrawFormatString(FONT_X + 365, FONT_Y + 140, white, "%s", kettei);
+
+            if (g_nowfontY == 4 && g_nowfontX >= 10 && g_nowfontX <= 12)
+            {
+                DrawFormatString(FONT_X + 365, FONT_Y + 140, red, "%s", kettei);
+            }
+
+            DrawFormatString(g_fontX, g_fontY, color, "%c", g_name[i][j]);
             color = white;
             g_fontX += 35;
         }
@@ -550,10 +586,19 @@ void InputRanking(void)
             PlaySoundMem(bgmse.g_SE7, DX_PLAYTYPE_BACK, TRUE);//ランキング入力画面の選択SE
             if (fontno < 9)
             {
-                g_Ranking[4].name[fontno] = name[g_nowfontY][g_nowfontX];
+                g_Ranking[4].name[fontno] = g_name[g_nowfontY][g_nowfontX];
                 fontno++;
                 
             }
+
+            if (g_nowfontY == 4 && g_nowfontX >= 10 && g_nowfontX <= 12)
+            {
+                g_Ranking[4].score = enemy.g_Score;	// ランキングデータの5番目にスコアを登録
+                SortRanking();		// ランキング並べ替え
+                SaveRanking();		// ランキングデータの保存
+                g_GameState = 2;		// ゲームモードの変更
+            }
+
             fonttime = 0;
         }
         /*(170, 310, 10, g_Ranking[4].name, FALSE);*/
@@ -561,7 +606,7 @@ void InputRanking(void)
 
     }
 
-    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B /*&& g_OldKey == 0*/)//消去
+    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B)//消去
     {
         if (fonttime >= 10)
         {
@@ -577,19 +622,19 @@ void InputRanking(void)
     fonttime++;
 
     DrawFormatString(210, 165, color, "%s", g_Ranking[4].name);
-    if (g_KeyFlg & PAD_INPUT_8) {
+    /*if (g_KeyFlg & PAD_INPUT_8) {
         Decision = 1;
-    }
+    }*/
 
-    DrawString(100, 410, "STARTボタン、決定", 0xFFFFFF);
+    //DrawString(100, 410, "STARTボタン、決定", 0xFFFFFF);
    
-    if (g_KeyFlg & PAD_INPUT_A && Decision== 1)
-    {
-        g_Ranking[4].score = enemy.g_Score;	// ランキングデータの5番目にスコアを登録
-        SortRanking();		// ランキング並べ替え
-        SaveRanking();		// ランキングデータの保存
-        g_GameState = 2;		// ゲームモードの変更
-    }
+    //if (g_KeyFlg & PAD_INPUT_A && Decision== 1)
+    //{
+    //    g_Ranking[4].score = enemy.g_Score;	// ランキングデータの5番目にスコアを登録
+    //    SortRanking();		// ランキング並べ替え
+    //    SaveRanking();		// ランキングデータの保存
+    //    g_GameState = 2;		// ゲームモードの変更
+    //}
 }
 /***********************************************
  * 画像読み込み
