@@ -591,7 +591,6 @@ void InputRanking(void)
     fonttime++;
 
     DrawFormatString(210, 165, color, "%s", g_Ranking[4].name);
-    DrawFormatString(210, 185, color, "%d", fontno);
     
 }
 /***********************************************
