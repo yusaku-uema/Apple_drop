@@ -28,6 +28,8 @@ public:
     int appletype;
     int g_EnemyCount1, g_EnemyCount2, g_EnemyCount3; //ƒŠƒ“ƒS‚ğæ“¾‚µ‚½”‚ğ“ü‚ê‚é•Ï”
     int g_Score; //ƒXƒRƒA
+    int applex;
+    int appley;
 
     
     ENEMY();
@@ -42,3 +44,4 @@ public:
 };
 
 extern ENEMY enemy;
+extern int WaitTime;

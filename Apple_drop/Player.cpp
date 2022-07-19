@@ -189,7 +189,7 @@ int PLAYER::HitBoxPlayer(Player* p, Enemy* e)
     }
     return FALSE;
 }
-
+//プレイヤーの初期化
 void PLAYER::PlayerInit(void)
 {
     g_player = { TRUE,PLAYER_POS_X,PLAYER_POS_Y,PLAYER_WIDTH,PLAYER_HEIGHT,0,PLAYER_SPEED };
@@ -213,7 +213,7 @@ PLAYER::PLAYER()
     invincibletime = 0;
     blinkflg = TRUE;
 }
-
+//点滅
 void PLAYER::Blink(void)
 {
     if (invincibletime < 120)

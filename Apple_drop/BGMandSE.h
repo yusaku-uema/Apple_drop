@@ -9,7 +9,7 @@ public:
 	int g_RankingBGM;//ランキングBGM
 	int g_HelpBGM;//ヘルプBGM
 	int g_EndBGM;//エンドBGM
-
+	
 	int g_SE1;//選択SE
 	int g_SE2;//ポーズ画面選択SE
 	int g_SE3;//ポーズ画面からメインに戻るSE
