@@ -415,8 +415,8 @@ void Pause(void) {
     }
     if (++g_WaitTime < 30) {
         SetFontSize(30);
-        DrawString(225, 250, "---Pause中---", GetColor(255, 255, 50), 0);
-        DrawString(100, 300, "---Bボタンを押してゲームへ---", GetColor(255, 255, 0), 0);
+        DrawString(150, 250, "---Pause中---", GetColor(255, 255, 50), 0);
+        DrawString(25, 300, "---Bボタンを押してゲームへ---", GetColor(255, 255, 0), 0);
     }
     // 音量の設定
     ChangeVolumeSoundMem(255 * 80 / 100, bgmse.g_SE3);
