@@ -214,7 +214,6 @@ void DrawGameTitle(void) {
     if (g_KeyFlg & PAD_INPUT_UP) {
         if (--MenuNo < 0)MenuNo = 3;
     }
-    //zキーでメニュー選択
     if (g_KeyFlg & PAD_INPUT_A) {
         PlaySoundMem(bgmse.g_SE1, DX_PLAYTYPE_BACK, TRUE);
         g_GameState = MenuNo + 1;
@@ -447,27 +446,27 @@ void InputRanking(void)
 
     if (fonttime >= 7)
     {
-        if (AX > 0 || g_KeyFlg & PAD_INPUT_RIGHT)
+        if ( g_KeyFlg & PAD_INPUT_RIGHT)
         {
             if (g_nowfontY == 4 && g_nowfontX >= 10 && g_nowfontX <= 11)g_nowfontX = 12;
             g_nowfontX++;
             if (g_nowfontX > 12) g_nowfontX = 0;
             fonttime = 0;
         }
-        else if (AX < 0 || g_KeyFlg & PAD_INPUT_LEFT)
+        else if ( g_KeyFlg & PAD_INPUT_LEFT)
         {
             g_nowfontX--;
             if (g_nowfontY == 4 && g_nowfontX <= 11 && g_nowfontX >= 10)g_nowfontX = 9;
             if (g_nowfontX < 0) g_nowfontX = 12;
             fonttime = 0;
         }
-        else if (AY > 0 || g_KeyFlg & PAD_INPUT_DOWN)
+        else if ( g_KeyFlg & PAD_INPUT_DOWN)
         {
             g_nowfontY++;
             if (g_nowfontY > 4) g_nowfontY = 0;
             fonttime = 0;
         }
-        else if (AY < 0 || g_KeyFlg & PAD_INPUT_UP)
+        else if ( g_KeyFlg & PAD_INPUT_UP)
         {
             g_nowfontY--;
             if (g_nowfontY < 0) g_nowfontY = 4;
