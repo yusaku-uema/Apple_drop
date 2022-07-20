@@ -32,23 +32,20 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ranking.h">
+    <ClInclude Include="UI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="BGMandSE.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Apple.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="common.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BGMandSE.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
