@@ -30,7 +30,6 @@ public:
     int g_Score; //ƒXƒRƒA
     int applex;
     int appley;
-
     
     ENEMY();
     void EnemyMove();
@@ -38,9 +37,6 @@ public:
     void InitEnemy();
     int CreateEnemy();
     void CheckApple(); //•`‰æ‚³‚ê‚Ä‚¢‚éƒŠƒ“ƒS‚ÌŒÂ”‚ğ”‚¦‚éŠÖ”
-
-    
-  
 };
 
 extern ENEMY enemy;

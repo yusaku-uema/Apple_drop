@@ -2,9 +2,6 @@
 #include"Apple.h"
 #include"common.h"
 #include"BGMandSE.h"
-UI::UI() {
-   
-}
 
 void UI::TimeCount()
 {

@@ -7,8 +7,6 @@ public:
 	int Time;   // Œ»İŠÔ
 	//§ŒÀŠÔ
 	int TIMELIMIT;
-
-	UI();
 	void UIView();
 	void TimeCount();
 	void UIInit();

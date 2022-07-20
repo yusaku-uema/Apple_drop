@@ -39,6 +39,4 @@ public:
     void Blink(void);
 
 };
-
-
 extern PLAYER player;
