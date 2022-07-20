@@ -11,12 +11,6 @@ ENEMY::ENEMY()
 {
     g_enemy00 = { TRUE,0,0,0,-50,APPLE_WIDTH,APPLE_HEIGHT,0,1 };
     g_Mileage = 0;
-    /*applecheck = 0;
-    applecount = 0;
-    drawapple = 0;
-    g_EnemyCount1 = 0;
-    g_EnemyCount2 = 0;
-    g_EnemyCount3 = 0;*/
 }
 
 void ENEMY::EnemyMove()
@@ -25,9 +19,6 @@ void ENEMY::EnemyMove()
     {
         if (g_enemy[i].flg == TRUE)
         {
-
-            //if (player.g_player.flg == FALSE)continue;
-
             //まっすぐ下に移動
             g_enemy[i].y += g_enemy[i].speed;// + g_player.speed - PLAYER_SPEED + 1;
 
@@ -91,12 +82,6 @@ void ENEMY::EnemyMove()
 
 
     }
-
-    //走行距離ごとに敵出現パターンを制御する
-    /*if (g_Mileage / 10 % 50 == 0)
-    {
-        CreateEnemy();
-    }*/
     applecheck++;
 
     if (applecheck >= 25)
@@ -166,8 +151,6 @@ int ENEMY::CreateEnemy()
                     g_enemy[i].speed = 1;
                     g_enemy[i].point = -1000;
                 }
-
-
 
                 drawapple--;
 

@@ -3,8 +3,6 @@
 #include"Apple.h"
 #define RANKING_DATA 5
 
-void InputRankingInit(void);
-
 //画面領域の大きさ
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -20,17 +18,9 @@ const int APPLE_HEIGHT = 40; //本当は50
 
 extern int g_Teki[4];
 extern int AX;
+extern int AY;
 extern int g_KeyFlg;
 extern int g_GameState;
 extern int g_StageBGM;
 extern int g_PauseImage;
 
-
-//ランキングデータ（構造体）
-struct RankingData {
-    int no;
-    char name[10];
-    long score;
-};
-
-extern struct RankingData g_Ranking[RANKING_DATA];

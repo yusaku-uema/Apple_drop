@@ -1,5 +1,6 @@
 #pragma once
 #include"DxLib.h"
+#include"Ranking.h"
 
 class UI {
 public:
@@ -8,12 +9,11 @@ public:
 	//êßå¿éûä‘
 	int TIMELIMIT;
 
-	UI();
 	void UIView();
 	void TimeCount();
 	void UIInit();
 	void StopTime();
 	void Alpha();
 };
-
 extern UI ui;
+extern Ranking ranking;

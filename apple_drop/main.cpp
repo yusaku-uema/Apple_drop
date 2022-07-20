@@ -11,11 +11,13 @@
 #include"Apple.h"
 #include"UI.h"
 #include"BGMandSE.h"
+#include"Ranking.h"
 
 ENEMY enemy;
 PLAYER player;
 UI ui;
 BGMSE bgmse;
+Ranking ranking;
 
 /***********************************************
  * 定数を宣言
@@ -28,9 +30,6 @@ const int PLAYER_BARRIER = 3;
 const int PLAYER_BARRIERUP = 10;
 //アイテムの最大数
 const int ITEM_MAX = 3;
-const int FONT_X = 100;
-const int FONT_Y = 200;
-
 /***********************************************
  * 変数の宣言
  ***********************************************/
@@ -40,7 +39,6 @@ int g_KeyFlg;  // 入力キー情報
 int g_GameState = 0;  // ゲームモード 
 int g_TitleImage; // 画像用変数 
 int g_Menu; //メニュー画面
-int g_RankingImage; //画像用変数
 int g_Item[2]; //アイテム画像変数
 int g_WaitTime = 0; //待ち時間
 int g_EndImage; //ゲームエンド
@@ -53,25 +51,12 @@ int fpscount = 0;  //かみこうが使うよ
 int fps = 0;  //かみこうが使うよ
 int g_Teki[4]; //キャラ画像変数
 int g_StageImage;
-int g_RankingInputImage;//ランキングインプット画面
 int g_teki;
 int g_Applec; //タイトルカーソル変数　消さないで
 //追加します
 int g_ky;
 int AX, AY; //コントローラ左スティック座標消さないで
-int g_fontX = FONT_X;
-int g_fontY = FONT_Y;
-int g_nowfontX = 0;
-int g_nowfontY = 0;
-int fonttime = 0;
-int fontno = 0;
-//カラー取得
-int Cr;
-int red = GetColor(255, 0, 0);
-int white = GetColor(255, 255, 255);
-int color = white;
 int g_HelpImage;
-int Decision = 0;
 //ステック
 struct DINPUT_JOYSTATE
 {
@@ -88,18 +73,6 @@ struct DINPUT_JOYSTATE
     unsigned char	Buttons[32];	// ボタン３２個( 押されたボタンは 128 になる )
 };
 
-struct RankingData g_Ranking[RANKING_DATA];
-
-char g_name[5][13] = {
-    {'a','b','c','d','e','f','g','h','i','j','k','l','m'},
-    {'n','o','p','q','r','s','t','u','v','w','x','y','z'},
-    {'A','B','C','D','E','F','G','H','I','J','K','L','M'},
-    {'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'},
-    {'0','1','2','3','4','5','6','7','8','9',}
-};
-
-char kettei[5] = "決定";
-
 /***********************************************
  * 関数のプロトタイプ宣言
  ***********************************************/
@@ -108,12 +81,7 @@ void GameMain(void); //ゲームメイン処理
 void DrawGameTitle(void); //タイトル描画処理
 void DrawEnd(void); //ゲームエンド描画処理
 void DrawHelp(void); //ゲームヘルプ描画処理
-void DrawRanking(void); //ランキング描画処理
-void InputRanking(void);//ランキング入力
 int LoadImages(); //画像読み込み
-void SortRanking(void); //ランキンググ並び替え
-int SaveRanking(void); //ランキングデータの保存
-int ReadRanking(void); //ランキングデータ読込み
 void BackScrool(); //背景画像スクロール処理
 void Pause(); //ポーズ画面
 
@@ -134,7 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     //描画先画面を裏にする 
     SetDrawScreen(DX_SCREEN_BACK);
 
-    if (ReadRanking() == -1) return -1;//ランキングデータの読込み
+    if (ranking.ReadRanking() == -1) return -1;//ランキングデータの読込み
 
     if (LoadImages() == -1) return -1; //画像読込み関数を呼び出し
     if (bgmse.LoadSounds() == -1) return -1; //サウンド読みこみ関数を呼び出し
@@ -166,7 +134,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
             GameInit();
             break;
         case 2:
-            DrawRanking();
+            ranking.DrawRanking();
             break;
         case 3:
             DrawHelp();
@@ -178,7 +146,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
             GameMain();
             break;
         case 6:
-            InputRanking();
+            ranking.InputRanking();
             break;
         case 7:
             Pause();
@@ -251,32 +219,6 @@ void GameInit(void)
     //ゲームメイン処理へ
     g_GameState = 5;
 }
-/***********************************************
- * ゲームランキング表示
- ***********************************************/
-void DrawRanking(void)
-{
-    //ランキングサウンド
-    PlaySoundMem(bgmse.g_RankingBGM, DX_PLAYTYPE_BACK, FALSE);
-    // 音量の設定
-    ChangeVolumeSoundMem(255 * 50 / 100, bgmse.g_RankingBGM);
-    //スペースキーでメニューに戻る
-    if (g_KeyFlg & PAD_INPUT_M) g_GameState = 0;
-
-    //ランキング画像表示
-    DrawGraph(0, 0, g_RankingImage, FALSE);
-
-    //ランキング一覧を表示
-    SetFontSize(30);
-    for (int i = 0; i < RANKING_DATA; i++) {
-        DrawFormatString(120, 170 + i * 25, 0xffffff, "%2d %-10s %10d", g_Ranking[i].no, g_Ranking[i].name, g_Ranking[i].score);
-    }
-    SetFontSize(30);
-    DrawString(50, 450, "----Bボタン押してタイトルに戻る----", 0xffffff, 0);
-    //Bボタンでタイトルに戻る
-    if (g_KeyFlg & PAD_INPUT_B) g_GameState = 0;
-    StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
-}
 
 /***********************************************
  * ゲームヘルプ描画処理
@@ -304,7 +246,6 @@ void DrawHelp(void)
     DrawString(100, 260, "STARTボタン…ポーズ画面に移動する", 0xFFFFFF);
     SetFontSize(30);
     DrawString(140, 310, "BACKボタン…ゲームを終了する", 0xFFFFFF);
-
     SetFontSize(30);
     DrawString(20, 390, "---Aボタン押してゲームをスタートする---", 0xffffff, 0);
     SetFontSize(30);
@@ -422,128 +363,6 @@ void Pause(void) {
     ChangeVolumeSoundMem(255 * 80 / 100, bgmse.g_SE3);
 }
 
-void InputRankingInit(void)
-{
-    for (int i = 0; i < 11; i++)
-    {
-        g_Ranking[4].name[i] = '\0';
-    }
-    fontno = 0;
-}
-
-/***********************************************
- * ランキング入力処理
- ***********************************************/
-void InputRanking(void)
-{
-
-   // //ランキング画像表示
-    DrawGraph( 0, 0, g_RankingInputImage , FALSE);
-
-   //フォントサイズの設定
-    SetFontSize(20);
-    DrawBox(FONT_X - 10, FONT_Y - 5, FONT_X + 450, FONT_Y + 175, 0x000000, TRUE);
-    DrawBox(FONT_X - 10, FONT_Y - 5, FONT_X + 450, FONT_Y + 175, white, FALSE);
-
-    if (fonttime >= 7)
-    {
-        if (AX > 0 || g_KeyFlg & PAD_INPUT_RIGHT)
-        {
-            if (g_nowfontY == 4 && g_nowfontX >= 10 && g_nowfontX <= 11)g_nowfontX = 12;
-            g_nowfontX++;
-            if (g_nowfontX > 12) g_nowfontX = 0;
-            fonttime = 0;
-        }
-        else if (AX < 0 || g_KeyFlg & PAD_INPUT_LEFT)
-        {
-            g_nowfontX--;
-            if (g_nowfontY == 4 && g_nowfontX <= 11 && g_nowfontX >= 10)g_nowfontX = 9;
-            if (g_nowfontX < 0) g_nowfontX = 12;
-            fonttime = 0;
-        }
-        else if (AY > 0 || g_KeyFlg & PAD_INPUT_DOWN)
-        {
-            g_nowfontY++;
-            if (g_nowfontY > 4) g_nowfontY = 0;
-            fonttime = 0;
-        }
-        else if (AY < 0 || g_KeyFlg & PAD_INPUT_UP)
-        {
-            g_nowfontY--;
-            if (g_nowfontY < 0) g_nowfontY = 4;
-            fonttime = 0;
-        }
-    }
-
-    SetFontSize(30);
-    for (int i = 0; i < 5; i++)
-    {
-        for (int j = 0; j < 13; j++)
-        {
-            if (i == g_nowfontY && j == g_nowfontX)
-            {
-                color = red;
-            }
-            DrawFormatString(FONT_X + 365, FONT_Y + 140, white, "%s", kettei);
-
-            if (g_nowfontY == 4 && g_nowfontX >= 10 && g_nowfontX <= 12)
-            {
-                DrawFormatString(FONT_X + 365, FONT_Y + 140, red, "%s", kettei);
-            }
-
-            DrawFormatString(g_fontX, g_fontY, color, "%c", g_name[i][j]);
-            color = white;
-            g_fontX += 35;
-        }
-        g_fontX = FONT_X;
-        g_fontY += 35;
-    }
-    g_fontY = FONT_Y;
-
-
-    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_A)//決定
-    {
-       
-        if (fonttime >= 10)
-        {
-            PlaySoundMem(bgmse.g_SE7, DX_PLAYTYPE_BACK, TRUE);//ランキング入力画面の選択SE
-            if (fontno < 9)
-            {
-                g_Ranking[4].name[fontno] = g_name[g_nowfontY][g_nowfontX];
-                fontno++;   
-            }
-
-            if (g_nowfontY == 4 && g_nowfontX >= 10 && g_nowfontX <= 12)
-            {
-                g_Ranking[4].score = enemy.g_Score;	// ランキングデータの5番目にスコアを登録
-                SortRanking();		// ランキング並べ替え
-                SaveRanking();		// ランキングデータの保存
-                g_GameState = 2;		// ゲームモードの変更
-            }
-
-            fonttime = 0;
-        }
-      
-    }
-
-    if (GetJoypadInputState(DX_INPUT_PAD1) & PAD_INPUT_B)//消去
-    {
-        if (fonttime >= 10)
-        {
-            PlaySoundMem(bgmse.g_SE8, DX_PLAYTYPE_BACK, TRUE);//ランキング削除SE
-            fontno--;
-            g_Ranking[4].name[fontno] = '\0';
-            if (fontno < 0)fontno = 0;
-            fonttime = 0;
-        }
-
-    }
-
-    fonttime++;
-
-    DrawFormatString(210, 165, color, "%s", g_Ranking[4].name);
-    
-}
 /***********************************************
  * 画像読み込み
  ***********************************************/
@@ -554,9 +373,6 @@ int LoadImages()
 
     //メニュー
     if ((g_Applec = LoadGraph("images/Chapter5/Applec.png")) == -1) return -1;
-
-    //ランキングデータの読込み
-    if ((g_RankingImage = LoadGraph("images/Chapter5/ranking.png")) == -1)return-1;
 
     //エンディング画像の読込み  
     if ((g_EndImage = LoadGraph("images/Chapter5/GameEnd.png")) == -1)return -1;
@@ -573,95 +389,9 @@ int LoadImages()
     //プレイヤー
     if (LoadDivGraph("images/Chapter5/Player_1.png", 16, 4, 4, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
 
-    //ランキング入力画面
-    if ((g_RankingInputImage = LoadGraph("images/Chapter5/rankingnyuuryoku.png")) == -1)return -1;
-
     //ポーズ画面
     if ((g_PauseImage = LoadGraph("images/Chapter5/black_00073.jpg")) == -1)return -1;
-}
 
-/***********************************************
- * ランキング並び替え
- ***********************************************/
-void SortRanking(void)
-{
-    int i, j;
-    RankingData work;
-
-    // 選択法ソート
-    for (i = 0; i < 4; i++) {
-        for (j = i + 1; j < 5; j++) {
-            if (g_Ranking[i].score <= g_Ranking[j].score) {
-                work = g_Ranking[i];
-                g_Ranking[i] = g_Ranking[j];
-                g_Ranking[j] = work;
-            }
-        }
-    }
-
-    //順位付け
-    for (i = 0; i < 5; i++) {
-        g_Ranking[i].no = 1;
-    }
-    //得点が同じ場合は、同じ順位とする
-    //同順位があった場合の次の順位はデータ個数が加算された順位とする
-    for (i = 0; i < 4; i++) {
-        for (j = i + 1; j < 5; j++) {
-            if (g_Ranking[i].score > g_Ranking[j].score) {
-                g_Ranking[j].no++;
-            }
-        }
-    }
-}
-/***********************************************
- * ランキングデータの保存
- ***********************************************/
-int  SaveRanking(void)
-{
-    FILE* fp;
-#pragma warning(disable:4996)
-
-   
-    if ((fp = fopen("dat/rankingdata.txt", "w")) == NULL) {
-        /* エラー処理 */
-        printf("Ranking Data Error\n");
-        return -1;
-    }
-
-    //ランキングデータ分配列データを書き込む
-    for (int i = 0; i < 5; i++) {
-        fprintf(fp, "%2d %10s %10d\n", g_Ranking[i].no, g_Ranking[i].name, g_Ranking[i].score);
-    }
-
-    //ファイルクローズ
-    fclose(fp);
-
-    return 0;
-}
-/***********************************************
- * ランキングデータ読込み
- ***********************************************/
-int ReadRanking(void)
-{
-    FILE* fp;
-#pragma warning(disable:4996)
-
-    //ファイルオープン
-    if ((fp = fopen("dat/rankingdata.txt", "r")) == NULL) {
-        //エラー処理
-        printf("Ranking Data Error\n");
-        return -1;
-    }
-
-    //ランキングデータ配分列データを読み込む
-    for (int i = 0; i < 5; i++) {
-        fscanf(fp, "%2d %10s %10d\n", &g_Ranking[i].no, g_Ranking[i].name, &g_Ranking[i].score);//あやしい
-    }
-
-    //ファイルクローズ
-    fclose(fp);
-
-    return 0;
 }
 
 /***********************************************
