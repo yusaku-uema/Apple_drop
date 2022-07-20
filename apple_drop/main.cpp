@@ -585,7 +585,7 @@ int LoadImages()
     if ((g_HelpImage = LoadGraph("images/Chapter5/Help2.png")) == -1)return -1;
 
     //プレイヤー
-    if (LoadDivGraph("images/Chapter5/Player_02.png", 12, 4, 3, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
+    if (LoadDivGraph("images/Chapter5/PlayerKai.png", 12, 4, 3, 76, 100, player.g_PlayerImage) == -1) return -1; //自機画像
 
     //ランキング入力画面
     if ((g_RankingInputImage = LoadGraph("images/Chapter5/rankingnyuuryoku.png")) == -1)return -1;
