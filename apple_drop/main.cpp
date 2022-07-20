@@ -295,22 +295,35 @@ void DrawHelp(void)
     DrawGraph(0, 0, g_HelpImage, FALSE);
     StopSoundMem(bgmse.g_TitleBGM); //ゲームオーバーに追加する
     SetFontSize(30);
-    DrawString(160, 110, "Lスティック…移動操作", 0xFFFFFF);
+    DrawString(240, 70, "ゲーム説明", GetColor(255, 255, 0));
+    SetFontSize(25);
+    DrawString(50, 110, "リンゴをたくさん拾って高スコアを目指そう！！", 0xFFFFFF);
+    SetFontSize(25);
+    DrawString(200, 135, "※毒リンゴには注意", 0xFFFFFF);
     SetFontSize(30);
-    DrawString(160, 160, "Aボタン…決定", 0xFFFFFF);
-    SetFontSize(30);
-    DrawString(160, 210, "Bボタン…戻る", 0xFFFFFF);
-    SetFontSize(30);
-    DrawString(100, 260, "STARTボタン…ポーズ画面に移動する", 0xFFFFFF);
-    SetFontSize(30);
-    DrawString(140, 310, "BACKボタン…ゲームを終了する", 0xFFFFFF);
+    DrawString(240, 180, "操作説明", GetColor(255, 255, 0));
+    SetFontSize(25);
+    DrawString(160, 220, "Lスティック…移動操作", 0xFFFFFF);
+    SetFontSize(25);
+    DrawString(160, 250, "Aボタン…決定", 0xFFFFFF);
+    SetFontSize(25);
+    DrawString(160, 280, "Bボタン…戻る", 0xFFFFFF);
+    SetFontSize(25);
+    DrawString(100, 310, "STARTボタン…ポーズ画面に移動する", 0xFFFFFF);
+    SetFontSize(25);
+    DrawString(140, 340, "BACKボタン…ゲームを終了する", 0xFFFFFF);
 
     SetFontSize(30);
-    DrawString(20, 390, "---Aボタン押してゲームをスタートする---", 0xffffff, 0);
+    DrawString(20, 390, "---Aボタン押してゲームをスタートする---", GetColor(255, 0, 0), 0);
     SetFontSize(30);
     DrawString(300, 420, "OR", 0xffffff, 0);
     SetFontSize(30);
+
     DrawString(50, 450, "----Bボタン押してタイトルに戻る----", 0xffffff, 0);
+
+
+    DrawString(50, 450, "----Bボタン押してタイトルに戻る----", GetColor(255, 0, 0), 0);
+    //Bボタンでタイトルに戻る
 
 }
 
