@@ -2,8 +2,9 @@
 #include"Apple.h"
 #include"common.h"
 #include"BGMandSE.h"
-#include"Ranking.h"
-
+UI::UI() {
+   
+}
 
 void UI::TimeCount()
 {
@@ -11,8 +12,9 @@ void UI::TimeCount()
     Time = TIMELIMIT - (GetNowCount() - g_StartTime);
     if (Time <= 0)
     {
-        if (ranking.getScore(4) <= enemy.g_Score) {
+        if (g_Ranking[RANKING_DATA - 1].score <= enemy.g_Score) {
             StopSoundMem(bgmse.g_StageBGM); //ゲームオーバーに追加する
+            InputRankingInit();
             g_GameState = 6;
         }
         else {
