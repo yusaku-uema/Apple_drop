@@ -9,6 +9,7 @@ struct Enemy {
     int x, y, w, h; //座標x,y,幅w,高さh
     int speed; //移動速度
     int point; //スコア加算
+    int time;
 };
 
 //敵機
@@ -20,6 +21,8 @@ public:
 
     struct Enemy g_enemy[ENEMY_MAX];
     struct Enemy g_enemy00;
+
+    struct Enemy g_drawenemy[ENEMY_MAX];
 
     int g_Mileage; //走行距離
     int applecheck; //リンゴの個数をチェックするための変数
@@ -39,6 +42,8 @@ public:
     int CreateEnemy();
     void CheckApple(); //描画されているリンゴの個数を数える関数
 
+
+    void DrawApple();
     
   
 };
