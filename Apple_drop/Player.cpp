@@ -13,41 +13,6 @@
 void PLAYER::PlayerControl()
 {
     //左右移動
-       /* if (AX < -0)
-        {
-            if (oldkey == 0 || oldkey == 1 || oldkey == 2)
-            {
-                PlayerWalkStart(1, -1);
-            }
-        }
-
-        if (!(AX < -0))
-        {
-            if (oldkey == 1 || oldkey == 2)
-            {
-                if (AX > 0) PlayerWalkEnd(-1, 1);
-                else PlayerWalkEnd(-1, 0);
-            }
-        }
-
-        if (AX > 0)
-        {
-            if (oldkey == 0 || oldkey == 3 || oldkey == 4)
-            {
-                PlayerWalkStart(3, 1);
-            }
-        }
-
-        if (!(AX > 0))
-        {
-            if (oldkey == 3 || oldkey == 4)
-            {
-                if (AX < 0)PlayerWalkEnd(1, 1);
-                else PlayerWalkEnd(1, 0);
-            }
-        }*/
-
-
     if (AX < 0)
     {
         if (oldkey == 0 || oldkey == 1 || oldkey == 2)
@@ -98,9 +63,9 @@ void PLAYER::PlayerControl()
         g_player.x = 0;
         g_player.speed = 1;
     }
-    if (g_player.x > 440)
+    if (g_player.x > 428)
     {
-        g_player.x = 440;
+        g_player.x = 428;
         g_player.speed = 1;
     }
 
@@ -131,8 +96,8 @@ void PLAYER::PlayerWalkEnd(int a, int b)
 
     if (b != 0)
     {
-        if (oldkey == 2)image = 0;
-        if (oldkey == 4)image = 0;
+        if (oldkey == 2)image = 9;
+        if (oldkey == 4)image = 8;
     }
 
     if (g_player.speed >= 1)
@@ -190,19 +155,6 @@ void PLAYER::PlayerImage(void)
 
     if (oldkey == 1 || oldkey == 2)
     {
-        if (image >= 8 && image <= 10)
-        {
-            image++;
-        }
-
-        else
-        {
-            image = 8;
-        }
-    }
-
-    if (oldkey == 3 || oldkey == 4)
-    {
         if (image >= 4 && image <= 6)
         {
             image++;
@@ -211,6 +163,19 @@ void PLAYER::PlayerImage(void)
         else
         {
             image = 4;
+        }
+    }
+
+    if (oldkey == 3 || oldkey == 4)
+    {
+        if (image >= 0 && image <= 2)
+        {
+            image++;
+        }
+
+        else
+        {
+            image = 0;
         }
     }
 
@@ -246,7 +211,7 @@ int PLAYER::HitBoxPlayer(Player* p, Enemy* e)
 void PLAYER::PlayerInit(void)
 {
     g_player = { TRUE,PLAYER_POS_X,PLAYER_POS_Y,PLAYER_WIDTH,PLAYER_HEIGHT,0,PLAYER_SPEED };
-    image = 0;  //プレイヤーの歩く画像を変更するときの変数
+    image = 10;  //プレイヤーの歩く画像を変更するときの変数
     walkspeed = 0;
     oldkey = 0;
     ATARI_HANTEI = 0;
