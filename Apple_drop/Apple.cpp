@@ -3,8 +3,6 @@
 #include"common.h"
 #include"Player.h"
 #include"BGMandSE.h"
-
-//struct ENEMY g_enemy[ENEMY_MAX];
 struct Enemy g_enemy[ENEMY_MAX];
 
 ENEMY::ENEMY()
@@ -19,8 +17,6 @@ void ENEMY::EnemyMove()
     {
         if (g_enemy[i].flg == TRUE)
         {
-
-            //if (player.g_player.flg == FALSE)continue;
 
             //‚Ü‚Á‚·‚®‰º‚ÉˆÚ“®
             g_enemy[i].y += g_enemy[i].speed;// + g_player.speed - PLAYER_SPEED + 1;
