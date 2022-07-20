@@ -13,7 +13,7 @@
 void PLAYER::PlayerControl()
 {
     //左右移動
-        if (AX < -0)
+       /* if (AX < -0)
         {
             if (oldkey == 0 || oldkey == 1 || oldkey == 2)
             {
@@ -25,7 +25,8 @@ void PLAYER::PlayerControl()
         {
             if (oldkey == 1 || oldkey == 2)
             {
-                PlayerWalkEnd(-1);
+                if (AX > 0) PlayerWalkEnd(-1, 1);
+                else PlayerWalkEnd(-1, 0);
             }
         }
 
@@ -41,14 +42,54 @@ void PLAYER::PlayerControl()
         {
             if (oldkey == 3 || oldkey == 4)
             {
-                PlayerWalkEnd(1);
+                if (AX < 0)PlayerWalkEnd(1, 1);
+                else PlayerWalkEnd(1, 0);
             }
+        }*/
+
+
+    if (AX < 0)
+    {
+        if (oldkey == 0 || oldkey == 1 || oldkey == 2)
+        {
+            PlayerWalkStart(1, -1);
+        }
+        if (oldkey == 3 || oldkey == 4)
+       {
+            PlayerWalkEnd(1, 1);
+        }
+    }
+
+    else if (AX > 0)
+    {
+        if (oldkey == 0 || oldkey == 3 || oldkey == 4)
+        {
+            PlayerWalkStart(3, 1);
+        }
+        if (oldkey == 1 || oldkey == 2)
+        {
+            PlayerWalkEnd(-1, 1);
+        }
+       
+    }
+
+    else if (AX == 0)
+    {
+        if (oldkey == 3 || oldkey == 4)
+        {
+            PlayerWalkEnd(1, 0);
         }
 
-        SetFontSize(18);
-        DrawFormatString(0, 10, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
-        DrawFormatString(0, 30, 0x00ffff, "プレイヤー画像　 = %2d", image);
-        DrawFormatString(0, 70, 0x00ffff, "プレイヤーX軸 　 = %d", g_player.x);
+        if (oldkey == 1 || oldkey == 2)
+        {
+            PlayerWalkEnd(-1, 0);
+        }
+    }
+
+    SetFontSize(18);
+    DrawFormatString(0, 10, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
+    DrawFormatString(0, 30, 0x00ffff, "プレイヤー画像　 = %2d", image);
+    DrawFormatString(0, 70, 0x00ffff, "プレイヤーX軸 　 = %d", g_player.x);
 
 
     //画面をはみ出さないようにする
@@ -73,14 +114,25 @@ void PLAYER::PlayerControl()
     if (g_player.flg == FALSE) Blink();
 }
 
-void PLAYER::PlayerWalkEnd(int a)
+void PLAYER::PlayerWalkEnd(int a, int b)
 {
     if (oldkey == 1 || oldkey == 3)
     {
         walkspeed = 0;
+        if (oldkey == 1)
+        {
+            oldkey = 2;
+        }
+        if (oldkey == 3)
+        {
+            oldkey = 4;
+        }
+    }
 
-        if (oldkey == 1)oldkey = 2;
-        if (oldkey == 3)oldkey = 4;
+    if (b != 0)
+    {
+        if (oldkey == 2)image = 0;
+        if (oldkey == 4)image = 0;
     }
 
     if (g_player.speed >= 1)
@@ -90,7 +142,7 @@ void PLAYER::PlayerWalkEnd(int a)
 
         if (walkspeed >= 5)
         {
-            PlayerImage();
+            if(b == 0) PlayerImage();
             g_player.speed--;
             walkspeed = 0;
         }
@@ -161,6 +213,7 @@ void PLAYER::PlayerImage(void)
             image = 4;
         }
     }
+
 }
 
 
