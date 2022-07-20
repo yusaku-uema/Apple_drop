@@ -444,6 +444,9 @@ void InputRanking(void)
     DrawBox(FONT_X - 10, FONT_Y - 5, FONT_X + 450, FONT_Y + 175, 0x000000, TRUE);
     DrawBox(FONT_X - 10, FONT_Y - 5, FONT_X + 450, FONT_Y + 175, white, FALSE);
 
+    DrawBox(240 , 150, 405, 195, 0x000000, TRUE);//•¶Žš
+    DrawBox(240, 150, 405, 195, white, FALSE);//•¶Žš
+
     if (fonttime >= 7)
     {
         if ( g_KeyFlg & PAD_INPUT_RIGHT)
@@ -540,7 +543,7 @@ void InputRanking(void)
 
     fonttime++;
 
-    DrawFormatString(210, 165, color, "%s", g_Ranking[4].name);
+    DrawFormatString(250, 165, color, "%s", g_Ranking[4].name);
     
 }
 /***********************************************
