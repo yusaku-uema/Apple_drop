@@ -31,7 +31,7 @@ public:
     PLAYER();
     void PlayerControl(); //é©ã@èàóù
     void PlayerWalkStart(int a, int b);
-    void PlayerWalkEnd(int);
+    void PlayerWalkEnd(int a, int b);
     void PlayerImage(void);
 
     int HitBoxPlayer(Player* p, Enemy* e);

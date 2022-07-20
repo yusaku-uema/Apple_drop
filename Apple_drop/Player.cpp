@@ -13,42 +13,48 @@
 void PLAYER::PlayerControl()
 {
     //左右移動
-        if (AX < -0)
+    if (AX < 0)
+    {
+        if (oldkey == 0 || oldkey == 1 || oldkey == 2)
         {
-            if (oldkey == 0 || oldkey == 1 || oldkey == 2)
-            {
-                PlayerWalkStart(1, -1);
-            }
+            PlayerWalkStart(1, -1);
+        }
+        if (oldkey == 3 || oldkey == 4)
+       {
+            PlayerWalkEnd(1, 1);
+        }
+    }
+
+    else if (AX > 0)
+    {
+        if (oldkey == 0 || oldkey == 3 || oldkey == 4)
+        {
+            PlayerWalkStart(3, 1);
+        }
+        if (oldkey == 1 || oldkey == 2)
+        {
+            PlayerWalkEnd(-1, 1);
+        }
+       
+    }
+
+    else if (AX == 0)
+    {
+        if (oldkey == 3 || oldkey == 4)
+        {
+            PlayerWalkEnd(1, 0);
         }
 
-        if (!(AX < -0))
+        if (oldkey == 1 || oldkey == 2)
         {
-            if (oldkey == 1 || oldkey == 2)
-            {
-                PlayerWalkEnd(-1);
-            }
+            PlayerWalkEnd(-1, 0);
         }
+    }
 
-        if (AX > 0)
-        {
-            if (oldkey == 0 || oldkey == 3 || oldkey == 4)
-            {
-                PlayerWalkStart(3, 1);
-            }
-        }
-
-        if (!(AX > 0))
-        {
-            if (oldkey == 3 || oldkey == 4)
-            {
-                PlayerWalkEnd(1);
-            }
-        }
-
-        SetFontSize(18);
-        DrawFormatString(0, 10, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
-        DrawFormatString(0, 30, 0x00ffff, "プレイヤー画像　 = %2d", image);
-        DrawFormatString(0, 70, 0x00ffff, "プレイヤーX軸 　 = %d", g_player.x);
+    SetFontSize(18);
+    DrawFormatString(0, 10, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
+    DrawFormatString(0, 30, 0x00ffff, "プレイヤー画像　 = %2d", image);
+    DrawFormatString(0, 70, 0x00ffff, "プレイヤーX軸 　 = %d", g_player.x);
 
 
     //画面をはみ出さないようにする
@@ -57,9 +63,9 @@ void PLAYER::PlayerControl()
         g_player.x = 0;
         g_player.speed = 1;
     }
-    if (g_player.x > 440)
+    if (g_player.x > 428)
     {
-        g_player.x = 440;
+        g_player.x = 428;
         g_player.speed = 1;
     }
 
@@ -73,14 +79,25 @@ void PLAYER::PlayerControl()
     if (g_player.flg == FALSE) Blink();
 }
 
-void PLAYER::PlayerWalkEnd(int a)
+void PLAYER::PlayerWalkEnd(int a, int b)
 {
     if (oldkey == 1 || oldkey == 3)
     {
         walkspeed = 0;
+        if (oldkey == 1)
+        {
+            oldkey = 2;
+        }
+        if (oldkey == 3)
+        {
+            oldkey = 4;
+        }
+    }
 
-        if (oldkey == 1)oldkey = 2;
-        if (oldkey == 3)oldkey = 4;
+    if (b != 0)
+    {
+        if (oldkey == 2)image = 9;
+        if (oldkey == 4)image = 8;
     }
 
     if (g_player.speed >= 1)
@@ -90,7 +107,7 @@ void PLAYER::PlayerWalkEnd(int a)
 
         if (walkspeed >= 5)
         {
-            PlayerImage();
+            if(b == 0) PlayerImage();
             g_player.speed--;
             walkspeed = 0;
         }
@@ -138,19 +155,6 @@ void PLAYER::PlayerImage(void)
 
     if (oldkey == 1 || oldkey == 2)
     {
-        if (image >= 8 && image <= 10)
-        {
-            image++;
-        }
-
-        else
-        {
-            image = 8;
-        }
-    }
-
-    if (oldkey == 3 || oldkey == 4)
-    {
         if (image >= 4 && image <= 6)
         {
             image++;
@@ -161,6 +165,20 @@ void PLAYER::PlayerImage(void)
             image = 4;
         }
     }
+
+    if (oldkey == 3 || oldkey == 4)
+    {
+        if (image >= 0 && image <= 2)
+        {
+            image++;
+        }
+
+        else
+        {
+            image = 0;
+        }
+    }
+
 }
 
 
@@ -193,7 +211,7 @@ int PLAYER::HitBoxPlayer(Player* p, Enemy* e)
 void PLAYER::PlayerInit(void)
 {
     g_player = { TRUE,PLAYER_POS_X,PLAYER_POS_Y,PLAYER_WIDTH,PLAYER_HEIGHT,0,PLAYER_SPEED };
-    image = 0;  //プレイヤーの歩く画像を変更するときの変数
+    image = 10;  //プレイヤーの歩く画像を変更するときの変数
     walkspeed = 0;
     oldkey = 0;
     ATARI_HANTEI = 0;
