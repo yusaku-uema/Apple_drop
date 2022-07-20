@@ -382,7 +382,6 @@ void GameMain(void)
 
     fpscount++;
     SetFontSize(18);
-    DrawFormatString(0, 50, 0x00ffff, "fps　 = %d", fps);
     if ((GetNowCount() - g_Time2) >= 1000)
     {
         fps = fpscount;
@@ -618,7 +617,6 @@ void SortRanking(void)
     for (i = 0; i < 5; i++) {
         g_Ranking[i].no = 1;
     }
-    //得点が同じ場合は、同じ順位とする
     //同順位があった場合の次の順位はデータ個数が加算された順位とする
     for (i = 0; i < 4; i++) {
         for (j = i + 1; j < 5; j++) {

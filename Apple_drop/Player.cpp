@@ -48,13 +48,6 @@ void PLAYER::PlayerControl()
             PlayerWalkEnd(-1, 0);
         }
     }
-
-    SetFontSize(18);
-    DrawFormatString(0, 10, 0x00ffff, "スピード　　　　 = %2d", g_player.speed);
-    DrawFormatString(0, 30, 0x00ffff, "プレイヤー画像　 = %2d", image);
-    DrawFormatString(0, 70, 0x00ffff, "プレイヤーX軸 　 = %d", g_player.x);
-
-
     //画面をはみ出さないようにする
     if (g_player.x < 0)
     {
